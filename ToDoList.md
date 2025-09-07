@@ -12,3 +12,4 @@
 10. No Clicking allowed ro File, Edit and View
 11. Fix the Old Portfolio Paths
 12. Make this Project Private on GitHub
+13. Add 8bit login photo

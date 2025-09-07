@@ -337,7 +337,7 @@
 @keyframes dramaticReveal {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -345,65 +345,178 @@
   }
 }
 
-#trash .secret-content {
+/* Blinking cursor for typewriter effect */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* This is the main container for the revealed secret */
+#trash .secret-content.revealed {
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* Pushes dog to bottom */
   align-items: center;
-  justify-content: center;
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
+  background-color: #0d2a0d; /* Dark earthy green */
+  color: #e0e0e0; /* Off-white text */
+  animation: dramaticReveal 0.5s ease-out;
+  overflow: hidden; /* Prevent scrollbars */
 }
 
-#trash .secret-content.revealed {
-  animation: dramaticReveal 0.6s ease-out;
+/* Container for the text and buttons */
+.secret-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.guardian-text {
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  line-height: 1.5;
+  min-height: 50px; /* Reserve space for text */
+}
+
+.guardian-text.typing {
+  border-right: 3px solid #32cd32; /* The cursor */
+  animation: blink 0.75s step-end infinite;
+}
+
+.highlight {
+  color: #32cd32; /* Matrix green */
+  font-weight: bold;
 }
 
 .game-options-container {
-  margin-top: 25px;
+  margin-top: 20px;
   display: flex;
-  flex-direction: column;
-  gap: 15px; /* Adds space between the buttons */
+  justify-content: center; /* Center buttons */
+  flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+  gap: 10px;
 }
 
 .game-option {
-  /* Button Shape & Size */
   display: inline-block;
-  padding: 10px 20px;
-  border: 2px solid #000;
-  min-width: 180px; /* Gives buttons a uniform width */
+  padding: 6px 14px;
+  border: 2px solid #32cd32;
+  min-width: 120px;
 
-  /* Button Style */
-  background-color: #000;
-  color: #fff;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  color: #32cd32;
+  box-shadow: none; /* Remove old shadow */
 
-  /* Font */
   font-family: "VT323", monospace;
-  font-size: 22px;
+  font-size: 18px;
   text-align: center;
 
-  /* Interactivity */
   cursor: pointer;
-  transition: all 0.1s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 .game-option:hover {
-  background-color: #222; /* Slightly lighter black on hover */
-  color: #fff;
+  background-color: #32cd32;
+  color: #0d2a0d; /* Dark green text on hover */
 }
 
 .game-option:active {
-  /* Classic button press effect */
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  transform: scale(0.95);
 }
+
+/* The new dog image style */
+.guardian-dog-image {
+  width: 250px; /* Much larger */
+  height: auto;
+  margin-top: 20px; /* Space above the dog */
+  align-self: center; /* Ensure it's centered */
+}
+
 #trash .finder-icon {
   user-select: none;
   -webkit-user-select: none; /* Safari */
 }
 
-/* Prevents the folder image itself from being dragged */
 #trash .finder-icon img {
   pointer-events: none;
+}
+
+/* Add this new class */
+.no-padding {
+  padding: 0 !important;
+}
+
+/* --- Pill Stage Specific Styles --- */
+.pill-stage-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Push content to the bottom */
+  flex-grow: 1; /* Allow container to grow and fill space */
+  width: 100%;
+}
+
+.pill-buttons-container {
+  display: flex;
+  justify-content: space-evenly; /* Evenly space the items */
+  align-items: flex-end; /* Align items to their bottom edge */
+  width: 100%;
+  padding: 0 10px; /* Add some horizontal padding */
+  box-sizing: border-box;
+}
+
+.guardian-dog-image.wise {
+  width: auto;
+  height: 190px; /* Adjust height as needed */
+  object-fit: contain;
+  margin-bottom: 0; /* Remove bottom margin to align with bottom of window */
+}
+
+.pill-option {
+  padding: 8px;
+  cursor: pointer;
+  border: 3px solid black;
+  transition: all 0.2s ease;
+  font-family: "VT323", monospace;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px; /* Add some margin to lift it from the very bottom */
+}
+
+.pill-option:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+}
+
+.pill-option.blue {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.pill-option.red {
+  background-color: #ff5f57;
+  color: white;
+}
+
+/* --- Final Message --- */
+.final-message-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.final-message-text {
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+#trash.window .content {
+  height: calc(100% - 25px);
 }

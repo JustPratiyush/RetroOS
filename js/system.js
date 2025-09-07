@@ -410,30 +410,25 @@ function toggleAppDrawer() {
 // --- SETTINGS ---
 
 function setWallpaper(style) {
+  let wallpaperIndex;
   if (style === "classic") {
-    document.body.style.backgroundImage =
-      "url('assets/wallpapers/wallpaper0.webp')";
-    currentWallpaperState = "classic";
-    localStorage.setItem("currentWallpaper", "classic");
+    wallpaperIndex = 0;
   } else if (style === "alt") {
-    currentWallpaperIndex = (currentWallpaperIndex % 5) + 1;
-    document.body.style.backgroundImage = `url('assets/wallpapers/wallpaper${currentWallpaperIndex}.webp')`;
-    currentWallpaperState = String(currentWallpaperIndex);
-    localStorage.setItem("currentWallpaper", String(currentWallpaperIndex));
-    localStorage.setItem(
-      "currentWallpaperIndex",
-      String(currentWallpaperIndex)
-    );
-  } else if (!isNaN(style)) {
-    const index = parseInt(style, 10);
-    if (index >= 0 && index <= 5) {
-      document.body.style.backgroundImage = `url('assets/wallpapers/wallpaper${index}.webp')`;
-      currentWallpaperState = String(index);
-      currentWallpaperIndex = index;
-      localStorage.setItem("currentWallpaper", String(index));
-      localStorage.setItem("currentWallpaperIndex", String(index));
-    }
+    // Assumes wallpapers are named wallpaper1 through wallpaper5
+    wallpaperIndex = (currentWallpaperIndex % 5) + 1;
+  } else if (!isNaN(style) && style >= 0 && style <= 5) {
+    wallpaperIndex = parseInt(style, 10);
+  } else {
+    return; // Invalid style
   }
+
+  document.body.style.backgroundImage = `url('assets/wallpapers/wallpaper${wallpaperIndex}.webp')`;
+  currentWallpaperIndex = wallpaperIndex;
+  localStorage.setItem(
+    "currentWallpaper",
+    wallpaperIndex === 0 ? "classic" : String(wallpaperIndex)
+  );
+  localStorage.setItem("currentWallpaperIndex", String(wallpaperIndex));
 }
 
 function toggleGrayscale(isChecked) {

@@ -24,25 +24,19 @@ document.addEventListener("DOMContentLoaded", () => {
       initApp();
 
       if (!hasShownWelcome) {
-        const welcomeWindow = document.createElement("div");
-        welcomeWindow.className = "window";
-        welcomeWindow.id = "welcome-window";
-        welcomeWindow.style.cssText = "display:block; max-width: 90%;";
-        welcomeWindow.innerHTML = `
-          <div class="title">
-            <span>Welcome</span>
-            <span class="controls">
-              <span class="ctrl ctrl-close" title="Close" onclick="document.getElementById('welcome-window').remove()">×</span>
-            </span>
-          </div>
-          <div class="content" style="padding: 20px; font-family: 'VT323', monospace; font-size: 18px; line-height: 1.6; text-align: center;">
-            <h2 style="margin: 0 0 15px 0; font-size: 28px;">Welcome to My Digital Space!</h2>
-            <p style="margin-bottom: 15px;">This is my portfolio + an interactive GUI inspired by classic MacOS in a retro-pixelated style. So feel free to click around, explore the apps, and discover more about me.</p>
-            <p style="margin: 0;">Enjoy your stay!</p>
-          </div>`;
-        document.body.appendChild(welcomeWindow);
-        makeDraggable(welcomeWindow);
-        bringToFront(welcomeWindow);
+        const welcomeWindow = createWindowFromTemplate(
+          "welcome-template",
+          "projects-container"
+        ); // Assuming 'projects-container' exists
+        if (welcomeWindow) {
+          // Override the close function to just remove the element
+          const closeBtn = welcomeWindow.querySelector(".ctrl-close");
+          if (closeBtn)
+            closeBtn.setAttribute(
+              "onclick",
+              "document.getElementById('welcome-window').remove()"
+            );
+        }
         hasShownWelcome = true;
       }
     }, 1000);

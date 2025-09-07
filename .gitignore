@@ -31,12 +31,6 @@ pids/
 coverage/
 *.lcov
 
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
 
 # OS generated files
 .DS_Store

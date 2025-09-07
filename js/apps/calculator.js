@@ -1,8 +1,3 @@
-/**
- * App: Calculator
- * Handles all logic for the calculator application.
- */
-
 function calcInput(v) {
   const d = document.getElementById("calcDisplay");
   if (!d) return;
@@ -37,20 +32,24 @@ function clearCalc() {
 function handleCalcKeyDown(e) {
   const calcWin = document.getElementById("calculator");
   if (!calcWin || calcWin.style.display !== "block") return;
+
   const keyMap = {
     Enter: "=",
     Backspace: "backspace",
     Escape: "clear",
     c: "clear",
   };
+
   if ("0123456789.+-*/^%".includes(e.key)) {
     e.preventDefault();
     calcInput(e.key);
   } else if (keyMap[e.key]) {
     e.preventDefault();
-    if (keyMap[e.key] === "=") calculate();
-    else if (keyMap[e.key] === "clear") clearCalc();
-    else if (keyMap[e.key] === "backspace") {
+    if (keyMap[e.key] === "=") {
+      calculate();
+    } else if (keyMap[e.key] === "clear") {
+      clearCalc();
+    } else if (keyMap[e.key] === "backspace") {
       const d = document.getElementById("calcDisplay");
       if (d) d.value = d.value.slice(0, -1);
     }

@@ -95,16 +95,6 @@ body.matrix-theme .window .content {
   text-shadow: var(--matrix-text-glow);
 }
 
-body.matrix-theme .window .ctrl {
-  border-color: var(--matrix-green-bright) !important;
-  background: var(--matrix-green-dark) !important;
-}
-
-body.matrix-theme .window .ctrl:hover {
-  background: var(--matrix-green-bright) !important;
-  box-shadow: var(--matrix-glow);
-}
-
 /* --- Top Bar & Dock Theming --- */
 body.matrix-theme .top-bar,
 body.matrix-theme .dock,
