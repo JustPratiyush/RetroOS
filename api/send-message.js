@@ -1,5 +1,5 @@
-const nodemailer = require('nodemailer');
-const Joi = require('joi');
+import nodemailer from 'nodemailer';
+import Joi from 'joi';
 
 // Validation schema
 const messageSchema = Joi.object({
