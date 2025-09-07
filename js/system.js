@@ -16,7 +16,31 @@ const konamiCode = [
 ];
 let konamiIndex = 0;
 
+// Add this new function alongside your other window management functions like openWindow, closeWindow, etc.
+
+/**
+ * Closes all currently open or minimized windows.
+ * @param {string[]} exceptions - An array of window IDs to keep open.
+ */
+function closeAllWindows(exceptions = []) {
+  // The 'windowStates' object tracks the status of all windows
+  for (const windowId in windowStates) {
+    if (
+      !exceptions.includes(windowId) &&
+      (windowStates[windowId] === "open" ||
+        windowStates[windowId] === "minimized")
+    ) {
+      closeWindow(windowId);
+    }
+  }
+}
+
+// Now, find your existing activateMatrixTheme function and replace it with this updated version.
+
 function activateMatrixTheme() {
+  // Close all windows to reduce distraction before showing the alert
+  closeAllWindows();
+
   document.body.classList.toggle("matrix-theme");
   const isActive = document.body.classList.contains("matrix-theme");
   const title = "System Security Alert";

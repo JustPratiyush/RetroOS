@@ -329,3 +329,81 @@
   color: #000;
   padding: 20px 0;
 }
+
+/* =====================================================================
+     🗑️ Trash Easter Egg Styling (Revised)
+   ===================================================================== */
+
+@keyframes dramaticReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#trash .secret-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#trash .secret-content.revealed {
+  animation: dramaticReveal 0.6s ease-out;
+}
+
+.game-options-container {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Adds space between the buttons */
+}
+
+.game-option {
+  /* Button Shape & Size */
+  display: inline-block;
+  padding: 10px 20px;
+  border: 2px solid #000;
+  min-width: 180px; /* Gives buttons a uniform width */
+
+  /* Button Style */
+  background-color: #000;
+  color: #fff;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+
+  /* Font */
+  font-family: "VT323", monospace;
+  font-size: 22px;
+  text-align: center;
+
+  /* Interactivity */
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+}
+
+.game-option:hover {
+  background-color: #222; /* Slightly lighter black on hover */
+  color: #fff;
+}
+
+.game-option:active {
+  /* Classic button press effect */
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+#trash .finder-icon {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+}
+
+/* Prevents the folder image itself from being dragged */
+#trash .finder-icon img {
+  pointer-events: none;
+}
