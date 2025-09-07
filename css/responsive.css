@@ -262,4 +262,57 @@
   .finder-content.sidebar-visible .finder-sidebar {
     transform: translateX(0);
   }
+
+  /* Mail App Responsive Design */
+  #mail {
+    left: 5% !important;
+    top: 10% !important;
+    width: 90% !important;
+    height: 70% !important;
+    max-width: none !important;
+  }
+
+  .mail-content {
+    height: 100%;
+  }
+
+  .mail-header {
+    padding: 6px 8px;
+    flex-wrap: wrap;
+    min-height: 40px;
+  }
+
+  .mail-header label {
+    font-size: 16px;
+    margin-right: 6px;
+    min-width: 40px;
+  }
+
+  .mail-header input {
+    font-size: 14px;
+    padding: 3px;
+    min-height: 24px;
+  }
+
+  .mail-body {
+    padding: 8px;
+    flex: 1;
+  }
+
+  .mail-body textarea {
+    font-size: 14px;
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .mail-footer {
+    padding: 8px;
+    flex-shrink: 0;
+  }
+
+  .mail-footer button {
+    font-size: 14px;
+    padding: 8px 16px;
+    max-width: 200px;
+  }
 }
