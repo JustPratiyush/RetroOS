@@ -265,11 +265,11 @@
 
   /* Mail App Responsive Design */
   #mail {
-    left: 5% !important;
-    top: 10% !important;
-    width: 90% !important;
-    height: 70% !important;
-    max-width: none !important;
+    left: 5%;
+    top: 10%;
+    width: 90%;
+    height: 70%;
+    max-width: none;
   }
 
   .mail-content {
