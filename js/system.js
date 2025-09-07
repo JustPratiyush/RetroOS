@@ -1,5 +1,43 @@
 // js/system.js
 
+// At the top of js/system.js
+
+const konamiCode = [
+  "arrowUp",
+  "arrowUp",
+  "arrowDown",
+  "arrowDown",
+  "arrowLeft",
+  "arrowRight",
+  "arrowLeft",
+  "arrowRight",
+  "b",
+  "a",
+];
+let konamiIndex = 0;
+
+function activateMatrixTheme() {
+  document.body.classList.toggle("matrix-theme");
+  const isActive = document.body.classList.contains("matrix-theme");
+  const title = "System Security Alert";
+  const message = isActive
+    ? "Reality glitch detected. Engaging fallback simulation... Welcome to the Matrix."
+    : "Simulation disengaged. Welcome back to reality.";
+  createMessageWindow(title, message);
+}
+
+window.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase()) {
+    konamiIndex++;
+    if (konamiIndex === konamiCode.length) {
+      activateMatrixTheme();
+      konamiIndex = 0;
+    }
+  } else {
+    konamiIndex = 0;
+  }
+});
+
 // --- CORE OS STATE & GLOBALS ---
 let zTop = 1000;
 const windowStates = {}; // States: 'closed', 'open', 'minimized'

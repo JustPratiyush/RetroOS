@@ -278,7 +278,6 @@ button {
   overflow: hidden;
   width: 360px;
   min-width: 250px;
-  min-height: 150px;
   border: 3px solid #000;
   background: var(--panel);
   box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);

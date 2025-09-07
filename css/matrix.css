@@ -1,0 +1,265 @@
+/* =====================================================================
+EASTER EGG: MATRIX THEME
+Activated by the Konami Code
+===================================================================== */
+
+/* --- Primary Variables --- */
+:root {
+  --matrix-green: #00ff00;
+  --matrix-green-bright: #39ff14;
+  --matrix-green-dark: #00cc00;
+  --matrix-green-darker: #009900;
+  --matrix-bg-dark: #000000;
+  --matrix-bg-medium: rgba(0, 40, 0, 0.9);
+  --matrix-bg-light: rgba(0, 30, 0, 0.95);
+  --matrix-glow: 0 0 8px var(--matrix-green-bright),
+    0 0 16px var(--matrix-green), 0 0 24px rgba(57, 255, 20, 0.8);
+  --matrix-text-glow: 0 0 4px var(--matrix-green-bright),
+    0 0 8px var(--matrix-green);
+}
+
+/* --- Body & Background Effects --- */
+body.matrix-theme {
+  background: var(--matrix-bg-dark) !important;
+  /* Ensure all text inherits the correct font and color */
+  font-family: "VT323", monospace !important;
+  color: var(--matrix-green-bright) !important;
+}
+
+/* This creates the iconic scanline effect over the entire screen */
+body.matrix-theme::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 99998; /* Just below the boot screen */
+  pointer-events: none;
+  animation: scanline 10s linear infinite;
+}
+
+@keyframes scanline {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -40px;
+  }
+}
+
+/* --- General UI Theming --- */
+body.matrix-theme .window,
+body.matrix-theme .menu,
+body.matrix-theme .top-bar,
+body.matrix-theme .dock,
+body.matrix-theme .app-drawer {
+  color: var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+  box-shadow: 0 0 15px var(--matrix-green), 4px 4px 0 var(--matrix-green-dark) !important;
+  border: 2px solid var(--matrix-green-bright) !important;
+  backdrop-filter: blur(5px);
+}
+
+body.matrix-theme .desktop-icon span {
+  color: var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+  background: rgba(0, 0, 0, 0.8) !important;
+  padding: 2px 6px !important;
+  border-radius: 3px !important;
+  border: 1px solid var(--matrix-green-dark) !important;
+}
+
+/* --- Window Theming --- */
+body.matrix-theme .window {
+  background: var(--matrix-bg-light) !important;
+}
+
+body.matrix-theme .window .title {
+  background: linear-gradient(
+    135deg,
+    var(--matrix-green-bright),
+    var(--matrix-green-dark)
+  ) !important;
+  color: var(--matrix-bg-dark) !important;
+  text-shadow: none;
+  font-weight: bold !important;
+}
+
+body.matrix-theme .window .content {
+  background: var(--matrix-bg-dark) !important;
+  color: var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .window .ctrl {
+  border-color: var(--matrix-green-bright) !important;
+  background: var(--matrix-green-dark) !important;
+}
+
+body.matrix-theme .window .ctrl:hover {
+  background: var(--matrix-green-bright) !important;
+  box-shadow: var(--matrix-glow);
+}
+
+/* --- Top Bar & Dock Theming --- */
+body.matrix-theme .top-bar,
+body.matrix-theme .dock,
+body.matrix-theme .app-drawer {
+  background: var(--matrix-bg-medium) !important;
+}
+
+body.matrix-theme .top-bar .icon.active {
+  background: var(--matrix-green-bright) !important;
+  color: var(--matrix-bg-dark) !important;
+  text-shadow: none;
+  box-shadow: var(--matrix-glow);
+}
+
+body.matrix-theme .dock-icon::before {
+  background: var(--matrix-bg-light);
+  border: 1px solid var(--matrix-green-dark);
+}
+
+body.matrix-theme .dock-icon:hover::before,
+body.matrix-theme .dock-icon.active::before {
+  background: var(--matrix-green-bright) !important;
+  box-shadow: var(--matrix-glow);
+}
+
+body.matrix-theme .dock-icon:hover .label {
+  background: var(--matrix-bg-dark) !important;
+  border: 1px solid var(--matrix-green-bright);
+  color: var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+/* --- Specific App Adjustments --- */
+body.matrix-theme #calcDisplay,
+body.matrix-theme #calculator button {
+  background: var(--matrix-bg-dark) !important;
+  color: var(--matrix-green-bright) !important;
+  border-color: var(--matrix-green-bright) !important;
+  box-shadow: 0 0 8px var(--matrix-green), 2px 2px 0 var(--matrix-green-dark) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme #internetSearchInput,
+body.matrix-theme input,
+body.matrix-theme textarea {
+  background: var(--matrix-bg-dark) !important;
+  color: var(--matrix-green-bright) !important;
+}
+
+body.matrix-theme .mail-header,
+body.matrix-theme .mail-footer {
+  border-bottom-color: var(--matrix-green-bright);
+  border-top-color: var(--matrix-green-bright);
+}
+
+/* --- Project Folders & File Browser --- */
+body.matrix-theme .project-item,
+body.matrix-theme .file-item,
+body.matrix-theme .folder-item {
+  background: var(--matrix-bg-dark) !important;
+  color: var(--matrix-green-bright) !important;
+  border: 1px solid var(--matrix-green-dark) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .project-item:hover,
+body.matrix-theme .file-item:hover,
+body.matrix-theme .folder-item:hover {
+  background: var(--matrix-bg-medium) !important;
+  border-color: var(--matrix-green-bright) !important;
+  box-shadow: var(--matrix-glow);
+}
+
+/* --- Project List Container --- */
+body.matrix-theme .project-list,
+body.matrix-theme .projects-container,
+body.matrix-theme .project-grid,
+body.matrix-theme .projects-sidebar {
+  background: var(--matrix-bg-dark) !important;
+  color: var(--matrix-green-bright) !important;
+}
+
+/* --- Project Sidebar Items --- */
+body.matrix-theme .sidebar-project-item {
+  background: var(--matrix-bg-dark) !important;
+  color: var(--matrix-green-bright) !important;
+  border: none !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .sidebar-project-item h4,
+body.matrix-theme .sidebar-project-item p {
+  color: var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+/* --- Active/Selected Project Item --- */
+body.matrix-theme .sidebar-project-item.active,
+body.matrix-theme .project-item.selected,
+body.matrix-theme .project-item.active,
+body.matrix-theme .file-item.selected,
+body.matrix-theme .folder-item.selected {
+  background: var(--matrix-green-bright) !important;
+  color: var(--matrix-bg-dark) !important;
+  border: 1px solid var(--matrix-green-bright) !important;
+  text-shadow: none !important;
+  box-shadow: var(--matrix-glow);
+}
+
+body.matrix-theme .sidebar-project-item.active h4,
+body.matrix-theme .sidebar-project-item.active p {
+  color: var(--matrix-bg-dark) !important;
+  text-shadow: none !important;
+}
+
+body.matrix-theme .project-title,
+body.matrix-theme .file-name,
+body.matrix-theme .folder-name {
+  color: var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .project-description,
+body.matrix-theme .file-details {
+  color: var(--matrix-green) !important;
+  text-shadow: 0 0 2px var(--matrix-green);
+}
+
+/* --- Menu Items --- */
+body.matrix-theme .menu div,
+body.matrix-theme .menu-item {
+  color: var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .menu div:hover,
+body.matrix-theme .menu-item:hover {
+  background: var(--matrix-green-dark) !important;
+  color: var(--matrix-bg-dark) !important;
+  text-shadow: none;
+}
+
+/* --- Buttons --- */
+body.matrix-theme button,
+body.matrix-theme .button {
+  background: var(--matrix-bg-dark) !important;
+  color: var(--matrix-green-bright) !important;
+  border: 2px solid var(--matrix-green-bright) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme button:hover,
+body.matrix-theme .button:hover {
+  background: var(--matrix-green-dark) !important;
+  color: var(--matrix-bg-dark) !important;
+  box-shadow: var(--matrix-glow);
+  text-shadow: none;
+}
