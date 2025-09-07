@@ -2,7 +2,10 @@
 
 class MailService {
   constructor() {
-    this.apiUrl = 'http://localhost:3001/api';
+    // Use relative URLs for Vercel deployment
+    this.apiUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3001/api' 
+      : '/api';
     this.isSubmitting = false;
   }
 
