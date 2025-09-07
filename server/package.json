@@ -1,0 +1,31 @@
+{
+  "name": "retro-os-backend",
+  "version": "1.0.0",
+  "description": "Backend server for RetroOS email notifications",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "nodemailer": "^6.9.7",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "joi": "^17.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "email",
+    "notifications",
+    "portfolio",
+    "backend"
+  ],
+  "author": "Abhinav Kuchhal",
+  "license": "MIT",
+  "type": "commonjs"
+}

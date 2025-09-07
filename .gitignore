@@ -3,3 +3,22 @@ node_modules/
 .env.local
 .next/
 dist/
+
+# Environment files
+.env
+*.log
+
+# Package locks (keep package.json but ignore locks)
+package-lock.json
+
+# Build outputs
+build/
+out/
+
+# IDE files
+.vscode/settings.json
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
