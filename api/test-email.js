@@ -41,10 +41,19 @@ export default async function handler(req, res) {
       message: 'Email configuration is valid'
     });
   } catch (error) {
+    console.error('Email test error:', error);
+    console.error('Environment check:', {
+      SMTP_HOST: process.env.SMTP_HOST,
+      SMTP_PORT: process.env.SMTP_PORT,
+      SMTP_USER: process.env.SMTP_USER ? 'SET' : 'NOT SET',
+      SMTP_PASS: process.env.SMTP_PASS ? 'SET' : 'NOT SET'
+    });
+    
     res.status(500).json({
       success: false,
       error: 'Email configuration failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : 'Configuration error'
+      details: error.message,
+      errorType: error.constructor.name
     });
   }
 }

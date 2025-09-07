@@ -163,11 +163,20 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Error sending email:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Environment check:', {
+      SMTP_HOST: process.env.SMTP_HOST,
+      SMTP_PORT: process.env.SMTP_PORT,
+      SMTP_USER: process.env.SMTP_USER ? 'SET' : 'NOT SET',
+      SMTP_PASS: process.env.SMTP_PASS ? 'SET' : 'NOT SET',
+      RECIPIENT_EMAIL: process.env.RECIPIENT_EMAIL ? 'SET' : 'NOT SET'
+    });
     
     res.status(500).json({
       success: false,
       error: 'Failed to send message',
-      details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+      details: error.message,
+      errorType: error.constructor.name
     });
   }
 }
