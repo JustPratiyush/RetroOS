@@ -138,7 +138,6 @@ body.matrix-theme #calculator button {
 }
 
 body.matrix-theme #internetSearchInput,
-body.matrix-theme input,
 body.matrix-theme textarea {
   background: var(--matrix-bg-dark) !important;
   color: var(--matrix-green-bright) !important;
