@@ -383,11 +383,6 @@
   min-height: 50px; /* Reserve space for text */
 }
 
-.guardian-text.typing {
-  border-right: 3px solid #32cd32; /* The cursor */
-  animation: blink 0.75s step-end infinite;
-}
-
 .highlight {
   color: #32cd32; /* Matrix green */
   font-weight: bold;
@@ -430,7 +425,8 @@
 
 /* The new dog image style */
 .guardian-dog-image {
-  width: 250px; /* Much larger */
+  max-width: 250px;
+  width: 60%;
   height: auto;
   margin-top: 20px; /* Space above the dog */
   align-self: center; /* Ensure it's centered */
@@ -517,6 +513,18 @@
   line-height: 1.6;
 }
 
+#trash.window {
+  background: #ffff;
+}
+
 #trash.window .content {
   height: calc(100% - 25px);
+}
+
+.final-message-text.monster {
+  color: red; /* Retro red color */
+}
+
+.final-message-text.bluepill {
+  color: rgb(0, 68, 255); /* Retro red color */
 }

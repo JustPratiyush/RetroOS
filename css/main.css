@@ -452,7 +452,8 @@ button {
   left: 240px;
   top: 140px;
   width: 450px;
-  height: 350px;
+  min-height: 350px !important;
+  height: auto;
 }
 #internet {
   left: 150px;

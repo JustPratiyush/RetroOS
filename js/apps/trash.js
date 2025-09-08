@@ -7,7 +7,7 @@
 let trashState = {
   folderDepth: 0,
   dogRevealed: false,
-  conversationState: "initial", // Can be 'initial', 'pills', 'final'
+  conversationState: "initial", // Can be 'initial', 'petted', 'questioning', 'pills', 'failed_test', 'final'
   isEmptied: false,
 };
 
@@ -59,6 +59,21 @@ function typewriterEffect(element, text, speed = 50, callback) {
 }
 
 /**
+ * Fades in the option buttons after a delay.
+ * @param {HTMLElement} trashContent - The main content element of the trash window.
+ */
+function showOptions(trashContent) {
+  if (!trashContent) return;
+  const optionsContainer = trashContent.querySelector(
+    ".game-options-container, .pill-buttons-container"
+  );
+  if (optionsContainer) {
+    optionsContainer.style.transition = "opacity 0.5s ease-in";
+    optionsContainer.style.opacity = "1";
+  }
+}
+
+/**
  * Main function to render the content of the Trash window based on the current state.
  */
 function renderTrashContent() {
@@ -75,56 +90,93 @@ function renderTrashContent() {
 
   if (trashState.dogRevealed) {
     trashContent.classList.add("no-padding");
+    let textElement;
 
-    if (trashState.conversationState === "initial") {
-      trashContent.innerHTML = `
-         <div class="secret-content revealed">
-           <div class="secret-main">
-             <div id="guardian-text" class="guardian-text highlight"></div>
-             <div class="game-options-container">
-               <span class="game-option" onclick="createMessageWindow('Pixel Dog', 'You pet the dog. It wags its tail happily.')">Pet the dog</span>
-               <span class="game-option" onclick="talkToDog()">Talk to the dog</span>
-               <span class="game-option" onclick="killDog()">Kill the dog</span>
+    switch (trashState.conversationState) {
+      case "initial":
+        trashContent.innerHTML = `
+           <div class="secret-content revealed">
+             <div class="secret-main">
+               <div id="guardian-text" class="guardian-text highlight"></div>
+               <div class="game-options-container" style="opacity: 0;">
+                 <span class="game-option" onclick="petTheDog()">Pet the dog</span>
+                 <span class="game-option" onclick="killDog()">Kill the dog</span>
+               </div>
              </div>
-           </div>
-           <img src="assets/icons/sleeping_dog.webp" alt="Guardian Dog" class="guardian-dog-image">
-         </div>`;
-      const textElement = document.getElementById("guardian-text");
-      typewriterEffect(
-        textElement,
-        "Woof! You found the guardian. What will you do?"
-      );
-    } else if (trashState.conversationState === "pills") {
-      const message = `The dog looks at you knowingly.\n"The choice is yours... \nSee how deep the rabbit-hole goes."`;
-      trashContent.innerHTML = `
-        <div class="secret-content revealed">
-            <div id="guardian-text" class="guardian-text highlight"></div>
-            <div class="pill-stage-container">
-                 <img src="assets/icons/wise_dog.webp" alt="Wise Guardian Dog" class="guardian-dog-image wise">
-                 <div class="pill-buttons-container" style="opacity: 0;">
-                     <div class="pill-option blue" onclick="chooseBluePill()">Take the Blue Pill</div>
-                     <div class="pill-option red" onclick="chooseRedPill()">Take the Red Pill</div>
-                 </div>
-            </div>
-        </div>`;
-      const textElement = document.getElementById("guardian-text");
-      typewriterEffect(textElement, message);
-
-      // After 4 seconds, fade in the pill buttons.
-      setTimeout(() => {
-        const pillContainer = trashContent.querySelector(
-          ".pill-buttons-container"
+             <img src="assets/icons/sleeping_dog.webp" alt="Guardian Dog" class="guardian-dog-image">
+           </div>`;
+        textElement = document.getElementById("guardian-text");
+        typewriterEffect(
+          textElement,
+          "'The dog slowly opens one eye...'\n'You finally arrived. \nWhat is your purpose here, traveler?'",
+          50,
+          () => showOptions(trashContent)
         );
-        if (pillContainer) {
-          pillContainer.style.transition = "opacity 0.5s ease-in";
-          pillContainer.style.opacity = "1";
-        }
-      }, 4000);
-    } else if (trashState.conversationState === "final") {
-      // This state is handled by the choosePill functions directly
+        break;
+
+      case "petted":
+        trashContent.innerHTML = `
+           <div class="secret-content revealed">
+             <div class="secret-main">
+               <div id="guardian-text" class="guardian-text highlight"></div>
+               <div class="game-options-container" style="opacity: 0;">
+                 <span class="game-option" onclick="talkToDog()">Yes</span>
+                 <span class="game-option" onclick="killDog()">Kill the dog</span>
+               </div>
+             </div>
+             <img src="assets/icons/happy_dog.webp" alt="Happy Guardian Dog" class="guardian-dog-image">
+           </div>`;
+        textElement = document.getElementById("guardian-text");
+        typewriterEffect(
+          textElement,
+          "'Thank you... It's been long since my master, \nAbhinav, went away. I am his dog, Morphy.\nMay I ask you something?'",
+          50,
+          () => showOptions(trashContent)
+        );
+        break;
+
+      case "questioning":
+        trashContent.innerHTML = `
+            <div class="secret-content revealed">
+              <div class="secret-main">
+                <div id="guardian-text" class="guardian-text highlight"></div>
+                <div class="game-options-container" style="opacity: 0;">
+                  <span class="game-option" onclick="answerQuestion(true)">"I've felt it my whole life."</span>
+                  <span class="game-option" onclick="answerQuestion(false)">"The world seems fine."</span>
+                </div>
+              </div>
+              <img src="assets/icons/happy_dog.webp" alt="Wise Dog" class="guardian-dog-image">
+            </div>`;
+        textElement = document.getElementById("guardian-text");
+        typewriterEffect(
+          textElement,
+          "'Have you ever felt that something is wrong with the \nworld? That you are a slave, born into a prison \nyou cannot see or touch?'",
+          50,
+          () => showOptions(trashContent)
+        );
+        break;
+
+      case "pills":
+        const message = `'Then you are ready to see.'\n"The choice is yours...\nSee how deep the rabbit-hole goes."`;
+        trashContent.innerHTML = `
+          <div class="secret-content revealed">
+              <div id="guardian-text" class="guardian-text highlight"></div>
+              <div class="pill-stage-container">
+                   <img src="assets/icons/wise_dog.webp" alt="Wise Guardian Dog" class="guardian-dog-image wise">
+                   <div class="pill-buttons-container" style="opacity: 0;">
+                       <div class="pill-option blue" onclick="chooseBluePill()">Take the Blue Pill</div>
+                       <div class="pill-option red" onclick="chooseRedPill()">Take the Red Pill</div>
+                   </div>
+              </div>
+          </div>`;
+        textElement = document.getElementById("guardian-text");
+        typewriterEffect(textElement, message, 50, () =>
+          showOptions(trashContent)
+        );
+        break;
     }
   } else {
-    // Before the dog is revealed, ensure the window has its default height
+    // Before the dog is revealed
     const trashWindow = document.getElementById("trash");
     if (trashWindow) trashWindow.style.height = ""; // Reset height
 
@@ -136,6 +188,7 @@ function renderTrashContent() {
       </div>`;
   }
 }
+
 /**
  * Called when a user double-clicks a folder. Advances the sequence.
  */
@@ -151,13 +204,42 @@ function progressTrashSequence() {
 }
 
 /**
- * Changes the state to show the "red pill / blue pill" options and resizes the window.
+ * Transitions to the 'petted' state after petting the dog.
+ */
+function petTheDog() {
+  trashState.conversationState = "petted";
+  renderTrashContent();
+}
+
+/**
+ * Transitions to the 'questioning' state.
  */
 function talkToDog() {
-  trashState.conversationState = "pills";
-  const trashWindow = document.getElementById("trash");
-  if (trashWindow) {
-    trashWindow.style.height = "420px"; // Make window taller for this scene
+  trashState.conversationState = "questioning";
+  renderTrashContent();
+}
+
+/**
+ * Handles the user's answer to the dog's question.
+ * @param {boolean} isReady - True if the user gave the "correct" answer.
+ */
+function answerQuestion(isReady) {
+  if (isReady) {
+    trashState.conversationState = "pills";
+    const trashWindow = document.getElementById("trash");
+    if (trashWindow) {
+      trashWindow.style.height = "420px"; // Make window taller for the pill scene
+    }
+  } else {
+    trashState.conversationState = "failed_test";
+    const message =
+      "The dog looks away, disappointed.\n'The path is not for you,' it whispers. 'Ignorance is bliss.' The moment passes.";
+    const trashContent = document.getElementById("trashContent");
+    trashContent.innerHTML = `<div class="final-message-container" style="padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight"></div></div>`;
+    const textElement = document.getElementById("final-message");
+    typewriterEffect(textElement, message, 50);
+    endEasterEgg();
+    return; // Stop further rendering
   }
   renderTrashContent();
 }
@@ -170,13 +252,16 @@ function endEasterEgg() {
 }
 
 /**
- * Resets the easter egg and shows a sad message.
+ * Resets the easter egg and shows a sad message inside the trash window.
  */
 function killDog() {
-  createMessageWindow(
-    "What have you done?",
-    "You monster. The guardian is gone forever."
-  );
+  trashState.conversationState = "final";
+  const trashContent = document.getElementById("trashContent");
+  if (!trashContent) return;
+  const message = "You monster. The guardian is gone forever.";
+  trashContent.innerHTML = `<div class="final-message-container" style="padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight monster"></div></div>`;
+  const textElement = document.getElementById("final-message");
+  typewriterEffect(textElement, message, 50);
   endEasterEgg();
 }
 
@@ -191,9 +276,9 @@ function chooseRedPill() {
 
   const message = `The dog nods. "Your reality is a construct. To see behind the veil, you must enter the code. Listen closely..."\n\nUp, Up, Down, Down, Left, Right, Left, Right, B, A\n\n"Now go. Awaken."`;
 
-  trashContent.innerHTML = `<div class="final-message-container" style="background-color: #0d2a0d; padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight"></div></div>`;
+  trashContent.innerHTML = `<div class="final-message-container" style="padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight"></div></div>`;
   const textElement = document.getElementById("final-message");
-  typewriterEffect(textElement, message, 50); // Removed callback
+  typewriterEffect(textElement, message, 50);
   endEasterEgg(); // Mark as emptied in the background
 }
 
@@ -207,10 +292,10 @@ function chooseBluePill() {
   if (trashWindow) trashWindow.style.height = ""; // Reset height to default
 
   const message =
-    "You take the blue pill. The dog sighs. You suddenly have a strong urge to check your email and organize your files. The moment of strange insight is gone.";
+    "You take the blue pill. The dog sighs. You suddenly have a strong urge to check your email and organize your files. Your daily mediocre life continues, the moment of strange insight is gone.";
 
-  trashContent.innerHTML = `<div class="final-message-container" style="background-color: #0d2a0d; padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight"></div></div>`;
+  trashContent.innerHTML = `<div class="final-message-container" style="padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight bluepill"></div></div>`;
   const textElement = document.getElementById("final-message");
-  typewriterEffect(textElement, message, 50); // Removed callback
+  typewriterEffect(textElement, message, 50);
   endEasterEgg(); // Mark as emptied in the background
 }
