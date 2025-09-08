@@ -331,9 +331,10 @@
 }
 
 /* =====================================================================
-     🗑️ Trash Easter Egg Styling (Revised)
+     🗑️ Trash Easter Egg Styling (Refactored)
    ===================================================================== */
 
+/* --- Animations --- */
 @keyframes dramaticReveal {
   from {
     opacity: 0;
@@ -345,29 +346,28 @@
   }
 }
 
-/* Blinking cursor for typewriter effect */
 @keyframes blink {
   50% {
     border-color: transparent;
   }
 }
 
-/* This is the main container for the revealed secret */
+/* --- Main Secret Container --- */
 #trash .secret-content.revealed {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Pushes dog to bottom */
+  justify-content: space-evenly; /* Balanced spacing */
   align-items: center;
   height: 100%;
-  padding: 20px;
+  padding: 20px 20px 0; /* Remove bottom padding */
   box-sizing: border-box;
   background-color: #0d2a0d; /* Dark earthy green */
   color: #e0e0e0; /* Off-white text */
   animation: dramaticReveal 0.5s ease-out;
-  overflow: hidden; /* Prevent scrollbars */
+  overflow: hidden;
 }
 
-/* Container for the text and buttons */
+/* --- Text and Content --- */
 .secret-main {
   display: flex;
   flex-direction: column;
@@ -380,7 +380,7 @@
   font-family: "VT323", monospace;
   font-size: 20px;
   line-height: 1.5;
-  min-height: 50px; /* Reserve space for text */
+  min-height: 50px; /* Reserve space for typewriter effect */
 }
 
 .highlight {
@@ -388,23 +388,23 @@
   font-weight: bold;
 }
 
+/* --- Game Options --- */
 .game-options-container {
   margin-top: 20px;
   display: flex;
-  justify-content: center; /* Center buttons */
-  flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .game-option {
   display: inline-block;
   padding: 6px 14px;
-  border: 2px solid #32cd32;
   min-width: 120px;
+  border: 2px solid #32cd32;
 
-  background-color: transparent;
+  background: transparent;
   color: #32cd32;
-  box-shadow: none; /* Remove old shadow */
 
   font-family: "VT323", monospace;
   font-size: 18px;
@@ -416,22 +416,30 @@
 
 .game-option:hover {
   background-color: #32cd32;
-  color: #0d2a0d; /* Dark green text on hover */
+  color: #0d2a0d; /* Dark green on hover */
 }
 
 .game-option:active {
   transform: scale(0.95);
 }
 
-/* The new dog image style */
+/* --- Guardian Dog Image --- */
 .guardian-dog-image {
   max-width: 250px;
   width: 60%;
   height: auto;
-  margin-top: 20px; /* Space above the dog */
-  align-self: center; /* Ensure it's centered */
+  margin-top: 20px;
+  align-self: center;
 }
 
+.guardian-dog-image.wise {
+  width: auto;
+  height: 230px;
+  object-fit: contain;
+  margin: 0; /* Reset margins for pill stage */
+}
+
+/* --- Finder Icon Fixes --- */
 #trash .finder-icon {
   user-select: none;
   -webkit-user-select: none; /* Safari */
@@ -441,45 +449,34 @@
   pointer-events: none;
 }
 
-/* Add this new class */
+/* --- Utility --- */
 .no-padding {
   padding: 0 !important;
 }
 
-/* --- Pill Stage Specific Styles --- */
-.pill-stage-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end; /* Push content to the bottom */
-  flex-grow: 1; /* Allow container to grow and fill space */
-  width: 100%;
-}
-
+/* --- Pill Stage --- */
 .pill-buttons-container {
   display: flex;
-  justify-content: space-evenly; /* Evenly space the items */
-  align-items: flex-end; /* Align items to their bottom edge */
-  width: 100%;
-  padding: 0 10px; /* Add some horizontal padding */
+  flex-direction: row; /* Horizontal layout */
+  justify-content: space-between;
+  align-items: center;
+  max-width: 420px;
+  padding: 0 10px;
   box-sizing: border-box;
-}
-
-.guardian-dog-image.wise {
-  width: auto;
-  height: 190px; /* Adjust height as needed */
-  object-fit: contain;
-  margin-bottom: 0; /* Remove bottom margin to align with bottom of window */
 }
 
 .pill-option {
   padding: 8px;
-  cursor: pointer;
+  margin: 0;
   border: 3px solid black;
-  transition: all 0.2s ease;
   font-family: "VT323", monospace;
   font-size: 16px;
   text-align: center;
-  margin-bottom: 10px; /* Add some margin to lift it from the very bottom */
+  border-radius: 30px;
+
+  cursor: pointer;
+  flex-shrink: 0; /* Prevent squishing */
+  transition: all 0.2s ease;
 }
 
 .pill-option:hover {
@@ -509,22 +506,27 @@
 .final-message-text {
   font-family: "VT323", monospace;
   font-size: 20px;
-  white-space: pre-wrap;
   line-height: 1.6;
+  white-space: pre-wrap;
 }
 
+.final-message-text.monster {
+  color: red; /* Retro red */
+}
+
+.final-message-text.redpill {
+  color: black;
+}
+
+.final-message-text.bluepill {
+  color: rgb(0, 68, 255);
+}
+
+/* --- Window Overrides --- */
 #trash.window {
-  background: #ffff;
+  background: #fff;
 }
 
 #trash.window .content {
   height: calc(100% - 25px);
-}
-
-.final-message-text.monster {
-  color: red; /* Retro red color */
-}
-
-.final-message-text.bluepill {
-  color: rgb(0, 68, 255); /* Retro red color */
 }

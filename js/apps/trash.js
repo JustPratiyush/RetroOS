@@ -156,19 +156,22 @@ function renderTrashContent() {
         );
         break;
 
+      // Find this block within the renderTrashContent function
+      // Find this block within the renderTrashContent function
+      // Find this block within the renderTrashContent function
       case "pills":
         const message = `'Then you are ready to see.'\n"The choice is yours...\nSee how deep the rabbit-hole goes."`;
+        // Replace the existing innerHTML with this new row-based structure
         trashContent.innerHTML = `
-          <div class="secret-content revealed">
-              <div id="guardian-text" class="guardian-text highlight"></div>
-              <div class="pill-stage-container">
-                   <img src="assets/icons/wise_dog.webp" alt="Wise Guardian Dog" class="guardian-dog-image wise">
-                   <div class="pill-buttons-container" style="opacity: 0;">
-                       <div class="pill-option blue" onclick="chooseBluePill()">Take the Blue Pill</div>
-                       <div class="pill-option red" onclick="chooseRedPill()">Take the Red Pill</div>
-                   </div>
-              </div>
-          </div>`;
+    <div class="secret-content revealed">
+        <div id="guardian-text" class="guardian-text highlight"></div>
+
+        <div class="pill-buttons-container" style="opacity: 0;">
+            <div class="pill-option blue" onclick="chooseBluePill()">Blue Pill</div>
+            <img src="assets/icons/wise_dog.webp" alt="Wise Guardian Dog" class="guardian-dog-image wise">
+            <div class="pill-option red" onclick="chooseRedPill()">Red Pill</div>
+        </div>
+    </div>`;
         textElement = document.getElementById("guardian-text");
         typewriterEffect(textElement, message, 50, () =>
           showOptions(trashContent)
@@ -276,7 +279,7 @@ function chooseRedPill() {
 
   const message = `The dog nods. "Your reality is a construct. To see behind the veil, you must enter the code. Listen closely..."\n\nUp, Up, Down, Down, Left, Right, Left, Right, B, A\n\n"Now go. Awaken."`;
 
-  trashContent.innerHTML = `<div class="final-message-container" style="padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight"></div></div>`;
+  trashContent.innerHTML = `<div class="final-message-container" style="padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight redpill"></div></div>`;
   const textElement = document.getElementById("final-message");
   typewriterEffect(textElement, message, 50);
   endEasterEgg(); // Mark as emptied in the background
