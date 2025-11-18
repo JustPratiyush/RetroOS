@@ -208,9 +208,16 @@ button {
   display: flex;
   align-items: center;
   height: 25px;
+  padding: 8px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.status-icon:hover {
+  background: rgba(255, 255, 255, 0.6);
 }
 .status-icon img {
-  height: 100%;
+  height: 25px !important;
   width: auto;
 }
 .battery {
@@ -221,6 +228,11 @@ button {
   border: 2px solid #000;
   border-radius: 2px;
   background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.battery:hover {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 .battery::after {
   content: "";
@@ -473,13 +485,124 @@ button {
 }
 #clockApp {
   width: 320px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
 #welcome-window {
   width: 500px;
   left: 30%;
   top: 30%;
   transform: translate(-50%, -50%);
+}
+
+/* css/main.css */
+
+#login-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998; /* Below boot screen (9999 typically) but above desktop */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  /* THE MAGIC: Blurs whatever is behind this div (the wallpaper/desktop) */
+  backdrop-filter: blur(15px) brightness(0.8);
+  -webkit-backdrop-filter: blur(15px) brightness(0.8);
+  background-color: rgba(0, 0, 0, 0.15); /* Slight tint */
+  transition: opacity 0.5s ease;
+}
+
+.login-container {
+  text-align: center;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.login-avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  margin-bottom: 15px;
+  object-fit: cover;
+}
+
+.login-name {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.login-input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+#login-password {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 8px 35px 8px 15px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  width: 180px;
+  transition: all 0.2s;
+  backdrop-filter: blur(5px);
+}
+
+#login-password::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#login-password:focus {
+  background: rgba(255, 255, 255, 0.4);
+  width: 190px;
+}
+
+#login-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  opacity: 0; /* Hidden until typing starts (optional, or set to 1) */
+  transition: opacity 0.2s;
+}
+
+#login-password:not(:placeholder-shown) + #login-btn {
+  opacity: 1;
+}
+
+.login-hint {
+  margin-top: 15px;
+  font-size: 12px;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

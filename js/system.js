@@ -16,7 +16,15 @@ const konamiCode = [
 ];
 let konamiIndex = 0;
 
-// Add this new function alongside your other window management functions like openWindow, closeWindow, etc.
+// --- CORE OS STATE & GLOBALS ---
+let zTop = 1000;
+const windowStates = {}; // States: 'closed', 'open', 'minimized'
+let isTerminalInitialized = false;
+let currentWallpaperState = localStorage.getItem("currentWallpaper") || "1";
+let currentWallpaperIndex = parseInt(
+  localStorage.getItem("currentWallpaperIndex") || "1",
+  10
+);
 
 /**
  * Closes all currently open or minimized windows.
@@ -34,8 +42,6 @@ function closeAllWindows(exceptions = []) {
     }
   }
 }
-
-// Now, find your existing activateMatrixTheme function and replace it with this updated version.
 
 function activateMatrixTheme() {
   // Close all windows to reduce distraction before showing the alert
@@ -61,16 +67,6 @@ window.addEventListener("keydown", (e) => {
     konamiIndex = 0;
   }
 });
-
-// --- CORE OS STATE & GLOBALS ---
-let zTop = 1000;
-const windowStates = {}; // States: 'closed', 'open', 'minimized'
-let isTerminalInitialized = false;
-let currentWallpaperState = localStorage.getItem("currentWallpaper") || "1";
-let currentWallpaperIndex = parseInt(
-  localStorage.getItem("currentWallpaperIndex") || "1",
-  10
-);
 
 // --- WINDOW & ICON MANAGEMENT ---
 
@@ -112,7 +108,6 @@ function openWindow(id) {
     setAppIconActive(id, true);
     if (id === "finder") renderFinderContent("desktop");
     if (id === "trash") renderTrashContent();
-    if (id === "clockApp") updateClock(true);
     if (id === "terminal" && !isTerminalInitialized) {
       initTerminal();
       isTerminalInitialized = true;
@@ -168,9 +163,72 @@ function createMessageWindow(title, message) {
   bringToFront(win);
 }
 
+/**
+ * Opens a status popover window (Battery, Wi-Fi, Clock) right below its icon.
+ * @param {string} id - The ID of the window to open (e.g., 'batteryApp').
+ * @param {HTMLElement} iconEl - The top bar icon element that was clicked.
+ */
+function openStatusWindow(id, iconEl) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  // Close all open menus/popovers before opening a new one
+  closeAllMenus();
+  closeWindow("clockApp");
+  closeWindow("wifiApp");
+  closeWindow("batteryApp");
+
+  // Check if the window was already open (to toggle it off)
+  const currentState = windowStates[id] || "closed";
+  if (currentState === "open") {
+    closeWindow(id);
+    return;
+  }
+
+  // Update content for the specific app before opening
+  if (id === "clockApp" && typeof updateClockContent === "function") {
+    updateClockContent(true); // Forces a content refresh
+  }
+  if (id === "batteryApp" && typeof updateBatteryContent === "function") {
+    updateBatteryContent(true); // Forces a content refresh
+  }
+  if (id === "wifiApp" && typeof updateWifiContent === "function") {
+    updateWifiContent(); // Forces a content refresh
+  }
+
+  // Position the window right below the icon
+  const rect = iconEl.getBoundingClientRect();
+  const rightIconsEl = document.querySelector(".top-bar .right-icons");
+
+  if (!rightIconsEl) {
+    console.error("Could not find .top-bar .right-icons element");
+    return;
+  }
+
+  const rightIcons = rightIconsEl.getBoundingClientRect();
+
+  // Calculate position: align the right edge of the window with the right edge of the icons container
+  // Use appropriate width for each popover (clock needs more space)
+  const windowWidth = id === "clockApp" ? 320 : 250;
+  el.style.right = window.innerWidth - rightIcons.right + "px";
+  el.style.top = rect.bottom + 5 + "px";
+  el.style.width = windowWidth + "px";
+  el.style.position = "absolute"; // Ensure it positions relative to the body/viewport
+  el.style.left = "auto"; // Reset left to ensure right positioning works
+  el.style.transform = "none"; // Remove any transform that might interfere with positioning
+
+  // Open the window
+  el.style.display = "block";
+  windowStates[id] = "open";
+  bringToFront(el);
+}
+
 // --- DRAGGABILITY ---
 
 function makeDraggable(win) {
+  // Status windows should not be draggable
+  if (win.classList.contains("status-window")) return;
+
   const header = win.querySelector(".title");
   if (!header) return;
 
@@ -279,7 +337,6 @@ function makeIconDraggable(icon) {
     window.addEventListener("touchend", dragEnd);
   }
 
-  // This function moves the icon
   function dragMove(e) {
     if (!isDragging) return;
     if (e.type === "touchmove") e.preventDefault(); // Prevent page scroll
@@ -341,6 +398,11 @@ function closeAllMenus() {
   document
     .querySelectorAll(".top-bar .icon")
     .forEach((i) => i.classList.remove("active"));
+
+  // Also close all status popovers when a menu is clicked
+  closeWindow("clockApp");
+  closeWindow("wifiApp");
+  closeWindow("batteryApp");
 }
 
 function menuAction(action) {
@@ -375,6 +437,12 @@ function menuAction(action) {
   }
 }
 
+/**
+ * Updates the battery icon and calls the function to update the popover content.
+ */
+/**
+ * Updates the battery icon and calls the function to update the popover content.
+ */
 function updateBatteryStatus() {
   if (!("getBattery" in navigator)) {
     const batteryIconEl = document.getElementById("battery-icon");
@@ -384,20 +452,32 @@ function updateBatteryStatus() {
   navigator.getBattery().then(function (battery) {
     const batteryLevelEl = document.getElementById("battery-level");
     const batteryIconEl = document.getElementById("battery-icon");
+
     function updateAllBatteryInfo() {
       if (!batteryLevelEl || !batteryIconEl) return;
+
       const levelPercent = Math.round(battery.level * 100);
       batteryLevelEl.style.width = levelPercent + "%";
       batteryLevelEl.style.backgroundColor =
         levelPercent < 20 ? "#ff6b6b" : "#32cd32";
-      batteryIconEl.title = `Battery: ${levelPercent}%`;
+      batteryIconEl.title = `Battery: ${levelPercent}% ${
+        battery.charging ? "(Charging)" : ""
+      }`;
+
+      // Safety check added: only call updateBatteryContent if the function exists
+      if (
+        windowStates["batteryApp"] === "open" &&
+        typeof updateBatteryContent === "function"
+      ) {
+        updateBatteryContent();
+      }
     }
+
     updateAllBatteryInfo();
     battery.addEventListener("levelchange", updateAllBatteryInfo);
+    battery.addEventListener("chargingchange", updateAllBatteryInfo);
   });
 }
-
-// In js/system.js
 
 function toggleAppDrawer() {
   const appDrawer = document.getElementById("app-drawer");

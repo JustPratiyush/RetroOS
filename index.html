@@ -69,18 +69,29 @@
 
         <div id="boot-percent" class="boot-percent">0%</div>
 
-        <button
-          id="boot-enter"
-          class="boot-enter"
-          aria-hidden="true"
-          style="display: none"
-        >
-          ENTER
-        </button>
-
         <div id="boot-caption" class="boot-caption">Starting RetroOS...</div>
       </div>
     </div>
+
+    <!-- LOGIN SCREEN START -->
+    <div id="login-screen" style="display: flex">
+      <div class="login-container">
+        <div class="login-avatar">
+          <img src="assets/icons/me.png" alt="User Avatar" />
+        </div>
+        <div class="login-name">Abhinav Kuchhal</div>
+        <div class="login-input-wrapper">
+          <input
+            type="password"
+            id="login-password"
+            placeholder="Enter Password"
+          />
+          <button id="login-btn" onclick="attemptLogin()">➝</button>
+        </div>
+        <div class="login-hint">Hint: Just press Enter</div>
+      </div>
+    </div>
+    <!-- LOGIN SCREEN END -->
 
     <div class="grain"></div>
 
@@ -128,13 +139,28 @@
         </div>
       </div>
       <div class="right-icons">
-        <div class="status-icon">
+        <!-- Wi-Fi Status Icon -->
+        <div
+          class="status-icon"
+          id="wifi-icon"
+          onclick="openStatusWindow('wifiApp', this)"
+        >
           <img src="assets/icons/wifi.webp" alt="Wi-Fi" />
         </div>
-        <div id="battery-icon" class="status-icon battery">
+        <!-- Battery Status Icon -->
+        <div
+          id="battery-icon"
+          class="status-icon battery"
+          onclick="openStatusWindow('batteryApp', this)"
+        >
           <div id="battery-level" class="battery-level"></div>
         </div>
-        <div class="clock" id="clock" onclick="openWindow('clockApp')">
+        <!-- Clock Status Icon -->
+        <div
+          class="clock"
+          id="clock"
+          onclick="openStatusWindow('clockApp', this)"
+        >
           --:--
         </div>
       </div>
@@ -551,9 +577,10 @@
       </div>
     </div>
 
-    <div id="clockApp" class="window" style="display: none">
+    <!-- Clock App (New simplified style, acting as a popover) -->
+    <div id="clockApp" class="window status-window" style="display: none">
       <div class="title">
-        <span>Clock</span>
+        <span>Date & Time</span>
         <span class="controls">
           <span
             class="ctrl ctrl-close"
@@ -572,7 +599,51 @@
           text-align: center;
         "
       >
-        <div id="bigClock" class="big-clock-display"></div>
+        <!-- Content inserted by JS (updateClockContent) -->
+      </div>
+    </div>
+
+    <!-- NEW: Wi-Fi Status Popover -->
+    <div id="wifiApp" class="window status-window" style="display: none">
+      <div class="title">
+        <span>Network Status</span>
+        <span class="controls">
+          <span
+            class="ctrl ctrl-close"
+            title="Close"
+            onclick="closeWindow('wifiApp')"
+            >×</span
+          >
+        </span>
+      </div>
+      <div
+        class="content"
+        id="wifiContent"
+        style="padding: 10px; min-width: 200px"
+      >
+        <!-- Content inserted by JS (updateWifiContent) -->
+      </div>
+    </div>
+
+    <!-- NEW: Battery Status Popover -->
+    <div id="batteryApp" class="window status-window" style="display: none">
+      <div class="title">
+        <span>Battery Status</span>
+        <span class="controls">
+          <span
+            class="ctrl ctrl-close"
+            title="Close"
+            onclick="closeWindow('batteryApp')"
+            >×</span
+          >
+        </span>
+      </div>
+      <div
+        class="content"
+        id="batteryContent"
+        style="padding: 10px; min-width: 250px"
+      >
+        <!-- Content inserted by JS (updateBatteryContent) -->
       </div>
     </div>
 
@@ -776,6 +847,7 @@
 
     <script src="js/main.js" defer></script>
     <script src="js/system.js" defer></script>
+    <script src="js/auth.js" defer></script>
 
     <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 
@@ -783,7 +855,8 @@
     <script src="js/apps/music.js" defer></script>
     <script src="js/apps/finder.js" defer></script>
     <script src="js/apps/trash.js" defer></script>
-    <script src="js/apps/clock.js" defer></script>
+    <!-- UPDATED SCRIPT NAME -->
+    <script src="js/apps/datetime_battery_wifi.js" defer></script>
     <script src="js/apps/terminal.js" defer></script>
     <script src="js/mail.js" defer></script>
 

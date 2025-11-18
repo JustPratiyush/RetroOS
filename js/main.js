@@ -8,37 +8,17 @@
 // --- BOOT SEQUENCE ---
 document.addEventListener("DOMContentLoaded", () => {
   const bootScreen = document.getElementById("boot-screen");
-  const enterBtn = document.getElementById("boot-enter");
-  let hasShownWelcome = false;
 
   function finishBoot() {
-    const startupSound = new Audio("assets/sounds/startup-sound.mp3");
-    startupSound.volume = 0.5;
-    startupSound
-      .play()
-      .catch((e) => console.log("Could not play startup sound:", e));
+    // NOTE: Startup sound removed from here. It plays upon successful login in js/auth.js.
 
     bootScreen.classList.add("boot-hide");
     setTimeout(() => {
       bootScreen.style.display = "none";
-      initApp();
 
-      if (!hasShownWelcome) {
-        const welcomeWindow = createWindowFromTemplate(
-          "welcome-template",
-          "projects-container"
-        ); // Assuming 'projects-container' exists
-        if (welcomeWindow) {
-          // Override the close function to just remove the element
-          const closeBtn = welcomeWindow.querySelector(".ctrl-close");
-          if (closeBtn)
-            closeBtn.setAttribute(
-              "onclick",
-              "document.getElementById('welcome-window').remove()"
-            );
-        }
-        hasShownWelcome = true;
-      }
+      // Initialize the App (Sets up wallpaper, icons, etc.)
+      // This runs behind the now-visible login screen.
+      initApp();
     }, 1000);
   }
 
@@ -49,10 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const assets = Array.from(document.images);
   const total = assets.length;
 
+  // Function to transition automatically
+  function transitionToLogin() {
+    caption.textContent = "Boot Complete";
+    setTimeout(finishBoot, 500); // 500ms delay before transitioning to login
+  }
+
   if (total === 0) {
     caption.textContent = "Ready to Start";
-    enterBtn.style.display = "inline-block";
-    enterBtn.focus();
+    transitionToLogin(); // Auto-transition if no assets
   } else {
     assets.forEach((img) => {
       const image = new Image();
@@ -64,24 +49,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (percentEl) percentEl.textContent = `${percent}%`;
         if (loaded === total) {
           setTimeout(() => {
-            caption.textContent = "Ready to Start";
-            enterBtn.style.display = "inline-block";
-            enterBtn.focus();
+            transitionToLogin(); // Auto-transition when all assets are loaded
           }, 300);
         }
       };
     });
   }
 
-  enterBtn?.addEventListener("click", finishBoot);
-  window.addEventListener("keydown", function onKey(e) {
-    if (e.key === "Enter" && enterBtn?.style.display !== "none") {
-      finishBoot();
-      window.removeEventListener("keydown", onKey);
-    }
-  });
+  // Removed event listeners for "ENTER" button/key.
 });
 
+// --- MAIN APP INITIALIZER ---
 // --- MAIN APP INITIALIZER ---
 function initApp() {
   document.querySelectorAll(".window").forEach((win) => makeDraggable(win));
@@ -97,8 +75,26 @@ function initApp() {
   }
 
   window.addEventListener("click", (e) => {
-    if (!e.target.closest(".top-bar .icon") && !e.target.closest(".menu")) {
+    // Check if clicking on status icons or status windows
+    const isStatusIcon =
+      e.target.closest(".status-icon") ||
+      e.target.closest(".clock") ||
+      e.target.closest("#battery-icon");
+    const isStatusWindow = e.target.closest(".status-window");
+
+    // Close menus if clicking outside menu/icon areas (but allow status icons to handle their own clicks)
+    if (
+      !e.target.closest(".top-bar .icon") &&
+      !e.target.closest(".menu") &&
+      !isStatusIcon
+    ) {
       closeAllMenus();
+      // Also close status windows when clicking outside them (but not when clicking on status icons)
+      if (!isStatusWindow) {
+        closeWindow("clockApp");
+        closeWindow("wifiApp");
+        closeWindow("batteryApp");
+      }
     }
     const appDrawer = document.getElementById("app-drawer");
     const hamburgerIcon = document.getElementById("hamburger-icon");
@@ -134,6 +130,14 @@ function initApp() {
 
   if (typeof renderTrashContent === "function") renderTrashContent();
   updateBatteryStatus();
+
+  // FIX: Call the correct combined initializer if it exists, or update the clock
+  if (typeof initStatusApps === "function") {
+    initStatusApps();
+  } else if (typeof updateClockContent === "function") {
+    // Fallback if initStatusApps failed but Clock is available
+    updateClockContent();
+  }
+
   if (typeof initCalculator === "function") initCalculator();
-  if (typeof initClock === "function") initClock();
 }
