@@ -20,7 +20,7 @@ This application has requested unusual system permissions and may compromise sys
 — RetroOS Security Monitor`
   },
   {
-    from: "Riya", sender: "riya.personal@mail.com",
+    from: "Lela", sender: "lela.personal@mail.com",
     subject: "Why aren't you picking up?",
     date: "Jan 18, 2026", read: false,
     body: `Abhinav,
@@ -29,7 +29,7 @@ I've been calling you all evening and you haven't answered.
 
 Are you buried in code again? Just text me back when you see this.
 
-— Riya`
+— Lela`
   },
   {
     from: "Mr. Ditkovich", sender: "rent@building-office.com",
