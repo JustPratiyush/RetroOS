@@ -117,6 +117,28 @@ select {
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.9);
 }
 
+/* --- Loaders --- */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.retro-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  color: #000;
+  height: 100%;
+  width: 100%;
+}
+.retro-loader::after {
+  content: '█';
+  animation: blink 1s step-end infinite;
+  margin-left: 4px;
+  font-size: 20px;
+}
+
 /* --- General UI --- */
 .grain {
   position: fixed;
@@ -512,6 +534,31 @@ button {
   transform: translateY(10px);
   transition: all 140ms;
 }
+
+/* Notification Badge */
+.dock-badge {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 4;
+  background-color: #ff3b30;
+  color: #fff;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  font-weight: bold;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  border: 1px solid #fff;
+  pointer-events: none;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+
 .dock-icon:hover {
   transform: translateY(-12px);
 }
@@ -721,4 +768,68 @@ button {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* --- Settings App --- */
+.settings-content {
+  padding: 16px;
+  max-width: 100%;
+}
+.settings-section {
+  margin-bottom: 16px;
+}
+.settings-heading {
+  margin: 0 0 4px 0;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 16px;
+  color: #000;
+}
+.settings-desc {
+  font-family: "VT323", monospace;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.settings-divider {
+  height: 2px;
+  background: var(--border-dark);
+  margin: 16px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.settings-btn-group {
+  display: flex;
+  gap: 8px;
+}
+.settings-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--panel-light);
+  border: 2px outset var(--border-light);
+  padding: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  flex: 1;
+  color: #000;
+  text-align: center;
+}
+.settings-btn:active {
+  border-style: inset;
+  background: #d4d4d4;
+}
+.settings-btn img {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+.custom-upload-btn {
+  flex-direction: row;
+  padding: 10px;
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
 }

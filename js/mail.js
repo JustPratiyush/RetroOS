@@ -144,6 +144,20 @@ Keep building.
 ];
 
 // --- INBOX RENDERING ---
+function updateMailBadge() {
+  const unread = inboxEmails.filter(e => !e.read).length;
+  const badge = document.getElementById("dock-mail-badge");
+  if (badge) {
+    if (unread > 0) {
+      badge.textContent = unread;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+      badge.textContent = '';
+    }
+  }
+}
+
 function renderInbox() {
   const listEl = document.getElementById("mail-list");
   if (!listEl) return;
@@ -161,10 +175,12 @@ function selectEmail(index) {
   if (!email) return;
 
   email.read = true;
+  updateMailBadge();
 
+  // Internal app badge (if any)
   const unread = inboxEmails.filter(e => !e.read).length;
-  const badge = document.getElementById("mail-badge");
-  if (badge) badge.textContent = unread > 0 ? unread : "";
+  const appBadge = document.getElementById("mail-badge");
+  if (appBadge) appBadge.textContent = unread > 0 ? unread : "";
 
   document.querySelectorAll(".mail-list-item").forEach((item, i) => {
     item.classList.toggle("active", i === index);
@@ -185,124 +201,18 @@ function selectEmail(index) {
     <div class="mail-detail-body">${email.body}</div>`;
 }
 
-// --- VIEW TOGGLING ---
-function setMailView(view) {
-  const isInbox = view === "inbox";
-  document.getElementById("mail-list").style.display  = isInbox ? "flex" : "none";
-  document.getElementById("mail-detail").style.display = isInbox ? "flex" : "none";
-  document.getElementById("mail-compose-pane").style.display = isInbox ? "none" : "flex";
-  document.getElementById("mail-inbox-btn")?.classList.toggle("active", isInbox);
-  document.getElementById("mail-compose-btn")?.classList.toggle("active", !isInbox);
-  if (isInbox) renderInbox();
-}
-const showInboxView   = () => setMailView("inbox");
-const showComposeView = () => setMailView("compose");
-
-// --- MAIL SERVICE ---
-class MailService {
-  constructor() {
-    this.apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:3001/api' : '/api';
-    this.isSubmitting = false;
-  }
-
-  async sendMessage(formData) {
-    if (this.isSubmitting) throw new Error('Please wait, message is being sent...');
-    this.isSubmitting = true;
-    try {
-      const res = await fetch(`${this.apiUrl}/send-message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || `HTTP error! status: ${res.status}`);
-      return result;
-    } finally {
-      this.isSubmitting = false;
-    }
-  }
-
-  async testConnection() {
-    try {
-      const res = await fetch(`${this.apiUrl}/health`);
-      const result = await res.json();
-      return result.success;
-    } catch {
-      return false;
-    }
-  }
-}
-
-const mailService = new MailService();
-
-// --- FORM SUBMISSION ---
-function initMailForm() {
-  const mailForm = document.querySelector('#mail-compose-pane form');
-  if (!mailForm) return;
-  ['action', 'method', 'enctype'].forEach(attr => mailForm.removeAttribute(attr));
-
-  mailForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const submitBtn = mailForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    const formData = new FormData(mailForm);
-    const messageData = {
-      email: formData.get('email'),
-      subject: formData.get('subject'),
-      message: formData.get('message'),
-    };
-
-    if (!messageData.email || !messageData.subject || !messageData.message) {
-      showNotification('Please fill in all required fields.', 'error');
-      return;
-    }
-
-    submitBtn.textContent = 'Sending...';
-    submitBtn.disabled = true;
-
-    try {
-      const result = await mailService.sendMessage(messageData);
-      if (result.success) {
-        showNotification("Message sent successfully! I'll get back to you soon.", 'success');
-        mailForm.reset();
-        setTimeout(() => closeWindow('mail'), 2000);
-      } else {
-        throw new Error(result.error || 'Failed to send message');
-      }
-    } catch (error) {
-      showNotification(error.message || 'Failed to send message. Please try again later.', 'error');
-    } finally {
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
-    }
-  });
-}
-
-// --- NOTIFICATIONS ---
-function showNotification(message, type = 'info') {
-  document.querySelectorAll('.mail-notification').forEach(n => n.remove());
-  const n = document.createElement('div');
-  n.className = `mail-notification mail-notification-${type}`;
-  const dismiss = () => { n.style.animationName = 'slideOutRight'; setTimeout(() => n.remove(), 300); };
-  n.textContent = message;
-  document.body.appendChild(n);
-  n.addEventListener('click', dismiss);
-  setTimeout(dismiss, 5000);
-}
-
-async function checkBackendStatus() {
-  if (!(await mailService.testConnection())) {
-    showNotification('Email service is currently offline. Please try again later.', 'error');
-  }
-}
-
 // --- INIT ---
 document.addEventListener('DOMContentLoaded', () => {
-  initMailForm();
+  updateMailBadge(); // Set initial badge count
+
   const origOpen = window.openWindow;
   if (origOpen) {
     window.openWindow = function(id) {
-      if (id === 'mail') setTimeout(() => { renderInbox(); checkBackendStatus(); }, 500);
+      if (id === 'mail') {
+        setTimeout(() => { 
+          renderInbox(); 
+        }, 500);
+      }
       return origOpen.apply(this, arguments);
     };
   }

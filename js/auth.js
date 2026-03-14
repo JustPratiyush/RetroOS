@@ -50,6 +50,12 @@ function attemptLogin() {
   const loginScreen = document.getElementById("login-screen");
   const passwordInput = document.getElementById("login-password");
 
+  // --- Admin Mode Check ---
+  const enteredPassword = passwordInput ? passwordInput.value : "";
+  const ADMIN_PASSWORD = "RetroAdmin$123";
+  window.isAdminMode = (enteredPassword === ADMIN_PASSWORD);
+  window.adminPassword = window.isAdminMode ? enteredPassword : "";
+
   // Simulate processing delay
   if (passwordInput) passwordInput.disabled = true;
 
@@ -67,6 +73,11 @@ function attemptLogin() {
     setTimeout(() => {
       // Finally hide the element completely
       if (loginScreen) loginScreen.style.display = "none";
+
+      // Apply admin mode CSS class
+      if (window.isAdminMode) {
+        document.body.classList.add("admin-mode");
+      }
 
       // Start the background music
       if (typeof startBackgroundMusic === "function") {

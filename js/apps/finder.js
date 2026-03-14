@@ -12,9 +12,7 @@ const finderData = {
     { src: "assets/album/steve with mustache.jpg",    label: "steve with mustache.jpg",   title: "steve with mustache" },
   ],
   "system architecture blueprint": [
-    { src: "assets/System_Architecture_Blueprint/Javascript hell, I should have used React. .png", label: "Javascript hell...", title: "Javascript hell" },
-    { src: "assets/System_Architecture_Blueprint/Macintosh OS 2.webp", label: "Macintosh OS 2.webp", title: "Macintosh OS 2" },
-    { src: "assets/System_Architecture_Blueprint/macintosh OS 1.png",  label: "macintosh OS 1.png",  title: "macintosh OS 1" },
+    { src: "assets/Files/architecture.png", label: "architecture.png", title: "Architecture Blueprint" },
   ],
 };
 
@@ -37,12 +35,7 @@ function renderFinderContent(location) {
     document.querySelectorAll(".desktop-icon").forEach((icon) => {
       const name = icon.querySelector("span")?.textContent || "Untitled";
       if (icon.classList.contains("android-folder")) {
-        const thumbs = Array.from(icon.querySelectorAll(".android-folder-grid img"))
-          .map(img => `<img src="${img.src}" style="width:14px;height:14px;object-fit:contain;border-radius:3px;" />`)
-          .join("");
-        mainContainer.innerHTML += `<div class="finder-icon" onclick="toggleSocialsFolder(event)">
-          <div style="width:64px;height:64px;background:#e0e0e0;border:2px solid #999;border-radius:14px;display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:6px;box-sizing:border-box;margin:0 auto;box-shadow:2px 2px 0 rgba(0,0,0,0.15);">${thumbs}</div>
-          <span>${name}</span></div>`;
+        return; // Exclude My Socials from Finder
       } else {
         const imgSrc = icon.querySelector("img")?.src || "";
         mainContainer.innerHTML += `<div class="finder-icon" ondblclick="handleFinderClick('${name.replace(/'/g, "\\'")}')"><img src="${imgSrc}" alt="${name}"><span>${name}</span></div>`;

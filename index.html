@@ -58,6 +58,8 @@
     <link rel="stylesheet" href="css/terminal.css" />
     <link rel="stylesheet" href="css/music.css" />
     <link rel="stylesheet" href="css/matrix.css" />
+    <link rel="stylesheet" href="css/guestbook.css" />
+    <link rel="stylesheet" href="css/noticeboard.css" />
   </head>
   <body>
     <div id="boot-screen" aria-hidden="false">
@@ -124,7 +126,7 @@
     </div>
 
     <!-- Android-style Social Folder -->
-    <div id="socials-folder" class="android-folder desktop-icon" style="top: 100px; right: 20px; left: auto; width: 100px;" onclick="toggleSocialsFolder(event)">
+    <div id="socials-folder" class="android-folder desktop-icon" style="top: 80px; right: 20px; left: auto; width: 100px;" onclick="toggleSocialsFolder(event)">
       <div class="android-folder-box">
         <div class="android-folder-grid">
           <img src="assets/icons/twitter.webp" alt="Twitter" />
@@ -136,15 +138,27 @@
       <span>My Socials</span>
     </div>
 
+    <!-- Guestbook Desktop Icon -->
+    <div id="icon-guestbook" class="desktop-icon" style="top: 180px; right: 20px; left: auto; width: 100px;" onclick="openWindow('guestbook')">
+      <img src="assets/icons/guestbook.png" alt="Guestbook" />
+      <span>Guestbook</span>
+    </div>
+
+    <!-- Notice Board Desktop Icon -->
+    <div id="icon-noticeboard" class="desktop-icon" style="top: 280px; right: 20px; left: auto; width: 100px;" onclick="openWindow('noticeboard')">
+      <img src="assets/icons/notice-board.png" alt="Notice Board" />
+      <span>Notice Board</span>
+    </div>
+
     <!-- Expanded Socials Popup -->
     <div id="socials-popup" class="socials-popup" style="display: none;">
       <div class="socials-popup-title">My Socials</div>
       <div class="socials-popup-grid">
-        <a href="https://x.com/abhinavkuchhal" target="_blank" class="socials-popup-item">
+        <a href="https://x.com/JustPratiyush" target="_blank" class="socials-popup-item">
           <img src="assets/icons/twitter.webp" alt="Twitter" style="border-radius: 12px; border: 2px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,0.4);" />
           <span>Twitter</span>
         </a>
-        <a href="https://www.instagram.com/abhinavkuchhal/" target="_blank" class="socials-popup-item">
+        <a href="https://www.instagram.com/abhinavkuchhal7/" target="_blank" class="socials-popup-item">
           <img src="assets/icons/instagram.webp" alt="Instagram" style="border-radius: 12px; border: 2px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,0.4);" />
           <span>Instagram</span>
         </a>
@@ -156,7 +170,7 @@
           <img src="assets/icons/linkedin.webp" alt="LinkedIn" style="border-radius: 12px; border: 2px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,0.4);" />
           <span>LinkedIn</span>
         </a>
-        <a href="https://github.com/abhinavkuchhal" target="_blank" class="socials-popup-item">
+        <a href="https://github.com/JustPratiyush" target="_blank" class="socials-popup-item">
           <img src="assets/icons/github.webp" alt="GitHub" style="border-radius: 12px; border: 2px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,0.4);" />
           <span>GitHub</span>
         </a>
@@ -312,6 +326,7 @@
         data-app="mail"
         onclick="openWindow('mail')"
       >
+        <span id="dock-mail-badge" class="dock-badge" style="display:none;"></span>
         <img src="assets/icons/mail.webp" alt="mail" />
         <span class="label">Mail</span>
       </div>
@@ -555,59 +570,10 @@
         </span>
       </div>
       <div class="content mail-app">
-        <!-- Sidebar -->
-        <div class="mail-sidebar">
-          <div class="mail-sidebar-item active" id="mail-inbox-btn" onclick="showInboxView()">
-            📥 Inbox <span class="mail-badge" id="mail-badge">7</span>
-          </div>
-          <div class="mail-sidebar-item" id="mail-compose-btn" onclick="showComposeView()">
-            ✏️ Compose
-          </div>
-        </div>
-        <!-- Email List -->
-        <div class="mail-list" id="mail-list"></div>
-        <!-- Email Detail / Compose Pane -->
-        <div class="mail-detail" id="mail-detail">
+        <div class="mail-list" id="mail-list" style="width: 320px; min-width: 320px;"></div>
+        <!-- Email Detail Pane -->
+        <div class="mail-detail" id="mail-detail" style="display:flex">
           <div class="mail-detail-placeholder">Select an email to read</div>
-        </div>
-        <!-- Compose Form (hidden by default) -->
-        <div class="mail-compose-pane" id="mail-compose-pane" style="display:none">
-          <form>
-            <div class="mail-header">
-              <label>To:</label>
-              <input type="text" value="Abhinav Kuchhal(Me)" readonly />
-            </div>
-            <div class="mail-header">
-              <label for="email-from">From:</label>
-              <input
-                id="email-from"
-                type="email"
-                name="email"
-                placeholder="yourEmail@example.com"
-                required
-              />
-            </div>
-            <div class="mail-header">
-              <label for="email-subject">Subject:</label>
-              <input
-                id="email-subject"
-                type="text"
-                name="subject"
-                placeholder="Regarding your awesome project..."
-                required
-              />
-            </div>
-            <div class="mail-body">
-              <textarea
-                name="message"
-                placeholder="Your message..."
-                required
-              ></textarea>
-            </div>
-            <div class="mail-footer">
-              <button type="submit">Send Message</button>
-            </div>
-          </form>
         </div>
       </div>
     </div>
@@ -641,7 +607,7 @@
       </div>
     </div>
 
-    <div id="settings" class="window" style="display: none">
+    <div id="settings" class="window" style="display: none; width: 340px;">
       <div class="title">
         <span>Settings</span>
         <span class="controls">
@@ -652,12 +618,6 @@
             >−</span
           >
           <span
-            class="ctrl ctrl-max"
-            title="Maximize"
-            onclick="maximizeWindow('settings')"
-            >O</span
-          >
-          <span
             class="ctrl ctrl-close"
             title="Close"
             onclick="closeWindow('settings')"
@@ -665,18 +625,38 @@
           >
         </span>
       </div>
-      <div class="content">
-        <div style="margin-bottom: 8px">Wallpaper:</div>
-        <button onclick="setWallpaper('classic')">Classic</button>
-        <button onclick="setWallpaper('alt')">Alternate</button>
-        <div style="margin-top: 12px">Effects:</div>
-        <label>
-          <input
-            type="checkbox"
-            id="grayscaleToggle"
-            onchange="toggleGrayscale(this.checked)"
-          />Grayscale wallpaper
-        </label>
+      <div class="content settings-content">
+        
+        <div class="settings-section">
+          <h3 class="settings-heading">Theme & Appearances</h3>
+          <div class="settings-desc">Select a built-in OS wallpaper. Classic includes the OG 90s grayscale effect.</div>
+          <div class="settings-btn-group">
+            <button class="settings-btn" onclick="setWallpaper('classic', true)">
+              <img src="assets/icons/monitor.png" alt="" onerror="this.src='assets/icons/TxtIcon.webp'"> Classic
+            </button>
+            <button class="settings-btn" onclick="setWallpaper('alt', true)">
+              <img src="assets/icons/monitor.png" alt="" onerror="this.src='assets/icons/folderIcon.webp'"> Alternate
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <div class="settings-section">
+          <h3 class="settings-heading">Custom Wallpaper</h3>
+          <div class="settings-desc">Upload your own background image. (Stored locally).</div>
+          <label class="settings-btn custom-upload-btn">
+             Upload Image 
+            <input 
+              type="file" 
+              id="customWallpaperInput" 
+              accept="image/*" 
+              onchange="handleCustomWallpaperUpload(event)" 
+              style="display: none;" 
+            />
+          </label>
+        </div>
+
       </div>
     </div>
 
@@ -832,6 +812,91 @@
       </div>
     </div>
 
+    <!-- Guestbook App -->
+    <div id="guestbook" class="window" style="display: none; width: 700px; height: 480px;">
+      <div class="title">
+        <span>Guestbook <span class="admin-badge">ADMIN</span></span>
+        <span class="controls">
+          <span class="ctrl ctrl-min" title="Minimize" onclick="minimizeWindow('guestbook')">−</span>
+          <span class="ctrl ctrl-max" title="Maximize" onclick="maximizeWindow('guestbook')">O</span>
+          <span class="ctrl ctrl-close" title="Close" onclick="closeWindow('guestbook')">×</span>
+        </span>
+      </div>
+      <div class="content guestbook-content">
+        <!-- View 1: List View -->
+        <div id="gb-view-list">
+          <div class="gb-list-header">
+            <h3>📖 Visitor Guestbook</h3>
+            <button class="gb-btn gb-btn-send" onclick="showGbComposeView()">Post your own message</button>
+          </div>
+          <div class="guestbook-list" id="guestbook-list"></div>
+        </div>
+
+        <!-- View 2: Detail View -->
+        <div id="gb-view-detail" style="display:none;">
+          <div class="gb-detail-header">
+            <button class="gb-btn" onclick="showGbListView()">Back</button>
+            <h3>Message Details</h3>
+            <div style="width: 60px;"></div> <!-- Spacer -->
+          </div>
+          <div class="guestbook-detail-body" id="guestbook-detail-body">
+          </div>
+        </div>
+
+        <!-- View 3: Compose View -->
+        <div id="gb-view-compose" style="display:none;">
+          <div class="gb-detail-header">
+            <button class="gb-btn" onclick="showGbListView()">Back</button>
+            <h3>Write a Message</h3>
+            <div style="width: 60px;"></div> <!-- Spacer -->
+          </div>
+          <div class="guestbook-compose">
+            <div id="gb-warning" class="gb-warning"></div>
+            <input type="text" id="gb-name-input" placeholder="Your name..." maxlength="50" />
+            <textarea id="gb-message-input" placeholder="Leave a message..." maxlength="500"></textarea>
+            <div class="guestbook-compose-actions">
+              <button class="gb-btn gb-btn-send" onclick="submitGuestbookEntry()">Post Message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notice Board App -->
+    <div id="noticeboard" class="window" style="display: none; width: 600px; height: 500px;">
+      <div class="title">
+        <span>Notice Board <span class="admin-badge">ADMIN</span></span>
+        <span class="controls">
+          <span class="ctrl ctrl-min" title="Minimize" onclick="minimizeWindow('noticeboard')">−</span>
+          <span class="ctrl ctrl-max" title="Maximize" onclick="maximizeWindow('noticeboard')">O</span>
+          <span class="ctrl ctrl-close" title="Close" onclick="closeWindow('noticeboard')">×</span>
+        </span>
+      </div>
+      <div class="content noticeboard-content">
+        <div class="noticeboard-header">
+          <h3>📌 Developer Notices</h3>
+          <button class="nb-btn admin-only" onclick="showNbComposeForm()">+ New Post</button>
+        </div>
+        <div class="noticeboard-posts" id="noticeboard-posts">
+          <div class="noticeboard-empty">Loading notices...</div>
+        </div>
+        <div id="nb-compose-form" class="nb-compose" style="display:none;">
+          <input type="text" id="nb-compose-title" placeholder="Notice title..." />
+          <select id="nb-compose-tag">
+            <option value="update">📦 Update</option>
+            <option value="announce">📢 Announcement</option>
+            <option value="warning">⚠️ Warning</option>
+            <option value="info">ℹ️ Info</option>
+          </select>
+          <textarea id="nb-compose-content" placeholder="Notice content..."></textarea>
+          <div class="nb-compose-actions">
+            <button class="nb-btn" onclick="hideNbComposeForm()">Cancel</button>
+            <button class="nb-btn gb-btn-send" onclick="submitNoticeboardPost()"><span id="nb-compose-submit-text">Post Notice</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <template id="welcome-template">
       <div class="window" id="welcome-window" style="display: block; height: auto">
         <div class="title">
@@ -943,6 +1008,8 @@
     <!-- UPDATED SCRIPT NAME -->
     <script src="js/apps/datetime_battery_wifi.js" defer></script>
     <script src="js/apps/terminal.js" defer></script>
+    <script src="js/apps/guestbook.js" defer></script>
+    <script src="js/apps/noticeboard.js" defer></script>
     <script src="js/mail.js" defer></script>
 
     <script>

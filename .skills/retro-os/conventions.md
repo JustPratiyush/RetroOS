@@ -37,8 +37,9 @@
 - ❌ **Never use size-changing keyframe animations** (`@keyframes` that grow/shrink elements).
 - ❌ **Never put app-specific CSS rules inside `main.css`** — use the app's dedicated CSS file.
 - ❌ **Never put CSS inside a JS file** (e.g. using `document.createElement('style')`).
-- ❌ **Never use Formspree, EmailJS, or similar** — the mail backend is custom Nodemailer.
-- ❌ **Never use `sans-serif` as the fallback font** — use `monospace`.
+- ❌ **Never use Formspree, EmailJS, or similar.**
+- ❌ **Never use `sans-serif` or `Pixelify Sans` for numbers** — mandatory `VT323` for all numerical text to ensure readability.
+- ❌ **Never use Vercel KV or Local Storage** for persistent global data. We exclusively use **Upstash Redis**.
 - ❌ **Never write code belonging to App A inside App B's file** — one file, one responsibility.
 
 ### Soft rules (avoid unless you have a good reason)
@@ -46,7 +47,7 @@
 - Avoid light `#eee` borders on dark-background-adjacent elements — use `#000`.
 - Avoid `border-radius` values above `20px` on retro OS elements.
 - Avoid gradients on buttons or interactive elements.
-- Avoid adding multiple apps to the same JS or CSS file.
+- Avoid multi-pane sidebars on small apps — use single-pane "drilldown" layouts like the Guestbook where clicking an item opens a dedicated view.
 
 ---
 
@@ -150,10 +151,12 @@ The `body` field supports basic HTML (`<strong>`, `<br>`, etc.).
 
 | Endpoint | File | Purpose |
 |---|---|---|
-| `POST /api/send-message` | `api/send-message.js` | Sends contact email via Nodemailer |
-| `GET /api/health` | `api/health.js` | Backend connectivity check |
+| `GET /api/guestbook` | `api/guestbook.js` | Fetch latest 100 guestbook entries from Upstash Redis |
+| `POST /api/guestbook` | `api/guestbook.js` | Add a new entry to the guestbook |
+| `DELETE /api/guestbook` | `api/guestbook.js` | Admin only: Delete an entry by ID |
+| `GET /api/noticeboard` | `api/noticeboard.js` | Fetch all developer notices from Upstash Redis |
+| `POST /api/noticeboard` | `api/noticeboard.js` | Admin only: Add a new notice |
 
-- **Local dev:** runs Express on `localhost:3001`, served by `server/` directory.
-- **Production:** Vercel serverless functions under `/api/`.
-- `MailService` in `mail.js` auto-detects environment via `window.location.hostname`.
-- Rate limit: 10 requests per 15 minutes (production).
+- **Storage:** Upstash Redis is the database. (Vercel KV is deprecated).
+- **Admin Auth:** Admin functions require an `X-Admin-Key` header matching the `ADMIN_SECRET_KEY` environment variable. The admin password is hardcoded client-side as `RetroAdmin$123` for quick verification.
+- **Local dev:** `vercel dev` is used to tunnel requests to Upstash. Hardcoded `localhost:3001` URLs were removed in favor of relative paths (`/api/...`).

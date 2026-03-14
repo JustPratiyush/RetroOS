@@ -132,6 +132,8 @@ function openWindow(id) {
     setAppIconActive(id, true);
     if (id === "finder") renderFinderContent("desktop");
     if (id === "trash") renderTrashContent();
+    if (id === "guestbook" && typeof renderGuestbook === "function") renderGuestbook();
+    if (id === "noticeboard" && typeof renderNoticeboard === "function") renderNoticeboard();
     if (id === "terminal" && !isTerminalInitialized) {
       initTerminal();
       isTerminalInitialized = true;
@@ -677,12 +679,39 @@ function toggleAppDrawer() {
 
 // --- SETTINGS ---
 
-function setWallpaper(style) {
+function setWallpaper(style, isManual = false) {
   let idx;
-  if (style === "classic")        idx = 0;
-  else if (style === "alt")       idx = (currentWallpaperIndex % 5) + 1;
-  else if (!isNaN(style) && style >= 0 && style <= 5) idx = parseInt(style, 10);
-  else return;
+  if (style === "classic") {
+    idx = 0;
+    document.body.style.filter = "grayscale(100%)";
+    // Inform the user about the classic theme only on manual click
+    if (isManual) {
+      setTimeout(() => {
+        createMessageWindow(
+          "OG Mac Look",
+          "<strong>System Theme Updated!</strong><br><br>You have successfully enabled the original 1990s Macintosh GUI look. Enjoy the nostalgia!"
+        );
+      }, 100);
+    }
+  } else if (style === "custom") {
+    const customData = localStorage.getItem("customWallpaper");
+    if (customData) {
+      document.body.style.backgroundImage = `url('${customData}')`;
+      document.body.style.filter = "none";
+      localStorage.setItem("currentWallpaper", "custom");
+      return;
+    }
+    idx = 1; // Fallback if no custom data
+    document.body.style.filter = "none";
+  } else if (style === "alt") {
+    idx = (currentWallpaperIndex % 5) + 1;
+    document.body.style.filter = "none";
+  } else if (!isNaN(style) && style >= 0 && style <= 5) {
+    idx = parseInt(style, 10);
+    document.body.style.filter = "none";
+  } else {
+    return;
+  }
 
   document.body.style.backgroundImage = `url('assets/wallpapers/wallpaper${idx}.webp')`;
   currentWallpaperIndex = idx;
@@ -690,8 +719,20 @@ function setWallpaper(style) {
   localStorage.setItem("currentWallpaperIndex", String(idx));
 }
 
-function toggleGrayscale(isChecked) {
-  document.body.style.filter = isChecked ? "grayscale(100%)" : "none";
+function handleCustomWallpaperUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    document.body.style.backgroundImage = `url('${dataUrl}')`;
+    document.body.style.filter = "none";
+    
+    localStorage.setItem("customWallpaper", dataUrl);
+    localStorage.setItem("currentWallpaper", "custom");
+  };
+  reader.readAsDataURL(file);
 }
 
 // Photo Viewer Logic — creates a new window per photo

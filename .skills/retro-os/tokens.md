@@ -45,10 +45,13 @@ Defined in `:root` inside `css/main.css`:
 | Blue accent | `#4a90e2` | Mail Send button only |
 | Red alert | `#ff3b30` | Mail unread badge |
 | White content | `#ffffff` | Main content areas in windows |
-| Finder list | `#f7f7f7` | Email list / Finder file bg |
+| Finder list | `#f7f7f7` | Email list / Finder file bg / Guestbook list bg |
 | Trash bg (revealed) | `#0d2a0d` | Dark earthy green for the Trash easter egg |
 | Trash text | `#e0e0e0` | Off-white text inside Trash easter egg |
-| Matrix green | `#32cd32` | `.highlight` inside Trash game, game-option borders |
+| Matrix green | `#32cd32` | `.highlight` inside Trash game, Notice Board update tags |
+| Notice Board / Warning | `#ff3b30` | Red tag in notice board |
+| Notice Board / Announce| `#febc2e` | Yellow tag in notice board |
+| Notice Board / Update | `#4a90e2` | Blue tag in notice board |
 | Sacrifice overlay | `rgba(80,0,0,0.7)` | Sacrifice ritual darkening overlay |
 
 ---

@@ -40,6 +40,7 @@ Build features natively. Avoid embedding third-party services.
 | Context | Font | Notes |
 |---|---|---|
 | All UI text | `VT323` (Google Fonts) | Monospace pixel font — primary |
+| Numerical Text | `VT323` (Google Fonts) | **MANDATORY:** Always use VT323 for numbers (clocks, badges, stats). `Pixelify Sans` is strictly forbidden for numbers as it lacks readability. |
 | Accent labels | `Pixelify Sans` | Sparingly — for stylistic labels |
 | System font fallback | `monospace` | Never use `sans-serif` as fallback |
 

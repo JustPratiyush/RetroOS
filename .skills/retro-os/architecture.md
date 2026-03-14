@@ -20,6 +20,8 @@ retroOS_V1/
 │   ├── terminal.css        ← Terminal app
 │   ├── music.css           ← Music player
 │   ├── matrix.css          ← Matrix theme easter egg
+│   ├── guestbook.css       ← Guestbook app (single-pane drilldown)
+│   ├── noticeboard.css     ← Notice Board app
 │   └── responsive.css      ← Mobile overrides
 ├── js/
 │   ├── main.js             ← Boot sequence + initApp()
@@ -34,7 +36,9 @@ retroOS_V1/
 │       ├── terminal.js
 │       ├── music.js
 │       ├── trash.js        ← Trash easter egg + Morphy the dog
-│       └── sacrifice.js    ← Sacrifice ritual easter egg
+│       ├── sacrifice.js    ← Sacrifice ritual easter egg
+│       ├── guestbook.js    ← Guestbook app + Upstash Redis
+│       └── noticeboard.js  ← Notice Board app + Upstash Redis
 ├── assets/
 │   ├── icons/
 │   ├── wallpapers/
@@ -151,21 +155,13 @@ They are draggable (handled by `makeDraggable()` in `system.js`).
 
 ## Mail App (`js/mail.js`)
 
-3-panel Apple Mail clone: Sidebar → Email List → Detail/Compose pane.
+2-pane Apple Mail clone: Email List → Detail pane. (Sidebar & Compose features were deprecated).
 
 `inboxEmails` array holds all hardcoded lore emails (HR, Sequoia, Morpheus, etc.).
 
-### View toggling
-- `setMailView(view)` — unified helper that toggles all three panels at once. `"inbox"` shows list+detail, `"compose"` shows compose form.
-- `showInboxView()` and `showComposeView()` are arrow function aliases for ease of use in HTML onclick.
-
-### Send flow
-- Compose form submits to backend `/api/send-message` (or `localhost:3001/api/send-message` locally).
-- `MailService` auto-detects environment based on `window.location.hostname`.
-
-### Notification CSS
-- Notification styles are in `css/apps.css` under the `/* --- Mail Notifications --- */` section.
-- `showNotification(message, type)` creates/removes DOM elements; no inline `<style>` injection.
+### Notification Badge
+- The dock icon features a dynamically updating red dot `.dock-badge` showing unread count.
+- `updateMailBadge()` runs on `DOMContentLoaded` and when an email is read.
 
 ---
 

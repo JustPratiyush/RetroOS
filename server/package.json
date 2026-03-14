@@ -13,8 +13,7 @@
     "nodemailer": "^6.9.7",
     "dotenv": "^16.3.1",
     "helmet": "^7.1.0",
-    "express-rate-limit": "^7.1.5",
-    "joi": "^17.11.0"
+    "express-rate-limit": "^7.1.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
