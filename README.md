@@ -4,7 +4,7 @@
 
 RetroOS is a nostalgic, interactive portfolio environment that recreates the magic of a vintage 90s operating system. Built with **Vanilla JavaScript, HTML5, and CSS3**, it serves as a creative workspace to showcase projects, lore, and software engineering expertise.
 
-![Desktop Overview](assets/screenshots/Demo1.jpg)
+![Desktop Overview](assets/screenshots/Demo1.png)
 
 ---
 
@@ -48,7 +48,7 @@ RetroOS is a playground for retro computing fans and web developers alike. We ar
 
 ## 📸 Screenshots
 
-![Music and Apps](assets/screenshots/Demo2.jpg)
+![Music and Apps](assets/screenshots/Demo2.png)
 
 ---
 
