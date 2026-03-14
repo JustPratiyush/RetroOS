@@ -68,6 +68,11 @@ function attemptLogin() {
       // Finally hide the element completely
       if (loginScreen) loginScreen.style.display = "none";
 
+      // Start the background music
+      if (typeof startBackgroundMusic === "function") {
+        startBackgroundMusic();
+      }
+
       // Show welcome window after successful login
       showWelcomeWindow();
     }, 500);

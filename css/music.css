@@ -12,6 +12,28 @@
   background-color: #000 !important;
 }
 
+.music-btn {
+  display: inline-block;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 6px 16px;
+  background: #e0e0e0;
+  border: 3px solid #000;
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.9);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.music-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.9);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
 /* =====================================================================
          🎶 Musical Notes Animation
    ===================================================================== */

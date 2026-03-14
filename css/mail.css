@@ -1,0 +1,253 @@
+/* =====================================================================
+   📧 Mail App
+   ===================================================================== */
+
+#mail.window {
+  width: 720px;
+  height: 480px;
+  font-family: "VT323", monospace;
+}
+
+.mail-app {
+  display: flex;
+  padding: 0;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* --- Sidebar --- */
+.mail-sidebar {
+  width: 130px;
+  min-width: 130px;
+  background: #e0e0e0;
+  border-right: 2px solid #000;
+  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mail-sidebar-item {
+  padding: 12px 10px;
+  border-bottom: 1px solid #ccc;
+  color: #333;
+  font-family: "VT323", monospace;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mail-sidebar-item:hover  { background: #d0d0d0; color: #000; }
+.mail-sidebar-item.active { background: #000; color: #fff; }
+
+.mail-badge {
+  background: #ff3b30;
+  color: #fff;
+  border-radius: 50%;
+  padding: 1px 6px;
+  font-size: 14px;
+  font-family: "VT323", monospace;
+}
+
+/* --- Email List Panel --- */
+.mail-list {
+  width: 230px;
+  min-width: 230px;
+  border-right: 2px solid #000;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #f7f7f7;
+}
+
+.mail-list-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+.mail-list-item:hover  { background: #eaeaea; }
+.mail-list-item.active { background: #000; color: #fff; }
+.mail-list-item.active .mail-list-sender,
+.mail-list-item.active .mail-list-subject,
+.mail-list-item.active .mail-list-date,
+.mail-list-item.active .mail-list-preview { color: #fff; }
+.mail-list-item.unread { border-left: 3px solid #000; }
+
+.mail-list-sender {
+  font-family: "VT323", monospace;
+  font-size: 17px;
+  color: #000;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mail-list-item.read .mail-list-sender { font-weight: 400; color: #555; }
+
+.mail-list-subject {
+  font-family: "VT323", monospace;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.mail-list-preview {
+  font-family: "VT323", monospace;
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mail-list-date {
+  font-family: "VT323", monospace;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 3px;
+}
+
+/* --- Email Detail Pane --- */
+.mail-detail {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+.mail-detail-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  color: #aaa;
+}
+.mail-detail-header {
+  padding: 15px 18px;
+  border-bottom: 2px solid #000;
+  flex-shrink: 0;
+  background: #f0f0f0;
+}
+.mail-detail-subject {
+  font-family: "VT323", monospace;
+  font-size: 26px;
+  color: #000;
+  margin-bottom: 6px;
+}
+.mail-detail-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mail-detail-from { font-family: "VT323", monospace; font-size: 15px; color: #444; }
+.mail-detail-date { font-family: "VT323", monospace; font-size: 13px; color: #888; }
+.mail-detail-body {
+  padding: 18px;
+  font-family: "VT323", monospace;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #222;
+  white-space: pre-wrap;
+  flex: 1;
+}
+
+/* --- Compose Pane --- */
+.mail-compose-pane { flex: 1; display: flex; flex-direction: column; background: #fff; }
+.mail-compose-pane form { display: flex; flex-direction: column; height: 100%; }
+
+.mail-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 2px solid #ccc;
+  flex-shrink: 0;
+}
+.mail-header label {
+  font-family: "VT323", monospace;
+  font-size: 18px;
+  margin-right: 8px;
+  color: #000;
+  min-width: 60px;
+}
+.mail-header input {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  padding: 4px;
+  font-family: "VT323", monospace;
+}
+.mail-header input:focus { outline: none; }
+
+.mail-body { flex-grow: 1; padding: 12px; }
+.mail-body textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  resize: none;
+  font-size: 17px;
+  font-family: "VT323", monospace;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+.mail-body textarea:focus { outline: none; }
+
+.mail-footer {
+  padding: 10px 14px;
+  border-top: 2px solid #000;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-shrink: 0;
+  background: #f0f0f0;
+}
+.mail-footer button {
+  display: inline-block;
+  font-family: "VT323", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border: 3px solid #000;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.9);
+  transition: all 0.1s ease;
+  letter-spacing: 0.5px;
+}
+.mail-footer button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.9);
+}
+
+/* --- Notifications --- */
+@keyframes slideInRight  { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideOutRight { from { transform: translateX(0); opacity: 1; }   to { transform: translateX(100%); opacity: 0; } }
+
+.mail-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 10000;
+  font-family: "VT323", monospace;
+  font-size: 16px;
+  max-width: 300px;
+  word-wrap: break-word;
+  cursor: pointer;
+  animation: slideInRight 0.3s ease-out;
+  transition: transform 0.2s ease;
+}
+.mail-notification:hover          { transform: translateX(-5px); }
+.mail-notification-success        { background: #4CAF50; }
+.mail-notification-error          { background: #f44336; }
+.mail-notification-info           { background: #2196F3; }

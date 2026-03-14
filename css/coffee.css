@@ -1,0 +1,32 @@
+/* =====================================================================
+   🍕 Coffee / Pizza App
+   ===================================================================== */
+
+.coffee-content {
+  text-align: center;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.coffee-content p { font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
+
+.buy-me-a-pizza-button {
+  border: 3px solid #000;
+  background: #ffdd00;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.9);
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  margin-bottom: 20px;
+}
+.buy-me-a-pizza-button a {
+  font-family: "Pixelify Sans", "Poppins", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+  display: block;
+}
+.buy-me-a-pizza-button:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.9); }

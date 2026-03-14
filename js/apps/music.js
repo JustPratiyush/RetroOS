@@ -3,17 +3,97 @@ let embedController = null;
 let isSpotifyPlaying = false;
 let spotifyApi = null; // Variable to hold the loaded API
 
-/**
- * This function is called once the Spotify script is ready.
- * We just save the IFrameAPI object for later use.
- */
+// Local Background Music State
+let bgmAudio = null;
+let isLocalPlaying = false;
+
 window.onSpotifyIframeApiReady = (IFrameAPI) => {
   spotifyApi = IFrameAPI;
 };
 
 /**
- * Creates the Spotify player instance.
+ * Starts the local background music. Called on successful login.
  */
+function startBackgroundMusic() {
+  if (!bgmAudio) {
+    bgmAudio = new Audio("assets/sounds/backgroundMusic.mp3");
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.5;
+  }
+  
+  bgmAudio.play().then(() => {
+    isLocalPlaying = true;
+    updateBgmButton();
+    startDockNoteLoop(); // Start notes on the dock icon immediately
+    
+    // Ensure the icon shows active
+    if (typeof setAppIconActive === "function") {
+      setAppIconActive("music", true);
+    }
+    
+    // Make sure the window is internally registered as "open but minimized"
+    const musicWinId = "music";
+    if (window.windowStates) {
+      window.windowStates[musicWinId] = "minimized";
+    }
+  }).catch(e => {
+    console.error("Auto-play prevented for background music:", e);
+    isLocalPlaying = false;
+    updateBgmButton();
+  });
+}
+
+function toggleBackgroundMusic() {
+  if (!bgmAudio) return;
+  if (isLocalPlaying) {
+    bgmAudio.pause();
+    isLocalPlaying = false;
+  } else {
+    bgmAudio.play();
+    isLocalPlaying = true;
+  }
+  updateBgmButton();
+  
+  if (isLocalPlaying || isSpotifyPlaying) {
+    startWindowNoteLoop();
+  } else {
+    stopWindowNoteLoop();
+  }
+}
+
+function updateBgmButton() {
+  const btn = document.getElementById("bgm-play-btn");
+  if (btn) {
+    btn.textContent = isLocalPlaying ? "Pause" : "Play";
+  }
+}
+
+function switchToSpotify() {
+  document.getElementById("local-music-view").style.display = "none";
+  document.getElementById("spotify-view").style.display = "block";
+  document.getElementById("music-back-btn").style.display = "inline";
+  
+  // Pause local music when switching to Spotify to avoid overlap
+  if (isLocalPlaying && bgmAudio) {
+    bgmAudio.pause();
+    isLocalPlaying = false;
+    updateBgmButton();
+    
+    // Stop the floating notes if Spotify isn't playing yet
+    if (!isSpotifyPlaying) {
+      stopWindowNoteLoop();
+    }
+  }
+
+  createMusicPlayer();
+}
+
+function switchToLocalMusic() {
+  document.getElementById("spotify-view").style.display = "none";
+  document.getElementById("local-music-view").style.display = "flex";
+  document.getElementById("music-back-btn").style.display = "none";
+}
+
 function createMusicPlayer() {
   if (embedController || !spotifyApi) {
     return;
@@ -21,14 +101,13 @@ function createMusicPlayer() {
 
   let element = document.getElementById("spotify-embed");
   if (!element) {
-    const parentContainer = document.querySelector("#music .music-player");
+    const parentContainer = document.getElementById("spotify-view");
     if (parentContainer) {
       element = document.createElement("div");
       element.id = "spotify-embed";
       element.style.height = "100%";
       parentContainer.appendChild(element);
     } else {
-      console.error("Music player container not found.");
       return;
     }
   }
@@ -49,7 +128,7 @@ function createMusicPlayer() {
 
       const isWindowVisible = musicWindow.style.display !== "none";
 
-      if (isSpotifyPlaying && isWindowVisible) {
+      if ((isSpotifyPlaying || isLocalPlaying) && isWindowVisible) {
         startWindowNoteLoop();
       } else {
         stopWindowNoteLoop();
@@ -60,28 +139,27 @@ function createMusicPlayer() {
   spotifyApi.createController(element, options, callback);
 }
 
-/**
- * Exposes a function for main.js to check the playback state.
- */
 function isMusicPlaying() {
-  return isSpotifyPlaying;
+  return isSpotifyPlaying || isLocalPlaying;
 }
 
-/**
- * Expose a function for main.js to properly shut down the player.
- */
 function destroyMusicPlayer() {
   if (embedController) {
     embedController.destroy();
     embedController = null;
-    isSpotifyPlaying = false;
-    stopWindowNoteLoop();
-    stopDockNoteLoop();
-    // --- THIS IS THE FIX ---
-    // Ensure the icon is deactivated when the player is destroyed.
-    if (typeof setAppIconActive === "function") {
-      setAppIconActive("music", false);
-    }
+  }
+  isSpotifyPlaying = false;
+  
+  if (bgmAudio) {
+    bgmAudio.pause();
+    bgmAudio.currentTime = 0;
+  }
+  isLocalPlaying = false;
+  
+  stopWindowNoteLoop();
+  stopDockNoteLoop();
+  if (typeof setAppIconActive === "function") {
+    setAppIconActive("music", false);
   }
 }
 

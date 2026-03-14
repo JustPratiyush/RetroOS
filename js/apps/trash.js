@@ -9,6 +9,7 @@ let trashState = {
   dogRevealed: false,
   conversationState: "initial", // Can be 'initial', 'petted', 'questioning', 'pills', 'failed_test', 'final'
   isEmptied: false,
+  dogKilled: false, // Tracks if the user chose to kill the dog
 };
 
 const FOLDER_MESSAGES = [
@@ -22,41 +23,6 @@ const FOLDER_MESSAGES = [
   "You really want to open this file?",
   "Just one more click...",
 ];
-
-/**
- * Creates a typewriter effect for a given element.
- * @param {HTMLElement} element - The element to type into.
- * @param {string} text - The text to type out.
- * @param {number} speed - The speed of typing in milliseconds.
- * @param {function} [callback] - An optional function to run after typing is complete.
- */
-function typewriterEffect(element, text, speed = 50, callback) {
-  if (!element) return;
-  let i = 0;
-  element.innerHTML = "";
-  element.classList.add("typing");
-
-  function type() {
-    const char = text.charAt(i);
-    // Use innerHTML to correctly render the line break
-    if (char === "\n") {
-      element.innerHTML += "<br>";
-    } else {
-      element.innerHTML += char;
-    }
-    i++;
-
-    if (i < text.length) {
-      setTimeout(type, speed);
-    } else {
-      element.classList.remove("typing");
-      if (callback) {
-        callback();
-      }
-    }
-  }
-  type();
-}
 
 /**
  * Fades in the option buttons after a delay.
@@ -83,7 +49,23 @@ function renderTrashContent() {
   trashContent.classList.remove("no-padding");
 
   if (trashState.isEmptied) {
-    // Final state: display the empty message with normal styling.
+    if (trashState.dogKilled) {
+      // Dog was killed: show the skull remains as a draggable icon
+      trashContent.innerHTML = `
+        <div style="padding: 15px; height: 100%; display: flex; align-items: center; justify-content: center;">
+          <div id="dead-dog-skull" class="skull-icon">
+            <img src="assets/icons/dead_dog.webp" alt="Remains" draggable="false">
+            <span>Remains</span>
+          </div>
+        </div>`;
+      // Make the skull draggable (can be dragged outside the trash window)
+      const skullEl = document.getElementById("dead-dog-skull");
+      if (skullEl && typeof makeSkullDraggable === "function") {
+        makeSkullDraggable(skullEl);
+      }
+      return;
+    }
+    // Other endings: display the empty message with normal styling.
     trashContent.innerHTML = `<div style="padding: 15px; color: black; text-align: center; height: 100%; display: flex; align-items: center; justify-content: center;">The trash is empty. The secret is gone.</div>`;
     return;
   }
@@ -198,9 +180,6 @@ function renderTrashContent() {
 function progressTrashSequence() {
   trashState.folderDepth++;
   if (trashState.folderDepth >= FOLDER_MESSAGES.length) {
-    if (!trashState.dogRevealed) {
-      closeAllWindows(["trash"]);
-    }
     trashState.dogRevealed = true;
   }
   renderTrashContent();
@@ -259,6 +238,13 @@ function endEasterEgg() {
  */
 function killDog() {
   trashState.conversationState = "final";
+  trashState.dogKilled = true;
+
+  // Play the dog killed sound effect
+  const dogKilledSound = new Audio("assets/sounds/Dog_Killed.mp3");
+  dogKilledSound.volume = 0.7;
+  dogKilledSound.play().catch(() => {});
+
   const trashContent = document.getElementById("trashContent");
   if (!trashContent) return;
   const message = "You monster. The guardian is gone forever.";

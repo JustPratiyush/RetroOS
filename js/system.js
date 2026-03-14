@@ -76,6 +76,25 @@ function bringToFront(el) {
   el.style.zIndex = zTop;
 }
 
+/**
+ * Clones an HTML <template> element and appends it to a container.
+ * Registers the new window with makeDraggable and bringToFront.
+ * @param {string} templateId - ID of the <template> element.
+ * @param {string} containerId - ID of the container to append into.
+ * @returns {HTMLElement|null} The cloned window element.
+ */
+function createWindowFromTemplate(templateId, containerId) {
+  const template = document.getElementById(templateId);
+  const container = document.getElementById(containerId);
+  if (!template || !container) return null;
+  const clone = template.content.cloneNode(true);
+  const windowEl = clone.querySelector(".window");
+  container.appendChild(clone);
+  makeDraggable(windowEl);
+  bringToFront(windowEl);
+  return windowEl;
+}
+
 function setAppIconActive(appName, isActive) {
   const allIcons = document.querySelectorAll(
     `.dock-icon[data-app="${appName}"]`
@@ -100,6 +119,11 @@ function openWindow(id) {
       stopDockNoteLoop();
     }
     createMusicPlayer();
+    
+    // Resume window notes if music is already playing
+    if (typeof isMusicPlaying === "function" && typeof startWindowNoteLoop === "function" && isMusicPlaying()) {
+      startWindowNoteLoop();
+    }
   }
   const currentState = windowStates[id] || "closed";
   if (currentState === "minimized" || currentState === "closed") {
@@ -135,6 +159,7 @@ function closeWindow(id) {
   if (id === "projects" || id === "readme") {
     el.parentElement?.removeChild(el);
   }
+  updateFullscreenState();
 }
 
 function minimizeWindow(id) {
@@ -148,6 +173,59 @@ function minimizeWindow(id) {
     if (typeof isMusicPlaying === "function" && isMusicPlaying()) {
       startDockNoteLoop();
     }
+  }
+  updateFullscreenState();
+}
+
+/**
+ * Toggles a window between maximized (full viewport) and its original size/position.
+ * @param {string} id - The window ID.
+ */
+function maximizeWindow(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  if (el.classList.contains("maximized")) {
+    // Restore original dimensions
+    el.classList.remove("maximized");
+    el.style.left = el.dataset.origLeft || "";
+    el.style.top = el.dataset.origTop || "";
+    el.style.width = el.dataset.origWidth || "";
+    el.style.height = el.dataset.origHeight || "";
+  } else {
+    // Save current dimensions
+    el.dataset.origLeft = el.style.left;
+    el.dataset.origTop = el.style.top;
+    el.dataset.origWidth = el.style.width;
+    el.dataset.origHeight = el.style.height;
+
+    // Maximize (true fullscreen)
+    el.classList.add("maximized");
+    el.style.left = "0";
+    el.style.top = "0";
+    el.style.width = "100vw";
+    el.style.height = "100vh";
+  }
+  bringToFront(el);
+  updateFullscreenState();
+}
+
+/**
+ * Checks if any window is maximized and hides the dock and top bar if true.
+ */
+function updateFullscreenState() {
+  const dock = document.querySelector(".dock");
+  const topBar = document.querySelector(".top-bar");
+  
+  const maximizedWindows = Array.from(document.querySelectorAll(".window.maximized"));
+  const hasVisibleMaximized = maximizedWindows.some(win => windowStates[win.id] === "open");
+  
+  if (hasVisibleMaximized) {
+    if (dock) dock.style.display = "none";
+    if (topBar) topBar.style.display = "none";
+  } else {
+    if (dock) dock.style.display = "flex";
+    if (topBar) topBar.style.display = "flex";
   }
 }
 
@@ -172,53 +250,32 @@ function openStatusWindow(id, iconEl) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  // Close all open menus/popovers before opening a new one
   closeAllMenus();
-  closeWindow("clockApp");
-  closeWindow("wifiApp");
-  closeWindow("batteryApp");
+  ["clockApp", "wifiApp", "batteryApp"].forEach(w => closeWindow(w));
 
-  // Check if the window was already open (to toggle it off)
-  const currentState = windowStates[id] || "closed";
-  if (currentState === "open") {
-    closeWindow(id);
-    return;
-  }
+  if ((windowStates[id] || "closed") === "open") { closeWindow(id); return; }
 
-  // Update content for the specific app before opening
-  if (id === "clockApp" && typeof updateClockContent === "function") {
-    updateClockContent(true); // Forces a content refresh
-  }
-  if (id === "batteryApp" && typeof updateBatteryContent === "function") {
-    updateBatteryContent(true); // Forces a content refresh
-  }
-  if (id === "wifiApp" && typeof updateWifiContent === "function") {
-    updateWifiContent(); // Forces a content refresh
-  }
+  const refreshers = {
+    clockApp:   () => typeof updateClockContent   === "function" && updateClockContent(true),
+    batteryApp: () => typeof updateBatteryContent === "function" && updateBatteryContent(true),
+    wifiApp:    () => typeof updateWifiContent    === "function" && updateWifiContent(),
+  };
+  refreshers[id]?.();
 
-  // Position the window right below the icon
   const rect = iconEl.getBoundingClientRect();
-  const rightIconsEl = document.querySelector(".top-bar .right-icons");
+  const rightIcons = document.querySelector(".top-bar .right-icons")?.getBoundingClientRect();
+  if (!rightIcons) return;
 
-  if (!rightIconsEl) {
-    console.error("Could not find .top-bar .right-icons element");
-    return;
-  }
-
-  const rightIcons = rightIconsEl.getBoundingClientRect();
-
-  // Calculate position: align the right edge of the window with the right edge of the icons container
-  // Use appropriate width for each popover (clock needs more space)
   const windowWidth = id === "clockApp" ? 320 : 250;
-  el.style.right = window.innerWidth - rightIcons.right + "px";
-  el.style.top = rect.bottom + 5 + "px";
-  el.style.width = windowWidth + "px";
-  el.style.position = "absolute"; // Ensure it positions relative to the body/viewport
-  el.style.left = "auto"; // Reset left to ensure right positioning works
-  el.style.transform = "none"; // Remove any transform that might interfere with positioning
-
-  // Open the window
-  el.style.display = "block";
+  Object.assign(el.style, {
+    right:    window.innerWidth - rightIcons.right + "px",
+    top:      rect.bottom + 5 + "px",
+    width:    windowWidth + "px",
+    position: "absolute",
+    left:     "auto",
+    transform: "none",
+    display:  "block",
+  });
   windowStates[id] = "open";
   bringToFront(el);
 }
@@ -377,6 +434,140 @@ function makeIconDraggable(icon) {
   icon.addEventListener("touchstart", dragStart, { passive: false });
 }
 
+/**
+ * Makes the skull icon draggable. On first drag, reparents the skull from
+ * the trash window to document.body so it can be freely moved across the desktop.
+ * @param {HTMLElement} skull - The skull container element (#dead-dog-skull).
+ */
+function makeSkullDraggable(skull) {
+  let isDragging = false;
+  let offX = 0, offY = 0;
+  let hasBeenReparented = false;
+
+  function dragStart(e) {
+    if (e.type === "touchstart") e.preventDefault();
+    const event = e.touches ? e.touches[0] : e;
+
+    isDragging = true;
+
+    if (!hasBeenReparented) {
+      // Reparent: move skull from inside trash to document.body
+      const rect = skull.getBoundingClientRect();
+      skull.remove();
+      document.body.appendChild(skull);
+      skull.classList.add("skull-on-desktop");
+      skull.style.position = "absolute";
+      skull.style.left = `${rect.left + window.scrollX}px`;
+      skull.style.top = `${rect.top + window.scrollY}px`;
+      skull.style.zIndex = String(++zTop);
+      hasBeenReparented = true;
+    }
+
+    offX = event.clientX - skull.getBoundingClientRect().left;
+    offY = event.clientY - skull.getBoundingClientRect().top;
+
+    skull.style.zIndex = String(++zTop);
+    document.body.style.userSelect = "none";
+
+    window.addEventListener("mousemove", dragMove);
+    window.addEventListener("mouseup", dragEnd);
+    window.addEventListener("touchmove", dragMove, { passive: false });
+    window.addEventListener("touchend", dragEnd);
+  }
+
+  function dragMove(e) {
+    if (!isDragging) return;
+    if (e.type === "touchmove") e.preventDefault();
+    const event = e.touches ? e.touches[0] : e;
+    skull.style.left = `${event.clientX - offX}px`;
+    skull.style.top = `${event.clientY - offY}px`;
+  }
+
+  function dragEnd(e) {
+    isDragging = false;
+    document.body.style.userSelect = "auto";
+    window.removeEventListener("mousemove", dragMove);
+    window.removeEventListener("mouseup", dragEnd);
+    window.removeEventListener("touchmove", dragMove);
+    window.removeEventListener("touchend", dragEnd);
+
+    // Check if dropped over the Sacrifice icon or Finder Documents
+    if (hasBeenReparented && typeof startSacrificeRitual === "function") {
+      const skullRect = skull.getBoundingClientRect();
+      const skullCenterX = skullRect.left + skullRect.width / 2;
+      const skullCenterY = skullRect.top + skullRect.height / 2;
+
+      const sacrificeIcon = document.getElementById("sacrifice-app-icon");
+
+      // Direct drop on Sacrifice icon
+      if (sacrificeIcon) {
+        const iconRect = sacrificeIcon.getBoundingClientRect();
+        if (
+          skullCenterX >= iconRect.left && skullCenterX <= iconRect.right &&
+          skullCenterY >= iconRect.top && skullCenterY <= iconRect.bottom
+        ) {
+          animateSkullToSacrifice(skull, sacrificeIcon);
+          return;
+        }
+      }
+
+      // Check if dropped over Finder window while Documents is active
+      const finderWindow = document.getElementById("finder");
+      if (finderWindow && finderWindow.style.display !== "none") {
+        const finderRect = finderWindow.getBoundingClientRect();
+        if (
+          skullCenterX >= finderRect.left && skullCenterX <= finderRect.right &&
+          skullCenterY >= finderRect.top && skullCenterY <= finderRect.bottom
+        ) {
+          // Check if Documents tab is active
+          const activeTab = finderWindow.querySelector(".sidebar-item.active");
+          if (activeTab && activeTab.textContent.trim().toLowerCase() === "documents") {
+            // Auto-navigate to documents if needed and transport skull
+            if (sacrificeIcon) {
+              animateSkullToSacrifice(skull, sacrificeIcon);
+            } else {
+              // Sacrifice icon not rendered yet — render documents, then transport
+              renderFinderContent("documents");
+              const newIcon = document.getElementById("sacrifice-app-icon");
+              if (newIcon) {
+                animateSkullToSacrifice(skull, newIcon);
+              }
+            }
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Animates the skull flying to the Sacrifice icon, then triggers the ritual.
+   */
+  function animateSkullToSacrifice(skullEl, targetIcon) {
+    const iconRect = targetIcon.getBoundingClientRect();
+    const targetX = iconRect.left + iconRect.width / 2 - skullEl.offsetWidth / 2;
+    const targetY = iconRect.top + iconRect.height / 2 - skullEl.offsetHeight / 2;
+
+    // Highlight the sacrifice icon
+    targetIcon.classList.add("sacrifice-receiving");
+
+    // Animate the skull flying to the icon
+    skullEl.style.transition = "left 0.5s ease-in, top 0.5s ease-in, opacity 0.5s ease-in";
+    skullEl.style.left = targetX + "px";
+    skullEl.style.top = targetY + "px";
+    skullEl.style.opacity = "0.3";
+
+    setTimeout(() => {
+      skullEl.style.transition = "";
+      targetIcon.classList.remove("sacrifice-receiving");
+      startSacrificeRitual();
+    }, 600);
+  }
+
+  skull.addEventListener("mousedown", dragStart);
+  skull.addEventListener("touchstart", dragStart, { passive: false });
+}
+
 // --- DESKTOP & UI MANAGEMENT ---
 
 function toggleMenu(menuId, el) {
@@ -438,10 +629,7 @@ function menuAction(action) {
 }
 
 /**
- * Updates the battery icon and calls the function to update the popover content.
- */
-/**
- * Updates the battery icon and calls the function to update the popover content.
+ * Updates the battery icon and popover content.
  */
 function updateBatteryStatus() {
   if (!("getBattery" in navigator)) {
@@ -490,27 +678,81 @@ function toggleAppDrawer() {
 // --- SETTINGS ---
 
 function setWallpaper(style) {
-  let wallpaperIndex;
-  if (style === "classic") {
-    wallpaperIndex = 0;
-  } else if (style === "alt") {
-    // Assumes wallpapers are named wallpaper1 through wallpaper5
-    wallpaperIndex = (currentWallpaperIndex % 5) + 1;
-  } else if (!isNaN(style) && style >= 0 && style <= 5) {
-    wallpaperIndex = parseInt(style, 10);
-  } else {
-    return; // Invalid style
-  }
+  let idx;
+  if (style === "classic")        idx = 0;
+  else if (style === "alt")       idx = (currentWallpaperIndex % 5) + 1;
+  else if (!isNaN(style) && style >= 0 && style <= 5) idx = parseInt(style, 10);
+  else return;
 
-  document.body.style.backgroundImage = `url('assets/wallpapers/wallpaper${wallpaperIndex}.webp')`;
-  currentWallpaperIndex = wallpaperIndex;
-  localStorage.setItem(
-    "currentWallpaper",
-    wallpaperIndex === 0 ? "classic" : String(wallpaperIndex)
-  );
-  localStorage.setItem("currentWallpaperIndex", String(wallpaperIndex));
+  document.body.style.backgroundImage = `url('assets/wallpapers/wallpaper${idx}.webp')`;
+  currentWallpaperIndex = idx;
+  localStorage.setItem("currentWallpaper", idx === 0 ? "classic" : String(idx));
+  localStorage.setItem("currentWallpaperIndex", String(idx));
 }
 
 function toggleGrayscale(isChecked) {
   document.body.style.filter = isChecked ? "grayscale(100%)" : "none";
+}
+
+// Photo Viewer Logic — creates a new window per photo
+let _photoViewerCount = 0;
+function openPhotoViewer(src, title) {
+  const id = `photo-viewer-${++_photoViewerCount}`;
+  const offset = ((_photoViewerCount - 1) % 8) * 24; // cascade offset so windows don't stack perfectly
+
+  const win = document.createElement("div");
+  win.id = id;
+  win.className = "window";
+  Object.assign(win.style, {
+    display: "block",
+    width: "600px",
+    height: "450px",
+    top: `calc(10% + ${offset}px)`,
+    left: `calc(15% + ${offset}px)`,
+  });
+
+  win.innerHTML = `
+    <div class="title">
+      <span class="title-text">${title || "Photo Viewer"}</span>
+      <span class="controls">
+        <span class="ctrl ctrl-min" onclick="minimizeWindow('${id}')">&#x2212;</span>
+        <span class="ctrl ctrl-max" onclick="maximizeWindow('${id}')"><strong style="font-family:Arial,sans-serif;">O</strong></span>
+        <span class="ctrl ctrl-close" onclick="this.closest('.window').remove()">&#x00D7;</span>
+      </span>
+    </div>
+    <div class="content photo-viewer-content">
+      <img src="${src}" alt="${title || 'Photo'}" style="width:100%;height:100%;object-fit:contain;" />
+    </div>`;
+
+
+  document.body.appendChild(win);
+  makeDraggable(win);
+  bringToFront(win);
+}
+
+// Android-style Socials Folder
+function toggleSocialsFolder(e) {
+  e.stopPropagation();
+  const popup = document.getElementById("socials-popup");
+  if (!popup) return;
+
+  if (popup.style.display === "none" || popup.style.display === "") {
+    // Create overlay
+    const overlay = document.createElement("div");
+    overlay.className = "socials-overlay";
+    overlay.id = "socials-overlay";
+    overlay.onclick = () => closeSocialsFolder();
+    document.body.appendChild(overlay);
+
+    popup.style.display = "block";
+  } else {
+    closeSocialsFolder();
+  }
+}
+
+function closeSocialsFolder() {
+  const popup = document.getElementById("socials-popup");
+  const overlay = document.getElementById("socials-overlay");
+  if (popup) popup.style.display = "none";
+  if (overlay) overlay.remove();
 }

@@ -1,0 +1,39 @@
+/* =====================================================================
+   🧮 Calculator App
+   ===================================================================== */
+
+#calculator { width: 250px; }
+#calculator .content { padding: 15px; background: #f0f0f0; }
+
+#calcDisplay {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 12px 0;
+  padding: 10px 8px;
+  font-size: 20px;
+  text-align: right;
+  border: 2px solid #999;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+}
+#calculator .content > div {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+#calculator button {
+  padding: 12px 0;
+  font-size: 22px;
+  font-weight: bold;
+  border: 2px solid #333;
+  border-radius: 6px;
+  background: #f8f8f8;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+  transition: all 0.1s ease;
+  font-family: "VT323", monospace;
+}
+#calculator button:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
+#calculator button[onclick*="calculate"] { background: #4a90e2; color: white; border-color: #2a6fc9; }
+#calculator button[onclick*="clearCalc"] { background: #ff6b6b; color: white; border-color: #e74c3c; }

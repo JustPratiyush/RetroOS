@@ -1,0 +1,52 @@
+/* =====================================================================
+   📁 Finder App
+   ===================================================================== */
+
+.finder-content {
+  display: flex;
+  padding: 0;
+  height: 100%;
+}
+.finder-sidebar {
+  width: 150px;
+  background: #e0e0e0;
+  padding: 10px;
+  border-right: 2px solid #000;
+  flex-shrink: 0;
+}
+.sidebar-item {
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.sidebar-item.active,
+.sidebar-item:hover { background: #000; color: #fff; }
+
+.finder-main {
+  flex-grow: 1;
+  padding: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.finder-icon {
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.finder-icon span {
+  display: block;
+  font-size: 14px;
+  margin-top: 6px;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}

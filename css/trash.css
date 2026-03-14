@@ -1,0 +1,121 @@
+/* =====================================================================
+   🗑️ Trash Easter Egg
+   ===================================================================== */
+
+/* --- Animations --- */
+@keyframes dramaticReveal {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes blink { 50% { border-color: transparent; } }
+
+/* --- Main Secret Container --- */
+#trash .secret-content.revealed {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100%;
+  padding: 20px 20px 0;
+  box-sizing: border-box;
+  background-color: #0d2a0d;
+  color: #e0e0e0;
+  animation: dramaticReveal 0.5s ease-out;
+  overflow: hidden;
+}
+
+.secret-content { font-family: monospace; white-space: pre; font-size: 12px; line-height: 1.2; overflow: auto; padding: 5px; }
+.secret-content .highlight { color: #32cd32; font-weight: bold; }
+
+.secret-main { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+
+.guardian-text {
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  line-height: 1.5;
+  min-height: 50px;
+}
+.highlight { color: #32cd32; font-weight: bold; }
+
+/* --- Game Options --- */
+.game-options-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.game-option {
+  display: inline-block;
+  padding: 6px 14px;
+  min-width: 120px;
+  border: 2px solid #32cd32;
+  background: transparent;
+  color: #32cd32;
+  font-family: "VT323", monospace;
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+.game-option:hover  { background-color: #32cd32; color: #0d2a0d; }
+.game-option:active { transform: scale(0.95); }
+
+/* --- Guardian Dog Image --- */
+.guardian-dog-image { max-width: 250px; width: 60%; height: auto; margin-top: 20px; align-self: center; }
+.guardian-dog-image.wise { width: auto; height: 230px; object-fit: contain; margin: 0; }
+
+/* --- Finder Icon Fixes inside Trash --- */
+#trash .finder-icon          { user-select: none; -webkit-user-select: none; }
+#trash .finder-icon img      { pointer-events: none; }
+
+/* --- Utility --- */
+.no-padding { padding: 0 !important; }
+
+/* --- Pill Stage --- */
+.pill-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 420px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.pill-option {
+  padding: 8px;
+  margin: 0;
+  border: 3px solid black;
+  font-family: "VT323", monospace;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 30px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.pill-option:hover       { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,255,255,0.6); }
+.pill-option.blue        { background-color: #4a90e2; color: white; }
+.pill-option.red         { background-color: #ff5f57; color: white; }
+
+/* --- Final Messages --- */
+.final-message-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+.final-message-text { font-family: "VT323", monospace; font-size: 20px; line-height: 1.6; white-space: pre-wrap; }
+.final-message-text.monster  { color: red; }
+.final-message-text.redpill  { color: black; }
+.final-message-text.bluepill { color: rgb(0, 68, 255); }
+
+/* --- Window Overrides --- */
+#trash.window            { background: #fff; }
+#trash.window .content   { height: calc(100% - 25px); }
+
+/* =====================================================================
+   💀 Dead Dog Skull (Draggable Remains)
+   ===================================================================== */
+.skull-icon { display: flex; flex-direction: column; align-items: center; cursor: grab; user-select: none; -webkit-user-select: none; }
+.skull-icon:active { cursor: grabbing; }
+.skull-icon img    { width: 80px; height: auto; filter: drop-shadow(0 0 6px rgba(255,165,0,0.6)); transition: filter 0.3s ease; pointer-events: none; }
+.skull-icon:hover img { filter: drop-shadow(0 0 12px rgba(255,165,0,0.9)); }
+.skull-icon span   { font-family: "VT323", monospace; font-size: 14px; margin-top: 6px; color: #333; }
+.skull-icon.skull-on-desktop { z-index: 9999; }
+.skull-icon.skull-on-desktop span { color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }

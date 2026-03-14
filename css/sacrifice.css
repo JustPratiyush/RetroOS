@@ -1,0 +1,91 @@
+/* =====================================================================
+   🩸 Sacrifice Ritual Animation
+   ===================================================================== */
+
+.sacrifice-icon { transition: filter 0.3s ease; }
+.sacrifice-icon.sacrifice-receiving { filter: drop-shadow(0 0 15px rgba(255,0,0,0.8)); }
+
+#sacrifice-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 99999;
+  pointer-events: all;
+  background: rgba(80,0,0,0);
+  transition: background 1s ease;
+  overflow: hidden;
+}
+#sacrifice-overlay.active    { background: rgba(80,0,0,0.7); }
+#sacrifice-overlay.aftermath { background: rgba(0,0,0,0.95); transition: background 1.5s ease; }
+#sacrifice-overlay.fade-out  { opacity: 0; transition: opacity 2s ease; }
+
+.sacrifice-blood-rain {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+.blood-drop {
+  position: absolute;
+  top: -40px;
+  background: linear-gradient(to bottom, rgba(139,0,0,0.9), rgba(200,0,0,0.6));
+  border-radius: 0 0 50% 50%;
+  animation: bloodFall linear forwards;
+}
+@keyframes bloodFall {
+  from { top: -40px; opacity: 1; }
+  to   { top: 110vh;  opacity: 0.4; }
+}
+
+.sacrifice-vignette {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  box-shadow: inset 0 0 150px rgba(139,0,0,0.8), inset 0 0 300px rgba(80,0,0,0.5);
+}
+
+.sacrifice-glitch-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-family: "VT323", monospace;
+  font-size: 48px;
+  color: #ff0000;
+  text-shadow: 3px 3px 0 #8b0000, -2px -2px 0 #ff4444, 0 0 20px rgba(255,0,0,0.6);
+  letter-spacing: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  text-align: center;
+}
+
+.sacrifice-final-message {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-family: "VT323", monospace;
+  font-size: 24px;
+  color: #8b0000;
+  text-align: center;
+  line-height: 1.8;
+  opacity: 0;
+  transition: opacity 1s ease;
+  white-space: pre-wrap;
+}
+
+@keyframes sacrificeShake {
+  0%, 100% { transform: translate(0,0); }
+  10%  { transform: translate(-4px, 2px); }
+  20%  { transform: translate(3px, -3px); }
+  30%  { transform: translate(-2px, 4px); }
+  40%  { transform: translate(4px, -1px); }
+  50%  { transform: translate(-3px, -3px); }
+  60%  { transform: translate(2px, 4px); }
+  70%  { transform: translate(-4px, -2px); }
+  80%  { transform: translate(3px, 3px); }
+  90%  { transform: translate(-1px, -4px); }
+}
+body.sacrifice-shake { animation: sacrificeShake 0.15s infinite; }
