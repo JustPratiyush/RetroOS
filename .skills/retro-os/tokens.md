@@ -8,110 +8,97 @@ Defined in `:root` inside `css/main.css`:
 :root {
   --panel: #e9e4d5;
   --wallpaper: url("../assets/wallpapers/wallpaper1.webp");
-  --file-icon-size: 60px;   /* Width and height of all desktop icons */
+  --file-icon-size: 60px;
   --file-icon-size-sm: 40px;
 }
 ```
 
-> **Note:** `--file-icon-size` is `60px` (not 64px). The 64px value applies to the Android Folder box only.
-
----
+`--file-icon-size` is `60px`. The `64px` size applies only to the Android-style socials folder box.
 
 ## Icon Sizes
 
 | Context | Size | Notes |
 |---|---|---|
-| Desktop icons | `60px` × `60px` (`--file-icon-size`) | All `.desktop-icon img` |
-| Finder icons | `60px` × `60px` | `.finder-icon img` inherits same |
-| Android Folder box | `64px` × `64px` | `.android-folder-box` — intentionally slightly larger |
-| Android mini-grid thumbnails | `14px` × `14px` | Shown inside Android folder in Finder view |
-| Android mini-grid thumbnails (desktop popup) | `22px` × `22px` | `.android-folder-grid img` in the expanded socials popup |
-| Dock icons (inner image) | `~40px` | Set in dock CSS |
-| Socials popup items | `56px` × `56px` | `.socials-popup-item img` |
+| Desktop icons | `60px x 60px` | `.desktop-icon img` |
+| Finder icons | `60px x 60px` | Standard Finder item images |
+| Android folder box | `64px x 64px` | Desktop and Finder socials folder shell |
+| Finder socials mini-grid icons | `14px x 14px` | Inside Finder-safe socials folder |
+| Socials popup icons | `56px x 56px` | Expanded popup links |
+| Dock inner icons | about `40px` | Shared dock styling |
 
----
-
-## Colors
+## Core Colors
 
 | Token | Value | Used For |
 |---|---|---|
-| Title bar bg | `#333333` | All window title bars |
-| Close ctrl | `#ff5f57` | `.ctrl-close` background |
-| Maximize ctrl | `#febc2e` | `.ctrl-max` background |
-| Minimize ctrl | `#32cd32` | `.ctrl-min` background |
-| Sidebar active | `#000000` | All sidebar active states (Finder, Mail, Projects) |
-| Sidebar bg | `#e0e0e0` | Finder sidebar, Mail sidebar |
-| Window panel | `#f0f0f0` | `--panel` variant, detail headers, compose footers |
-| Blue accent | `#4a90e2` | Mail Send button only |
-| Red alert | `#ff3b30` | Mail unread badge |
-| White content | `#ffffff` | Main content areas in windows |
-| Finder list | `#f7f7f7` | Email list / Finder file bg / Guestbook list bg |
-| Trash bg (revealed) | `#0d2a0d` | Dark earthy green for the Trash easter egg |
-| Trash text | `#e0e0e0` | Off-white text inside Trash easter egg |
-| Matrix green | `#32cd32` | `.highlight` inside Trash game, Notice Board update tags |
-| Notice Board / Warning | `#ff3b30` | Red tag in notice board |
-| Notice Board / Announce| `#febc2e` | Yellow tag in notice board |
-| Notice Board / Update | `#4a90e2` | Blue tag in notice board |
-| Sacrifice overlay | `rgba(80,0,0,0.7)` | Sacrifice ritual darkening overlay |
-
----
+| Title bar | `#333333` | Window title bars |
+| Close control | `#ff5f57` | `.ctrl-close` |
+| Maximize control | `#febc2e` | `.ctrl-max` |
+| Minimize control | `#32cd32` | `.ctrl-min` |
+| Active state | `#000000` | Selected icons, Finder sidebar, active list items |
+| Shared panel gray | `#f0f0f0` / `#e0e0e0` | Shared window chrome |
+| Mail accent | `#e2c75d` | Active mail tabs, unread markers |
+| Mail accent soft | `#f7e7a2` | Highlighted mail body text |
+| Mail sidebar | `#e7dcc1` | Mail folder column |
+| Mail card | `#fff9ec` | Mail list items |
+| Mail reader bg | `#fffdf5` | Mail detail pane |
+| Internet shell bg | `#f3eedf` | Internet home and loading shell |
+| Internet toolbar | `#d9d9d9` | Internet top controls |
+| Retro green | `#32cd32` | Internet Go button, loader sweeps, trash highlights |
+| Notice warning | `#ff3b30` | Notice warning tag |
+| Notice announce | `#febc2e` | Notice announce tag |
+| Notice update | `#4a90e2` | Notice update tag |
+| Trash bg | `#0d2a0d` | Trash easter egg |
+| Trash text | `#e0e0e0` | Trash copy |
+| Sacrifice overlay | `rgba(80,0,0,0.7)` | Sacrifice ritual overlay |
 
 ## Typography Scale
 
 | Element | Font | Size |
 |---|---|---|
-| Window title | `VT323` | 20px (inherited) |
-| Sidebar items | `VT323` | 18px |
-| Email list sender | `VT323` | 17px |
-| Email list subject | `VT323` | 14px |
-| Email list preview | `VT323` | 13px |
-| Email detail subject | `VT323` | 26px |
-| Email body | `VT323` | 17px, line-height 1.7 |
-| Desktop icon label | inherited from `main.css` | 15px, white with text-shadow |
-| Dock labels | `VT323` | 11px |
-| Terminal | `monospace` | 14px |
-| Trash guardian text | `VT323` | 20px |
-| Sacrifice glitch text | `VT323` | 48px |
-
----
+| Window title | `VT323` | about `20px` |
+| Finder sidebar items | `VT323` | about `18px` |
+| Mail list sender | `VT323` | `22px` |
+| Mail list subject | `VT323` | `18px` |
+| Mail list date | `VT323` | `18px` |
+| Mail detail subject | `VT323` | `31px` |
+| Mail detail body | `VT323` | `22px` |
+| Desktop icon labels | `VT323` | about `15px` |
+| Dock labels | `VT323` | about `11px` |
+| Terminal | `monospace` | about `14px` |
+| Loader titles | `VT323` | `24px` |
+| Sacrifice glitch text | `VT323` | `48px` |
 
 ## Spacing Patterns
 
 | Pattern | Value |
 |---|---|
-| Window inner content padding | `15–18px` |
-| Sidebar item padding | `12px 10px` |
-| Email list item padding | `10px 12px` |
-| Finder icon gap | `20px` (`.finder-main`) |
-| Desktop icon column spacing | `100px` between top values |
-| Button shadow (retro) | `5px 5px 0 rgba(0,0,0,0.9)` |
-| Icon shadow (social) | `3px 3px 0 rgba(0,0,0,0.4)` |
-
----
+| Shared window content padding | `15px-24px` depending on app |
+| Finder icon gap | `20px` |
+| Finder icon padding | `6px 4px` |
+| Mail tab gap | `10px` |
+| Mail list item padding | `12px 14px 12px 22px` |
+| Guestbook and Notice loader panel padding | about `18px` |
+| Retro button shadow | `5px 5px 0 rgba(0,0,0,0.9)` |
+| Secondary button shadow | `3px 3px 0 rgba(0,0,0,0.8)` |
 
 ## Border Conventions
 
 | Context | Border Style |
 |---|---|
-| All main windows | `3px solid #000` |
-| Sidebar divider | `2px solid #000` (right border) |
-| Email list divider | `2px solid #000` (right border) |
-| Item separators | `1px solid #ccc` (bottom border) |
-| Detail pane header | `2px solid #000` (bottom border) |
-| Compose footer | `2px solid #000` (top border) |
-| Social icons on desktop | `2px solid #000` with `border-radius: 12px` |
-| `.btn-retro` style | `3px solid #000` |
-| Android Folder in Finder | `2px solid #999` (muted — grey on grey) |
-
----
+| Main windows | `3px solid #000` |
+| Mail sidebar divider | `3px solid #000` |
+| Mail detail header | `3px solid #000` |
+| Retro buttons | `3px solid #000` |
+| Finder socials folder | `2px solid #999` |
+| Social icons | `2px solid #000` with `border-radius: 12px` |
+| Loader tracks | `2px solid #000` |
 
 ## Z-Index Reference
 
 | Layer | Z-Index | Notes |
 |---|---|---|
-| Normal windows | Managed by `zTop` counter | Increments on each `bringToFront` call |
-| Skull on desktop | `9999` | `.skull-icon.skull-on-desktop` |
-| Sacrifice overlay | `99999` | `#sacrifice-overlay` — covers everything |
-| Boot screen | `99999` | `#boot-screen` — highest during startup |
-| Mail notification | `10000` | `.mail-notification` toast |
-| Menu popups | via `bringToFront` | `.menu` elements |
+| Normal windows | managed by `zTop` | Raised through `bringToFront()` |
+| Skull on desktop | `9999` | Trash easter egg |
+| Boot screen | `99999` | Startup overlay |
+| Sacrifice overlay | `99999` | Full-screen ritual layer |
+| Menus and popups | raised dynamically | Shared popup behavior |

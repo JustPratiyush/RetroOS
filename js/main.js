@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function initApp() {
   document.querySelectorAll(".window").forEach((win) => makeDraggable(win));
   document.querySelectorAll(".desktop-icon").forEach(makeIconDraggable);
+  if (typeof initFinderInteractions === "function") initFinderInteractions();
 
   const finderToggleBtn = document.querySelector(".finder-toggle-btn");
   const finderContentArea = document.querySelector("#finder .finder-content");
@@ -96,6 +97,11 @@ function initApp() {
         closeWindow("batteryApp");
       }
     }
+
+    if (!e.target.closest(".desktop-icon") && typeof clearDesktopIconSelection === "function") {
+      clearDesktopIconSelection();
+    }
+
     const appDrawer = document.getElementById("app-drawer");
     const hamburgerIcon = document.getElementById("hamburger-icon");
     if (appDrawer && hamburgerIcon) {
@@ -110,26 +116,12 @@ function initApp() {
     }
   });
 
-  document
-    .getElementById("internetSearchForm")
-    ?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const queryInput = document.getElementById("internetSearchInput");
-      const query = queryInput?.value.trim();
-      if (!query) return;
-      const url =
-        query.includes(".") && !query.includes(" ")
-          ? `https://${query}`
-          : `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-      window.open(url, "_blank");
-      if (queryInput) queryInput.value = "";
-    });
-
   const savedWallpaper = localStorage.getItem("currentWallpaper") || "1";
   setWallpaper(savedWallpaper === "alt" ? "1" : savedWallpaper);
 
   if (typeof renderTrashContent === "function") renderTrashContent();
   updateBatteryStatus();
+  if (typeof initInternetApp === "function") initInternetApp();
 
   // FIX: Call the correct combined initializer if it exists, or update the clock
   if (typeof initStatusApps === "function") {

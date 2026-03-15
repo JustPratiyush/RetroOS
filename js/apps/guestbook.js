@@ -31,6 +31,16 @@ const _bannedRegex = new RegExp(
   "gi"
 );
 
+const GB_EMOJIS = [
+  "😀", "😁", "😂", "🤣", "😊", "😇", "🙂", "😉", "😍", "🥰", "😘", "😎",
+  "🤩", "🥳", "🤔", "😴", "😅", "🥲", "😭", "😤", "🤯", "😱", "🤖", "🫡",
+  "👋", "👏", "🙌", "👍", "👎", "👌", "✌️", "🤞", "🫶", "🙏", "💪", "👀",
+  "❤️", "🧡", "💛", "💚", "💙", "💜", "🤍", "🖤", "💖", "✨", "⭐", "🔥",
+  "💯", "💫", "🎉", "🎈", "🎵", "🎧", "📷", "💾", "📼", "🕹️", "👾", "🚀",
+  "🌙", "☀️", "🌈", "⚡", "☕", "🍕", "🍔", "🍟", "🍩", "🌸", "🌹", "🌊",
+  "📚", "✏️", "💻", "⌨️", "📱", "🎮", "🧠", "🪩", "🛸", "🫶", "🎬", "🎨"
+];
+
 /**
  * Checks if text contains banned words.
  * @param {string} text
@@ -102,12 +112,28 @@ const GuestbookService = {
 // --- STATE ---
 let _guestbookEntries = [];
 let _selectedEntryId = null;
+let _gbEmojiPickerInitialized = false;
+
+function getGuestbookLoaderMarkup() {
+  return `
+    <div class="guestbook-loader" role="status" aria-live="polite">
+      <div class="guestbook-loader-panel">
+        <div class="guestbook-loader-title">Loading Guestbook</div>
+        <div class="guestbook-loader-track" aria-hidden="true"></div>
+        <div class="guestbook-loader-copy">
+          Reading visitor messages from the RetroOS archive...
+        </div>
+      </div>
+    </div>
+  `;
+}
 
 // --- VIEW TOGGLING ---
 function showGbListView() {
   document.getElementById("gb-view-list").style.display = "flex";
   document.getElementById("gb-view-detail").style.display = "none";
   document.getElementById("gb-view-compose").style.display = "none";
+  closeGbEmojiPicker();
   _selectedEntryId = null;
 }
 
@@ -115,6 +141,7 @@ function showGbDetailView() {
   document.getElementById("gb-view-list").style.display = "none";
   document.getElementById("gb-view-detail").style.display = "flex";
   document.getElementById("gb-view-compose").style.display = "none";
+  closeGbEmojiPicker();
 }
 
 function showGbComposeView() {
@@ -123,6 +150,9 @@ function showGbComposeView() {
   document.getElementById("gb-view-compose").style.display = "flex";
   document.getElementById("gb-name-input").value = "";
   document.getElementById("gb-message-input").value = "";
+  initGbEmojiPicker();
+  closeGbEmojiPicker();
+  renderGbEmojiGrid();
   const warningEl = document.getElementById("gb-warning");
   if (warningEl) warningEl.textContent = "";
 }
@@ -131,7 +161,7 @@ function showGbComposeView() {
 function renderGuestbook() {
   const listEl = document.getElementById("guestbook-list");
   if (listEl) {
-    listEl.innerHTML = `<div class="retro-loader">Loading Guestbook</div>`;
+    listEl.innerHTML = getGuestbookLoaderMarkup();
   }
   
   GuestbookService.getEntries().then((entries) => {
@@ -244,6 +274,7 @@ function submitGuestbookEntry() {
     if (result.success) {
       nameInput.value = "";
       msgInput.value = "";
+      closeGbEmojiPicker();
       showGbNotification("Message posted! ✨", "success");
       renderGuestbook();
     } else {
@@ -292,6 +323,90 @@ function showGbWarning(msg) {
   if (el) el.textContent = msg;
 }
 
+function initGbEmojiPicker() {
+  if (_gbEmojiPickerInitialized) return;
+  renderGbEmojiGrid();
+  _gbEmojiPickerInitialized = true;
+}
+
+function renderGbEmojiGrid() {
+  const gridEl = document.getElementById("gb-emoji-grid");
+  if (!gridEl) return;
+
+  gridEl.innerHTML = "";
+
+  GB_EMOJIS.forEach((emoji) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "gb-emoji-option";
+    button.textContent = emoji;
+    button.setAttribute("aria-label", `Insert ${emoji}`);
+    button.onclick = () => insertGbEmoji(emoji);
+    gridEl.appendChild(button);
+  });
+}
+
+function toggleGbEmojiPicker() {
+  initGbEmojiPicker();
+  const picker = document.getElementById("gb-emoji-picker");
+  if (!picker) return;
+
+  if (picker.hidden) {
+    openGbEmojiPicker();
+  } else {
+    closeGbEmojiPicker();
+  }
+}
+
+function openGbEmojiPicker() {
+  const picker = document.getElementById("gb-emoji-picker");
+  const toggle = document.getElementById("gb-emoji-toggle");
+  if (!picker || !toggle) return;
+
+  picker.hidden = false;
+  toggle.setAttribute("aria-expanded", "true");
+}
+
+function closeGbEmojiPicker() {
+  const picker = document.getElementById("gb-emoji-picker");
+  const toggle = document.getElementById("gb-emoji-toggle");
+  if (!picker || !toggle) return;
+
+  picker.hidden = true;
+  toggle.setAttribute("aria-expanded", "false");
+}
+
+function insertGbEmoji(emoji) {
+  const msgInput = document.getElementById("gb-message-input");
+  if (!msgInput) return;
+
+  const start =
+    typeof msgInput.selectionStart === "number"
+      ? msgInput.selectionStart
+      : msgInput.value.length;
+  const end =
+    typeof msgInput.selectionEnd === "number"
+      ? msgInput.selectionEnd
+      : msgInput.value.length;
+  const nextValue = `${msgInput.value.slice(0, start)}${emoji}${msgInput.value.slice(end)}`;
+
+  if (nextValue.length > 500) {
+    showGbWarning("Message must be 500 characters or less.");
+    msgInput.focus();
+    return;
+  }
+
+  msgInput.value = nextValue;
+  const caretPosition = start + emoji.length;
+  msgInput.focus();
+  msgInput.setSelectionRange(caretPosition, caretPosition);
+
+  const warningEl = document.getElementById("gb-warning");
+  if (warningEl && warningEl.textContent === "Message must be 500 characters or less.") {
+    warningEl.textContent = "";
+  }
+}
+
 function showGbNotification(msg, type) {
   const existing = document.querySelector(".gb-notification");
   if (existing) existing.remove();
@@ -302,3 +417,29 @@ function showGbNotification(msg, type) {
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 3000);
 }
+
+document.addEventListener("click", (event) => {
+  const composeView = document.getElementById("gb-view-compose");
+  const picker = document.getElementById("gb-emoji-picker");
+  const toggle = document.getElementById("gb-emoji-toggle");
+
+  if (
+    !composeView ||
+    composeView.style.display === "none" ||
+    !picker ||
+    picker.hidden ||
+    !toggle
+  ) {
+    return;
+  }
+
+  if (!picker.contains(event.target) && !toggle.contains(event.target)) {
+    closeGbEmojiPicker();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeGbEmojiPicker();
+  }
+});

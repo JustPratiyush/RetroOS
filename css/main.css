@@ -170,6 +170,13 @@ select {
   cursor: grab;
   transition: background-color 0.2s;
 }
+.desktop-icon.selected {
+  background: rgba(0, 0, 0, 0.78);
+}
+.desktop-icon.selected .android-folder-box {
+  background: rgba(210, 210, 210, 0.55);
+  border-color: rgba(255, 255, 255, 0.9);
+}
 .android-folder-box {
   width: 64px;
   height: 64px;
@@ -288,6 +295,10 @@ select {
   line-height: 1.2;
   padding: 2px 0;
   pointer-events: none;
+}
+.desktop-icon.selected span {
+  color: #fff;
+  text-shadow: none;
 }
 button {
   font-family: inherit;
@@ -633,7 +644,8 @@ button {
 #internet {
   left: 150px;
   top: 150px;
-  width: 480px;
+  width: 760px;
+  height: 540px;
 }
 #projects {
   left: 100px;

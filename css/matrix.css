@@ -1,254 +1,1060 @@
 /* =====================================================================
-EASTER EGG: MATRIX THEME
-Activated by the Konami Code
-===================================================================== */
+   EASTER EGG: MATRIX THEME
+   Activated by the Konami Code
+   ===================================================================== */
 
-/* --- Primary Variables --- */
 :root {
-  --matrix-green: #00ff00;
-  --matrix-green-bright: #39ff14;
-  --matrix-green-dark: #00cc00;
-  --matrix-green-darker: #009900;
-  --matrix-bg-dark: #000000;
-  --matrix-bg-medium: rgba(0, 40, 0, 0.9);
-  --matrix-bg-light: rgba(0, 30, 0, 0.95);
-  --matrix-glow: 0 0 8px var(--matrix-green-bright),
-    0 0 16px var(--matrix-green), 0 0 24px rgba(57, 255, 20, 0.8);
-  --matrix-text-glow: 0 0 4px var(--matrix-green-bright),
-    0 0 8px var(--matrix-green);
+  --matrix-green: #53ff6a;
+  --matrix-green-bright: #b4ff9f;
+  --matrix-green-hot: #e8ffd9;
+  --matrix-green-dark: #0f6d24;
+  --matrix-green-darker: #04250b;
+  --matrix-ink: #010401;
+  --matrix-panel: rgba(3, 16, 6, 0.94);
+  --matrix-panel-strong: rgba(4, 22, 8, 0.98);
+  --matrix-panel-soft: rgba(10, 44, 15, 0.82);
+  --matrix-line: rgba(83, 255, 106, 0.45);
+  --matrix-line-strong: rgba(180, 255, 159, 0.84);
+  --matrix-copy-soft: rgba(180, 255, 159, 0.72);
+  --matrix-shadow-window: 0 0 0 1px rgba(83, 255, 106, 0.18),
+    0 0 18px rgba(39, 164, 56, 0.28), 6px 6px 0 rgba(0, 0, 0, 0.92);
+  --matrix-shadow-panel: inset 0 0 0 1px rgba(180, 255, 159, 0.08),
+    inset 0 0 26px rgba(29, 99, 35, 0.18);
+  --matrix-shadow-button: 4px 4px 0 rgba(0, 0, 0, 0.92),
+    inset 0 0 0 1px rgba(180, 255, 159, 0.08);
+  --matrix-text-glow: 0 0 3px rgba(180, 255, 159, 0.8),
+    0 0 10px rgba(83, 255, 106, 0.3);
 }
 
-/* --- Body & Background Effects --- */
 body.matrix-theme {
-  background: var(--matrix-bg-dark) !important;
-  /* Ensure all text inherits the correct font and color */
-  font-family: "VT323", monospace !important;
+  background:
+    radial-gradient(circle at top center, rgba(56, 166, 67, 0.18), transparent 42%),
+    linear-gradient(180deg, #071608 0%, #020702 48%, #040b04 100%) !important;
   color: var(--matrix-green-bright) !important;
+  font-family: "VT323", monospace !important;
 }
 
-/* This creates the iconic scanline effect over the entire screen */
-body.matrix-theme::after {
-  content: " ";
-  display: block;
+body.matrix-theme::before {
+  content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-  background-size: 100% 4px;
-  z-index: 99998; /* Just below the boot screen */
+  inset: 0;
   pointer-events: none;
-  animation: scanline 10s linear infinite;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(65, 184, 78, 0.18) 0,
+      rgba(2, 8, 3, 0) 24%,
+      rgba(2, 8, 3, 0) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 26px,
+      rgba(83, 255, 106, 0.04) 26px 27px,
+      transparent 27px 54px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      rgba(83, 255, 106, 0.035) 0 2px,
+      transparent 2px 6px
+    );
+  opacity: 0.9;
+  animation: matrixBackdropDrift 16s linear infinite;
 }
 
-@keyframes scanline {
+body.matrix-theme::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99998;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0) 48%,
+      rgba(0, 0, 0, 0.18) 50%,
+      rgba(0, 0, 0, 0) 52%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.22) 0 1px,
+      rgba(0, 0, 0, 0) 1px 4px
+    ),
+    radial-gradient(circle at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.52) 100%);
+  background-size: 100% 160px, 100% 4px, 100% 100%;
+  animation: matrixScanline 12s linear infinite;
+}
+
+@keyframes matrixBackdropDrift {
   from {
-    background-position: 0 0;
+    background-position: 0 0, 0 0, 0 0;
   }
   to {
-    background-position: 0 -40px;
+    background-position: 0 0, -108px 0, 0 72px;
   }
 }
 
-/* --- General UI Theming --- */
-body.matrix-theme .window,
-body.matrix-theme .menu,
-body.matrix-theme .top-bar,
-body.matrix-theme .dock,
-body.matrix-theme .app-drawer {
-  color: var(--matrix-green-bright) !important;
-  text-shadow: var(--matrix-text-glow);
-  box-shadow: 0 0 15px var(--matrix-green), 4px 4px 0 var(--matrix-green-dark) !important;
-  border: 2px solid var(--matrix-green-bright) !important;
-  backdrop-filter: blur(5px);
+@keyframes matrixScanline {
+  from {
+    background-position: 0 -140px, 0 0, 0 0;
+  }
+  to {
+    background-position: 0 140px, 0 0, 0 0;
+  }
+}
+
+body.matrix-theme .grain {
+  background-image: repeating-linear-gradient(
+    rgba(83, 255, 106, 0.05) 0 1px,
+    transparent 1px 6px
+  );
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  z-index: 1;
+}
+
+body.matrix-theme,
+body.matrix-theme input,
+body.matrix-theme textarea,
+body.matrix-theme button,
+body.matrix-theme select {
+  font-family: "VT323", monospace !important;
+}
+
+body.matrix-theme ::selection {
+  background: rgba(180, 255, 159, 0.28);
+  color: var(--matrix-green-hot);
+}
+
+body.matrix-theme ::placeholder {
+  color: rgba(180, 255, 159, 0.48);
+}
+
+body.matrix-theme * {
+  scrollbar-color: rgba(83, 255, 106, 0.38) rgba(1, 6, 2, 0.94);
+}
+
+body.matrix-theme a {
+  color: var(--matrix-green-hot);
+}
+
+body.matrix-theme a:hover {
+  color: var(--matrix-green-bright);
+}
+
+body.matrix-theme .desktop-icon {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--matrix-green-hot);
+}
+
+body.matrix-theme .desktop-icon:hover,
+body.matrix-theme .desktop-icon.selected {
+  background: rgba(1, 10, 3, 0.82);
+  border-color: var(--matrix-line);
+  box-shadow: inset 0 0 18px rgba(29, 99, 35, 0.2);
 }
 
 body.matrix-theme .desktop-icon span {
-  color: var(--matrix-green-bright) !important;
+  padding: 4px 8px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--matrix-green-hot) !important;
   text-shadow: var(--matrix-text-glow);
-  background: rgba(0, 0, 0, 0.8) !important;
-  padding: 2px 6px !important;
-  border-radius: 3px !important;
-  border: 1px solid var(--matrix-green-dark) !important;
 }
 
-/* --- Window Theming --- */
-body.matrix-theme .window {
-  background: var(--matrix-bg-light) !important;
+body.matrix-theme .desktop-icon.selected span {
+  box-shadow: none;
 }
 
-body.matrix-theme .window .title {
+body.matrix-theme #matrix-wallpaper-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0.42;
+  z-index: 0;
+}
+
+body.matrix-theme .android-folder-box {
   background: linear-gradient(
-    135deg,
-    var(--matrix-green-bright),
-    var(--matrix-green-dark)
-  ) !important;
-  color: var(--matrix-bg-dark) !important;
-  text-shadow: none;
-  font-weight: bold !important;
+    180deg,
+    rgba(5, 28, 9, 0.86),
+    rgba(1, 10, 3, 0.92)
+  );
+  border: 1px solid var(--matrix-line);
+  border-radius: 8px;
+  box-shadow: inset 0 0 18px rgba(29, 99, 35, 0.18);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-body.matrix-theme .window .content {
-  background: var(--matrix-bg-dark) !important;
-  color: var(--matrix-green-bright) !important;
-  text-shadow: var(--matrix-text-glow);
+body.matrix-theme .android-folder:hover .android-folder-box,
+body.matrix-theme .desktop-icon.selected .android-folder-box {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 44, 15, 0.9),
+    rgba(3, 16, 6, 0.96)
+  );
+  transform: none;
 }
 
-/* --- Top Bar & Dock Theming --- */
+body.matrix-theme .desktop-icon {
+  z-index: 2;
+}
+
 body.matrix-theme .top-bar,
 body.matrix-theme .dock,
-body.matrix-theme .app-drawer {
-  background: var(--matrix-bg-medium) !important;
-}
-
-body.matrix-theme .top-bar .icon.active {
-  background: var(--matrix-green-bright) !important;
-  color: var(--matrix-bg-dark) !important;
-  text-shadow: none;
-  box-shadow: var(--matrix-glow);
-}
-
-body.matrix-theme .dock-icon::before {
-  background: var(--matrix-bg-light);
-  border: 1px solid var(--matrix-green-dark);
-}
-
-body.matrix-theme .dock-icon:hover::before,
-body.matrix-theme .dock-icon.active::before {
-  background: var(--matrix-green-bright) !important;
-  box-shadow: var(--matrix-glow);
-}
-
-body.matrix-theme .dock-icon:hover .label {
-  background: var(--matrix-bg-dark) !important;
-  border: 1px solid var(--matrix-green-bright);
-  color: var(--matrix-green-bright) !important;
+body.matrix-theme .app-drawer,
+body.matrix-theme .menu,
+body.matrix-theme .socials-popup {
+  border: 2px solid var(--matrix-line-strong) !important;
+  color: var(--matrix-green-hot) !important;
   text-shadow: var(--matrix-text-glow);
 }
 
-/* --- Specific App Adjustments --- */
-body.matrix-theme #calcDisplay,
-body.matrix-theme #calculator button {
-  background: var(--matrix-bg-dark) !important;
-  color: var(--matrix-green-bright) !important;
-  border-color: var(--matrix-green-bright) !important;
-  box-shadow: 0 0 8px var(--matrix-green), 2px 2px 0 var(--matrix-green-dark) !important;
-  text-shadow: var(--matrix-text-glow);
+body.matrix-theme .top-bar {
+  position: relative;
+  z-index: 3;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 38, 12, 0.88),
+    rgba(2, 12, 4, 0.96)
+  ) !important;
+  box-shadow: 0 0 0 1px rgba(83, 255, 106, 0.12) inset,
+    0 10px 22px rgba(0, 0, 0, 0.35);
 }
 
-body.matrix-theme #internetSearchInput,
-body.matrix-theme textarea {
-  background: var(--matrix-bg-dark) !important;
-  color: var(--matrix-green-bright) !important;
+body.matrix-theme .top-bar .icon,
+body.matrix-theme .status-icon,
+body.matrix-theme .top-bar .clock {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--matrix-green-hot);
 }
 
-body.matrix-theme .mail-header,
-body.matrix-theme .mail-footer {
-  border-bottom-color: var(--matrix-green-bright);
-  border-top-color: var(--matrix-green-bright);
+body.matrix-theme .top-bar .icon:hover,
+body.matrix-theme .top-bar .icon.active,
+body.matrix-theme .status-icon:hover,
+body.matrix-theme .top-bar .clock:hover {
+  background: rgba(8, 38, 12, 0.92);
+  border-color: var(--matrix-line);
 }
 
-/* --- Project Folders & File Browser --- */
-body.matrix-theme .project-item,
-body.matrix-theme .file-item,
-body.matrix-theme .folder-item {
-  background: var(--matrix-bg-dark) !important;
-  color: var(--matrix-green-bright) !important;
-  border: 1px solid var(--matrix-green-dark) !important;
-  text-shadow: var(--matrix-text-glow);
+body.matrix-theme .battery {
+  background: rgba(1, 8, 2, 0.88);
+  border-color: var(--matrix-line-strong);
 }
 
-body.matrix-theme .project-item:hover,
-body.matrix-theme .file-item:hover,
-body.matrix-theme .folder-item:hover {
-  background: var(--matrix-bg-medium) !important;
-  border-color: var(--matrix-green-bright) !important;
-  box-shadow: var(--matrix-glow);
+body.matrix-theme .battery:hover {
+  background: rgba(5, 24, 8, 0.96);
 }
 
-/* --- Project List Container --- */
-body.matrix-theme .project-list,
-body.matrix-theme .projects-container,
-body.matrix-theme .project-grid,
-body.matrix-theme .projects-sidebar {
-  background: var(--matrix-bg-dark) !important;
-  color: var(--matrix-green-bright) !important;
+body.matrix-theme .battery::after {
+  background-color: var(--matrix-green-bright);
 }
 
-/* --- Project Sidebar Items --- */
-body.matrix-theme .sidebar-project-item {
-  background: var(--matrix-bg-dark) !important;
-  color: var(--matrix-green-bright) !important;
-  border: none !important;
-  text-shadow: var(--matrix-text-glow);
+body.matrix-theme .battery-level {
+  background: linear-gradient(90deg, var(--matrix-green-dark), var(--matrix-green-bright));
+  box-shadow: 0 0 10px rgba(83, 255, 106, 0.28);
 }
 
-body.matrix-theme .sidebar-project-item h4,
-body.matrix-theme .sidebar-project-item p {
-  color: var(--matrix-green-bright) !important;
-  text-shadow: var(--matrix-text-glow);
+body.matrix-theme .menu {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 21, 8, 0.96),
+    rgba(1, 9, 3, 0.98)
+  ) !important;
+  box-shadow: var(--matrix-shadow-window);
 }
 
-/* --- Active/Selected Project Item --- */
-body.matrix-theme .sidebar-project-item.active,
-body.matrix-theme .project-item.selected,
-body.matrix-theme .project-item.active,
-body.matrix-theme .file-item.selected,
-body.matrix-theme .folder-item.selected {
-  background: var(--matrix-green-bright) !important;
-  color: var(--matrix-bg-dark) !important;
-  border: 1px solid var(--matrix-green-bright) !important;
-  text-shadow: none !important;
-  box-shadow: var(--matrix-glow);
-}
-
-body.matrix-theme .sidebar-project-item.active h4,
-body.matrix-theme .sidebar-project-item.active p {
-  color: var(--matrix-bg-dark) !important;
-  text-shadow: none !important;
-}
-
-body.matrix-theme .project-title,
-body.matrix-theme .file-name,
-body.matrix-theme .folder-name {
-  color: var(--matrix-green-bright) !important;
-  text-shadow: var(--matrix-text-glow);
-}
-
-body.matrix-theme .project-description,
-body.matrix-theme .file-details {
-  color: var(--matrix-green) !important;
-  text-shadow: 0 0 2px var(--matrix-green);
-}
-
-/* --- Menu Items --- */
 body.matrix-theme .menu div,
 body.matrix-theme .menu-item {
-  color: var(--matrix-green-bright) !important;
-  text-shadow: var(--matrix-text-glow);
+  color: var(--matrix-green-hot) !important;
 }
 
 body.matrix-theme .menu div:hover,
 body.matrix-theme .menu-item:hover {
-  background: var(--matrix-green-dark) !important;
-  color: var(--matrix-bg-dark) !important;
-  text-shadow: none;
+  background: rgba(10, 44, 15, 0.96) !important;
+  color: var(--matrix-green-hot) !important;
 }
 
-/* --- Buttons --- */
-body.matrix-theme button,
-body.matrix-theme .button {
-  background: var(--matrix-bg-dark) !important;
-  color: var(--matrix-green-bright) !important;
-  border: 2px solid var(--matrix-green-bright) !important;
+body.matrix-theme .dock {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 44, 15, 0.88),
+    rgba(2, 12, 4, 0.96)
+  ) !important;
+  border-radius: 8px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
+}
+
+body.matrix-theme .app-drawer {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 38, 12, 0.92),
+    rgba(2, 12, 4, 0.98)
+  ) !important;
+  box-shadow: var(--matrix-shadow-window);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.matrix-theme .dock-icon {
+  transform: none;
+}
+
+body.matrix-theme .dock-icon::before {
+  border: 1px solid var(--matrix-line);
+  border-radius: 6px;
+  background: linear-gradient(
+    180deg,
+    rgba(7, 30, 11, 0.88),
+    rgba(2, 10, 4, 0.96)
+  );
+  box-shadow: inset 0 0 16px rgba(29, 99, 35, 0.18);
+}
+
+body.matrix-theme .dock-icon:hover::before,
+body.matrix-theme .dock-icon.active::before {
+  background: linear-gradient(
+    180deg,
+    rgba(13, 58, 19, 0.94),
+    rgba(4, 20, 7, 0.98)
+  );
+  border-color: var(--matrix-line-strong);
+  transform: none;
+  box-shadow: 0 0 0 1px rgba(83, 255, 106, 0.12),
+    inset 0 0 18px rgba(83, 255, 106, 0.15);
+}
+
+body.matrix-theme .dock-icon:hover img,
+body.matrix-theme .dock-icon:hover svg,
+body.matrix-theme .dock-icon.active img,
+body.matrix-theme .dock-icon.active svg {
+  transform: none;
+}
+
+body.matrix-theme .dock-icon .label {
+  background: rgba(1, 8, 2, 0.96) !important;
+  border: 1px solid var(--matrix-line-strong);
+  border-radius: 0;
+  color: var(--matrix-green-hot) !important;
   text-shadow: var(--matrix-text-glow);
 }
 
-body.matrix-theme button:hover,
-body.matrix-theme .button:hover {
-  background: var(--matrix-green-dark) !important;
-  color: var(--matrix-bg-dark) !important;
-  box-shadow: var(--matrix-glow);
+body.matrix-theme .dock-badge {
+  background: var(--matrix-green-bright);
+  border-color: rgba(1, 4, 1, 0.95);
+  color: var(--matrix-ink);
+  box-shadow: 0 0 12px rgba(83, 255, 106, 0.32);
+}
+
+body.matrix-theme .socials-popup {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 38, 12, 0.9),
+    rgba(1, 8, 2, 0.98)
+  );
+  border-radius: 10px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.matrix-theme .socials-popup-title,
+body.matrix-theme .socials-popup-item span {
+  color: var(--matrix-green-hot);
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .socials-popup-item {
+  padding: 6px;
+  border: 1px solid transparent;
+}
+
+body.matrix-theme .socials-popup-item:hover {
+  background: rgba(8, 38, 12, 0.72);
+  border-color: var(--matrix-line);
+}
+
+body.matrix-theme .socials-popup-item:hover img {
+  transform: none;
+}
+
+body.matrix-theme .socials-overlay {
+  background: rgba(0, 0, 0, 0.56);
+}
+
+body.matrix-theme .window {
+  border: 2px solid var(--matrix-line-strong) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 20, 7, 0.98),
+    rgba(2, 10, 4, 0.98)
+  ) !important;
+  box-shadow: var(--matrix-shadow-window) !important;
+}
+
+body.matrix-theme .window.maximized {
+  box-shadow: none !important;
+}
+
+body.matrix-theme .window .title {
+  background: linear-gradient(
+    90deg,
+    rgba(3, 14, 5, 0.98),
+    rgba(10, 52, 16, 0.92) 45%,
+    rgba(3, 14, 5, 0.98)
+  ) !important;
+  border-bottom: 2px solid var(--matrix-line-strong);
+  color: var(--matrix-green-hot) !important;
+  letter-spacing: 0.08em;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .window .content {
+  background: linear-gradient(
+    180deg,
+    rgba(1, 8, 2, 0.98),
+    rgba(4, 20, 7, 0.96)
+  ) !important;
+  color: var(--matrix-green-bright) !important;
+  box-shadow: var(--matrix-shadow-panel);
+}
+
+body.matrix-theme .ctrl {
+  border: 1px solid var(--matrix-line-strong);
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
   text-shadow: none;
+}
+
+body.matrix-theme .ctrl-close {
+  background: linear-gradient(180deg, #301212, #120606);
+  color: #ffa6a6;
+}
+
+body.matrix-theme .ctrl-max {
+  background: linear-gradient(180deg, #2f2610, #110d04);
+  color: #ffe08a;
+  font-family: "VT323", monospace;
+}
+
+body.matrix-theme .ctrl-min {
+  background: linear-gradient(180deg, #103014, #061006);
+  color: var(--matrix-green-hot);
+}
+
+body.matrix-theme button,
+body.matrix-theme .button,
+body.matrix-theme .music-btn,
+body.matrix-theme .gb-btn,
+body.matrix-theme .nb-btn,
+body.matrix-theme .settings-btn,
+body.matrix-theme .custom-upload-btn,
+body.matrix-theme .internet-toolbar-btn,
+body.matrix-theme .finder-toggle-btn,
+body.matrix-theme .projects-toggle-btn {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 38, 12, 0.92),
+    rgba(2, 10, 4, 0.98)
+  ) !important;
+  border: 2px solid var(--matrix-line-strong) !important;
+  box-shadow: var(--matrix-shadow-button) !important;
+  color: var(--matrix-green-hot) !important;
+  text-shadow: var(--matrix-text-glow);
+  border-radius: 0 !important;
+}
+
+body.matrix-theme button:hover,
+body.matrix-theme .button:hover,
+body.matrix-theme .music-btn:hover,
+body.matrix-theme .gb-btn:hover,
+body.matrix-theme .nb-btn:hover,
+body.matrix-theme .settings-btn:hover,
+body.matrix-theme .custom-upload-btn:hover,
+body.matrix-theme .internet-toolbar-btn:hover,
+body.matrix-theme .finder-toggle-btn:hover,
+body.matrix-theme .projects-toggle-btn:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(13, 58, 19, 0.96),
+    rgba(4, 18, 7, 0.98)
+  ) !important;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.92),
+    0 0 0 1px rgba(83, 255, 106, 0.12),
+    inset 0 0 16px rgba(83, 255, 106, 0.12) !important;
+}
+
+body.matrix-theme button a,
+body.matrix-theme .button a {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+body.matrix-theme input,
+body.matrix-theme textarea,
+body.matrix-theme select {
+  background: rgba(1, 8, 2, 0.94) !important;
+  border: 2px solid var(--matrix-line) !important;
+  color: var(--matrix-green-hot) !important;
+  box-shadow: inset 0 0 14px rgba(29, 99, 35, 0.16);
+  caret-color: var(--matrix-green-hot);
+}
+
+body.matrix-theme input:focus,
+body.matrix-theme textarea:focus,
+body.matrix-theme select:focus {
+  outline: none;
+  border-color: var(--matrix-line-strong) !important;
+  box-shadow: inset 0 0 18px rgba(83, 255, 106, 0.16),
+    0 0 0 1px rgba(83, 255, 106, 0.12) !important;
+}
+
+body.matrix-theme .status-window .content,
+body.matrix-theme #clockApp .content,
+body.matrix-theme #wifiContent,
+body.matrix-theme #batteryContent {
+  background: transparent !important;
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme #clockApp .content *,
+body.matrix-theme #wifiContent *,
+body.matrix-theme #batteryContent * {
+  color: var(--matrix-green-hot) !important;
+  border-color: var(--matrix-line) !important;
+}
+
+body.matrix-theme #clockApp .content div,
+body.matrix-theme #wifiContent div,
+body.matrix-theme #batteryContent div {
+  background: transparent !important;
+}
+
+body.matrix-theme #batteryContent > div > div:nth-of-type(2) {
+  border: 1px solid var(--matrix-line) !important;
+  background: rgba(10, 44, 15, 0.82) !important;
+  border-radius: 0 !important;
+}
+
+body.matrix-theme #batteryContent > div > div:nth-of-type(2) > div {
+  background: linear-gradient(
+    90deg,
+    var(--matrix-green-dark),
+    var(--matrix-green-bright)
+  ) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 10px rgba(83, 255, 106, 0.28);
+}
+
+body.matrix-theme #wifiContent button {
+  width: 100%;
+}
+
+body.matrix-theme .finder-content,
+body.matrix-theme .finder-main,
+body.matrix-theme .finder-main-container,
+body.matrix-theme .projects-window-content,
+body.matrix-theme .projects-main,
+body.matrix-theme .project-details-container,
+body.matrix-theme .mail-app,
+body.matrix-theme .mail-layout,
+body.matrix-theme .mail-detail,
+body.matrix-theme .internet-content,
+body.matrix-theme .internet-browser-shell,
+body.matrix-theme .internet-browser-home,
+body.matrix-theme .guestbook-content,
+body.matrix-theme .guestbook-detail-body,
+body.matrix-theme .guestbook-compose,
+body.matrix-theme .noticeboard-content,
+body.matrix-theme .noticeboard-posts,
+body.matrix-theme .nb-compose {
+  background: transparent !important;
+  color: var(--matrix-green-bright) !important;
+}
+
+body.matrix-theme .finder-sidebar,
+body.matrix-theme .projects-sidebar,
+body.matrix-theme .mail-sidebar,
+body.matrix-theme .mail-detail-header,
+body.matrix-theme .internet-title-tools,
+body.matrix-theme .gb-list-header,
+body.matrix-theme .gb-detail-header,
+body.matrix-theme .noticeboard-header {
+  background: rgba(8, 38, 12, 0.9) !important;
+  border-color: var(--matrix-line-strong) !important;
+}
+
+body.matrix-theme .sidebar-item,
+body.matrix-theme .sidebar-project-item,
+body.matrix-theme .mail-tab,
+body.matrix-theme .mail-list-item,
+body.matrix-theme .finder-icon,
+body.matrix-theme .guestbook-list-item,
+body.matrix-theme .nb-card,
+body.matrix-theme .favourite-item {
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .sidebar-item {
+  border: 1px solid transparent;
+}
+
+body.matrix-theme .sidebar-item.active,
+body.matrix-theme .sidebar-item:hover {
+  background: rgba(10, 44, 15, 0.96);
+  border-color: var(--matrix-line);
+  color: var(--matrix-green-hot);
+}
+
+body.matrix-theme .finder-icon {
+  padding: 8px 6px;
+  border: 1px solid transparent;
+}
+
+body.matrix-theme .finder-icon:hover,
+body.matrix-theme .finder-icon.selected {
+  background: rgba(5, 24, 8, 0.86);
+  border-color: var(--matrix-line);
+  box-shadow: inset 0 0 14px rgba(29, 99, 35, 0.16);
+}
+
+body.matrix-theme .finder-icon span {
+  color: var(--matrix-green-hot);
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .sidebar-project-item {
+  background: transparent !important;
+  border-bottom: 1px solid var(--matrix-line) !important;
+}
+
+body.matrix-theme .sidebar-project-item:hover,
+body.matrix-theme .sidebar-project-item.active {
+  background: rgba(10, 44, 15, 0.96) !important;
+}
+
+body.matrix-theme .sidebar-project-item h4,
+body.matrix-theme .project-title,
+body.matrix-theme .mail-detail-subject,
+body.matrix-theme .gb-list-header h3,
+body.matrix-theme .gb-detail-header h3,
+body.matrix-theme .noticeboard-header h3,
+body.matrix-theme .settings-heading {
+  color: var(--matrix-green-hot) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .sidebar-project-item p,
+body.matrix-theme .project-date,
+body.matrix-theme .project-description,
+body.matrix-theme .mail-list-date,
+body.matrix-theme .mail-detail-from-address,
+body.matrix-theme .mail-detail-date,
+body.matrix-theme .mail-detail-placeholder,
+body.matrix-theme .guestbook-list-item .gb-preview,
+body.matrix-theme .guestbook-list-item .gb-date,
+body.matrix-theme .noticeboard-empty,
+body.matrix-theme .gb-warning,
+body.matrix-theme .settings-desc,
+body.matrix-theme .guestbook-empty,
+body.matrix-theme .mail-empty-state {
+  color: var(--matrix-copy-soft) !important;
+}
+
+body.matrix-theme .project-tech span {
+  background: rgba(8, 38, 12, 0.88);
+  border: 1px solid var(--matrix-line);
+  border-radius: 0;
+  color: var(--matrix-green-hot);
+  box-shadow: inset 0 0 12px rgba(29, 99, 35, 0.14);
+}
+
+body.matrix-theme .btn-retro.btn-demo,
+body.matrix-theme .btn-retro.btn-code {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 38, 12, 0.92),
+    rgba(2, 10, 4, 0.98)
+  ) !important;
+  border-color: var(--matrix-line-strong) !important;
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .mail-tab {
+  background: rgba(2, 12, 4, 0.94);
+  border-color: var(--matrix-line) !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.92);
+}
+
+body.matrix-theme .mail-tab:hover,
+body.matrix-theme .mail-tab.active,
+body.matrix-theme .mail-tab.active:hover {
+  background: rgba(10, 44, 15, 0.96);
+  border-color: var(--matrix-line-strong) !important;
+}
+
+body.matrix-theme .mail-sidebar-divider {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(180, 255, 159, 0.8),
+    transparent
+  );
+}
+
+body.matrix-theme .mail-list-item {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 24, 8, 0.88),
+    rgba(1, 10, 4, 0.96)
+  ) !important;
+  border-color: var(--matrix-line) !important;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.92);
+}
+
+body.matrix-theme .mail-list-item:hover,
+body.matrix-theme .mail-list-item.active {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 44, 15, 0.96),
+    rgba(4, 18, 7, 0.98)
+  ) !important;
+  border-color: var(--matrix-line-strong) !important;
+}
+
+body.matrix-theme .mail-list-item::before {
+  background: rgba(83, 255, 106, 0.1);
+}
+
+body.matrix-theme .mail-list-item.unread::before {
+  background: var(--matrix-green-bright);
+  box-shadow: 0 0 10px rgba(83, 255, 106, 0.28);
+}
+
+body.matrix-theme .mail-list-sender,
+body.matrix-theme .mail-list-subject,
+body.matrix-theme .mail-detail-from-name,
+body.matrix-theme .mail-detail-body {
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .mail-detail-panel {
+  background: linear-gradient(
+    180deg,
+    rgba(3, 14, 5, 0.98),
+    rgba(1, 8, 2, 0.98)
+  ) !important;
+}
+
+body.matrix-theme .mail-detail-body {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(2, 12, 4, 0.98),
+      rgba(4, 18, 7, 0.98)
+    ),
+    repeating-linear-gradient(
+      180deg,
+      rgba(83, 255, 106, 0.06) 0 1px,
+      transparent 1px 28px
+    ) !important;
+  text-shadow: var(--matrix-text-glow);
+  box-shadow: inset 0 1px 0 rgba(180, 255, 159, 0.12);
+}
+
+body.matrix-theme .mail-list-item.read .mail-list-sender,
+body.matrix-theme .mail-list-item.read .mail-list-subject,
+body.matrix-theme .mail-list-item.read .mail-list-date {
+  color: rgba(180, 255, 159, 0.64) !important;
+}
+
+body.matrix-theme .mail-empty-state {
+  border-color: var(--matrix-line) !important;
+  background: rgba(5, 24, 8, 0.72) !important;
+}
+
+body.matrix-theme .mail-detail-body strong {
+  background: rgba(83, 255, 106, 0.16) !important;
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .mail-list::-webkit-scrollbar-track,
+body.matrix-theme .mail-detail-body::-webkit-scrollbar-track,
+body.matrix-theme .terminal-output::-webkit-scrollbar-track {
+  border: 1px solid var(--matrix-line);
+  background: rgba(1, 8, 2, 0.94);
+}
+
+body.matrix-theme .mail-list::-webkit-scrollbar-thumb,
+body.matrix-theme .mail-detail-body::-webkit-scrollbar-thumb,
+body.matrix-theme .terminal-output::-webkit-scrollbar-thumb {
+  border: 1px solid var(--matrix-line);
+  background: rgba(10, 44, 15, 0.96);
+}
+
+body.matrix-theme #internet.window,
+body.matrix-theme #music.window,
+body.matrix-theme #terminal.window {
+  background: var(--matrix-ink) !important;
+}
+
+body.matrix-theme #internet .internet-content,
+body.matrix-theme .internet-browser-pane,
+body.matrix-theme .internet-browser-loading,
+body.matrix-theme #terminal .content,
+body.matrix-theme .terminal-content,
+body.matrix-theme .terminal-output,
+body.matrix-theme .terminal-input-container,
+body.matrix-theme .music-player,
+body.matrix-theme #local-music-view,
+body.matrix-theme #spotify-view,
+body.matrix-theme .photo-viewer-content {
+  background: transparent !important;
+}
+
+body.matrix-theme #internetSearchInput,
+body.matrix-theme #internetHomeSearchInput {
+  background: rgba(1, 8, 2, 0.94) !important;
+  border-color: var(--matrix-line-strong) !important;
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .internet-browser-pane,
+body.matrix-theme #internetBrowserFrame,
+body.matrix-theme .photo-viewer-content {
+  background: rgba(1, 6, 2, 0.98) !important;
+}
+
+body.matrix-theme .internet-browser-loading {
+  color: var(--matrix-green-hot) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .favourites-title,
+body.matrix-theme .favourite-label {
+  color: var(--matrix-green-hot) !important;
+  text-shadow: var(--matrix-text-glow);
+}
+
+body.matrix-theme .favourite-item {
+  border-color: transparent;
+}
+
+body.matrix-theme .favourite-item:hover,
+body.matrix-theme .favourite-item:focus-visible {
+  background: rgba(8, 38, 12, 0.82);
+  border-color: var(--matrix-line);
+  color: var(--matrix-green-hot);
+  outline: none;
+}
+
+body.matrix-theme .favourite-item img {
+  background-color: rgba(1, 8, 2, 0.96);
+  border-color: var(--matrix-line-strong);
+  box-shadow: 0 0 0 1px rgba(83, 255, 106, 0.12);
+}
+
+body.matrix-theme #local-music-view {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 24, 8, 0.94),
+    rgba(1, 8, 2, 0.98)
+  ) !important;
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme #local-music-view h3,
+body.matrix-theme #local-music-view p,
+body.matrix-theme #local-music-view button {
+  color: inherit !important;
+}
+
+body.matrix-theme #local-music-view > div:last-child {
+  border-top-color: var(--matrix-line-strong) !important;
+}
+
+body.matrix-theme #terminal .content {
+  background: linear-gradient(
+    180deg,
+    rgba(1, 8, 2, 0.98),
+    rgba(3, 14, 5, 0.98)
+  ) !important;
+}
+
+body.matrix-theme .terminal-output {
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .terminal-prompt,
+body.matrix-theme .terminal-command,
+body.matrix-theme .terminal-boot {
+  color: var(--matrix-green-bright);
+}
+
+body.matrix-theme .terminal-user {
+  color: #ddffb3;
+}
+
+body.matrix-theme .terminal-path,
+body.matrix-theme .terminal-info,
+body.matrix-theme .terminal-directory,
+body.matrix-theme .terminal-output a {
+  color: #88f2a2;
+}
+
+body.matrix-theme .terminal-command-text,
+body.matrix-theme .terminal-file {
+  color: var(--matrix-green-hot);
+}
+
+body.matrix-theme .terminal-error {
+  color: #ff9b9b;
+}
+
+body.matrix-theme .terminal-input-container {
+  border-top: 1px solid var(--matrix-line);
+}
+
+body.matrix-theme .terminal-input {
+  color: var(--matrix-green-hot);
+  caret-color: var(--matrix-green-bright);
+}
+
+body.matrix-theme .photo-viewer-content img {
+  border: 1px solid var(--matrix-line);
+  box-shadow: 0 0 24px rgba(83, 255, 106, 0.12);
+}
+
+body.matrix-theme .guestbook-list-item,
+body.matrix-theme .nb-card,
+body.matrix-theme .guestbook-loader-panel,
+body.matrix-theme .noticeboard-loader-panel {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 24, 8, 0.9),
+    rgba(1, 8, 2, 0.98)
+  ) !important;
+  border-color: var(--matrix-line-strong) !important;
+  box-shadow: var(--matrix-shadow-window) !important;
+}
+
+body.matrix-theme .guestbook-list-item:hover,
+body.matrix-theme .guestbook-list-item:active {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 44, 15, 0.96),
+    rgba(4, 18, 7, 0.98)
+  ) !important;
+  transform: none;
+  box-shadow: var(--matrix-shadow-window) !important;
+}
+
+body.matrix-theme .gb-btn-send,
+body.matrix-theme .internet-go-btn,
+body.matrix-theme .nb-btn.gb-btn-send {
+  border-color: var(--matrix-line-strong) !important;
+}
+
+body.matrix-theme .gb-btn-delete,
+body.matrix-theme .nb-btn-delete {
+  color: #ffacac !important;
+  border-color: rgba(255, 172, 172, 0.68) !important;
+}
+
+body.matrix-theme .gb-emoji-picker {
+  background: rgba(1, 8, 2, 0.96) !important;
+  border-color: var(--matrix-line-strong) !important;
+  box-shadow: var(--matrix-shadow-window) !important;
+  backdrop-filter: none;
+}
+
+body.matrix-theme .gb-emoji-option {
+  background: rgba(5, 24, 8, 0.9) !important;
+  border-color: var(--matrix-line) !important;
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .gb-emoji-option:hover,
+body.matrix-theme .gb-emoji-option:active {
+  background: rgba(10, 44, 15, 0.96) !important;
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .guestbook-loader-title,
+body.matrix-theme .noticeboard-loader-title,
+body.matrix-theme .guestbook-loader-copy,
+body.matrix-theme .noticeboard-loader-copy,
+body.matrix-theme .nb-card-title,
+body.matrix-theme .nb-card-body,
+body.matrix-theme .gb-detail-meta {
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .guestbook-loader-track,
+body.matrix-theme .noticeboard-loader-track {
+  background: rgba(5, 24, 8, 0.88) !important;
+  border-color: var(--matrix-line-strong) !important;
+}
+
+body.matrix-theme .guestbook-loader-track::before {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(180, 255, 159, 0.08) 0 12px,
+    rgba(10, 44, 15, 0.92) 12px 24px
+  );
+}
+
+body.matrix-theme .noticeboard-loader-track::before {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(180, 255, 159, 0.08) 0 12px,
+    rgba(10, 44, 15, 0.92) 12px 24px
+  );
+}
+
+body.matrix-theme .guestbook-loader-track::after,
+body.matrix-theme .noticeboard-loader-track::after {
+  background: linear-gradient(
+    90deg,
+    var(--matrix-green-dark),
+    var(--matrix-green-bright)
+  );
+  border-left-color: rgba(1, 4, 1, 0.92);
+  border-right-color: rgba(1, 4, 1, 0.92);
+}
+
+body.matrix-theme .nb-card-header {
+  background: rgba(8, 38, 12, 0.88) !important;
+  border-bottom-color: var(--matrix-line) !important;
+}
+
+body.matrix-theme .nb-card-date,
+body.matrix-theme .nb-tag,
+body.matrix-theme .admin-badge,
+body.matrix-theme .nb-version-badge {
+  color: var(--matrix-green-hot) !important;
+}
+
+body.matrix-theme .nb-version-badge,
+body.matrix-theme .admin-badge,
+body.matrix-theme .nb-tag,
+body.matrix-theme .nb-tag-update,
+body.matrix-theme .nb-tag-announce,
+body.matrix-theme .nb-tag-warning,
+body.matrix-theme .nb-tag-info {
+  background: rgba(5, 24, 8, 0.88) !important;
+  border-color: var(--matrix-line) !important;
+}
+
+body.matrix-theme .settings-divider {
+  background: var(--matrix-line);
+  border-bottom-color: rgba(180, 255, 159, 0.12);
 }

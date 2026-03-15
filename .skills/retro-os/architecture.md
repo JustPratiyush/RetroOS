@@ -2,182 +2,199 @@
 
 ## Directory Structure
 
-```
+```text
 retroOS_V1/
-├── index.html              ← Single-page app. All windows live here.
+├── index.html
 ├── css/
-│   ├── main.css            ← Global OS chrome: windows, dock, desktop icons
-│   ├── mail.css            ← Mail app (window, sidebar, list, detail, compose, notifications)
-│   ├── finder.css          ← Finder sidebar and icon grid
-│   ├── internet.css        ← Snoogle/Internet app
-│   ├── calculator.css      ← Calculator app
-│   ├── clock.css           ← Clock status app
-│   ├── coffee.css          ← Coffee/Pizza app + buy-me-a-pizza button
-│   ├── photo-viewer.css    ← Photo Viewer app
-│   ├── trash.css           ← Trash easter egg, game options, skull icon
-│   ├── sacrifice.css       ← Sacrifice ritual: blood rain, shake, glitch text
-│   ├── projects.css        ← Projects window app
-│   ├── terminal.css        ← Terminal app
-│   ├── music.css           ← Music player
-│   ├── matrix.css          ← Matrix theme easter egg
-│   ├── guestbook.css       ← Guestbook app (single-pane drilldown)
-│   ├── noticeboard.css     ← Notice Board app
-│   └── responsive.css      ← Mobile overrides
+│   ├── main.css
+│   ├── finder.css
+│   ├── mail.css
+│   ├── internet.css
+│   ├── settings.css
+│   ├── guestbook.css
+│   ├── noticeboard.css
+│   └── responsive.css
 ├── js/
-│   ├── main.js             ← Boot sequence + initApp()
-│   ├── system.js           ← Window manager + global OS state + createWindowFromTemplate
-│   ├── auth.js             ← Login + welcome popup
-│   ├── mail.js             ← Mail inbox data + send logic
-│   ├── utils.js            ← Shared utility functions (typewriterEffect)
+│   ├── main.js
+│   ├── system.js
+│   ├── auth.js
+│   ├── mail.js
+│   ├── utils.js
 │   └── apps/
-│       ├── finder.js       ← Finder navigation + renderFinderContent + finderData
-│       ├── projects.js     ← Projects window: projectsData, openProjectsFolder, showProjectDetails
-│       ├── calculator.js
+│       ├── finder.js
+│       ├── projects.js
 │       ├── terminal.js
-│       ├── music.js
-│       ├── trash.js        ← Trash easter egg + Morphy the dog
-│       ├── sacrifice.js    ← Sacrifice ritual easter egg
-│       ├── guestbook.js    ← Guestbook app + Upstash Redis
-│       └── noticeboard.js  ← Notice Board app + Upstash Redis
-├── assets/
-│   ├── icons/
-│   ├── wallpapers/
-│   ├── sounds/
-│   ├── album/
-│   └── System_Architecture_Blueprint/
-├── api/                    ← Vercel serverless functions
-└── server/                 ← Local Express dev server
+│       ├── internet.js
+│       ├── guestbook.js
+│       ├── noticeboard.js
+│       ├── trash.js
+│       └── sacrifice.js
+├── api/
+│   ├── browser.js
+│   ├── guestbook.js
+│   ├── noticeboard.js
+│   └── health.js
+└── server/
 ```
-
----
 
 ## Window Model
 
-Each app is a `.window` div with a standard structure:
+Each window is a `.window` element in `index.html` with:
 
-```html
-<div id="app-id" class="window" style="display: none">
-  <div class="title">
-    <span>App Name</span>
-    <span class="controls">
-      <span class="ctrl ctrl-min" onclick="minimizeWindow('app-id')">−</span>
-      <span class="ctrl ctrl-max" onclick="maximizeWindow('app-id')">O</span>
-      <span class="ctrl ctrl-close" onclick="closeWindow('app-id')">×</span>
-    </span>
-  </div>
-  <div class="content"><!-- app content --></div>
-</div>
-```
+- a unique `id`
+- a `.title` bar
+- `.controls` containing `.ctrl-min`, `.ctrl-max`, and `.ctrl-close`
+- a `.content` region
 
-- `ctrl-min` = green circle (minimize)
-- `ctrl-max` = yellow circle with Arial Bold "O" (maximize/restore)
-- `ctrl-close` = red circle (close)
-- **Calculator** has NO maximize button — it has a fixed size.
+Calculator is the only regular window without a maximize control.
 
-### createWindowFromTemplate (in `system.js`)
+`js/system.js` owns the lifecycle:
 
-`createWindowFromTemplate(templateId, containerId)` clones an HTML `<template>` element, appends it to a container, calls `makeDraggable` and `bringToFront`. Used by `projects.js` and `auth.js`.
+- `openWindow(id)`
+- `closeWindow(id)`
+- `minimizeWindow(id)`
+- `maximizeWindow(id)`
+- `bringToFront(el)`
+- `createWindowFromTemplate(templateId, containerId)`
+- `openPhotoViewer(src, title)`
 
-### Window Lifecycle States (`js/system.js`)
+`windowStates[id]` tracks `closed`, `open`, or `minimized`.
 
-```javascript
-windowStates[id] = "closed" | "open" | "minimized"
-```
+## Desktop Icons And Shared Action Routing
 
-### Window layering
+Desktop icons are declared directly in `index.html` as `.desktop-icon` nodes. New icons are expected to use:
 
-`bringToFront(el)` increments `zTop` and sets `el.style.zIndex`.
+- `data-open-action`
+- `data-open-target`
+- optional `data-open-title`
 
----
+`js/system.js` centralizes activation through `activateIconAction(action, target, options)`, which is reused by both desktop icons and Finder icons. Supported actions currently include:
 
-## Static vs. Template Windows
+- `window`
+- `url`
+- `readme`
+- `projects`
+- `socials`
+- `finder-location`
+- `photo`
+- `purge`
 
-### Static (always in DOM, shown/hidden)
-- `#calculator`, `#terminal`, `#finder`, `#mail`, `#internet`, `#settings`, `#music`, `#coffee`, `#photo-viewer`, etc.
+Desktop icons are draggable via `makeIconDraggable()` and selectable through the `.selected` class in `css/main.css`.
 
-### Template-based (cloned on demand)
-- `#readme-template` → appended to `#readme-container` by `openReadMe()`
-- `#welcome-template` → appended by `auth.js` after login
+## Finder App
 
----
+`js/apps/finder.js` renders Finder content instead of hardcoding extra HTML in `index.html`.
 
-## Finder App (`js/apps/finder.js`)
+Important pieces:
 
-The Finder has a 3-panel layout:
-- **Sidebar:** Desktop, Documents, Downloads
-- **Main area:** Dynamic icon grid rendered by `renderFinderContent(location)`
+- `finderData` stores the document image datasets.
+- `createFinderIcon()` builds standard Finder items.
+- `createFinderSocialsIcon()` renders the Finder-safe opaque version of the `My Socials` folder.
+- `initFinderInteractions()` binds click selection and activation for Finder items once at startup.
+- `selectFinderLocation(location)` drives sidebar navigation.
 
-**Note:** Projects folder code (`openProjectsFolder`, `projectsData`, etc.) lives in `js/apps/projects.js`, NOT in finder.js.
-
-### Finder locations and what they contain
+Current Finder locations:
 
 | Location key | Contents |
 |---|---|
-| `"desktop"` | Mirrors actual `.desktop-icon` elements (ReadMe, Calculator, Pizza, My Site, My Socials) |
-| `"documents"` | Album folder + System_Architecture_Blueprint folder |
-| `"album"` | 4 image files driven by `finderData.album` array |
-| `"system_architecture_blueprint"` | 3 image files driven by `finderData.system_architecture_blueprint` array |
-| `"downloads"` | `SACRIFICE.exe` |
+| `desktop` | Mirrors the live desktop icon set, including `My Socials` |
+| `documents` | `Album` and `System Architecture Blueprint` |
+| `album` | Images from `finderData.album` |
+| `system architecture blueprint` | Images from `finderData["system architecture blueprint"]` |
+| `downloads` | `installer.dmg` until purge state advances, then `PURGE` |
 
-Image file data for `album` and `system_architecture_blueprint` is stored in the `finderData` object at the top of `finder.js`. To add/rename images, edit that object only — `renderFinderContent` reads it automatically.
+Inside Finder, `My Socials` should never reuse the frosted desktop look. It renders as an opaque gray 2x2 grid so it stays visible against the light Finder background.
 
-When a `.finder-icon` is double-clicked, `handleFinderClick(name)` routes to the appropriate action using a lookup map.
+## Mail App
 
-### Special case — My Socials in Finder
+`js/mail.js` now uses folder-based state instead of a single `inboxEmails` array.
 
-The "My Socials" android-folder uses a special rendering path in `renderFinderContent()`.
-When it detects `icon.classList.contains("android-folder")` it renders a 2×2 mini-grid
-with grey background (`#e0e0e0`, border `2px solid #999`) instead of a single img.
+Core structures:
 
----
+- `mailFolders`: folder metadata and badge participation
+- `mailData`: actual messages grouped under `inbox`, `important`, `spam`, `deleted`
+- `activeMailFolder`: current folder tab
+- `selectedMailByFolder`: remembered selection per folder
 
-## Desktop Icons (`.desktop-icon`)
+Core functions:
 
-All desktop icons are `position: absolute` elements in `index.html`.
-They are draggable (handled by `makeDraggable()` in `system.js`).
+- `renderMailTabs()`
+- `renderMailList()`
+- `renderMailDetail()`
+- `renderMailApp()`
+- `setActiveMailFolder(folderId)`
+- `selectMail(mailId)`
+- `updateMailBadge()`
 
-### Left column (top → down)
-1. ReadMe.txt (`top: 80px; left: 20px`)
-2. Calculator (`top: 180px; left: 20px`)
-3. Pizza (`top: 280px; left: 20px`)
-4. My Site (`top: 380px; left: 20px`) — links to `https://abhinavkuchhal.com`
+The unread dock badge only counts folders whose metadata sets `countsTowardBadge: true` currently `Inbox` and `Important`.
 
-### Right column (top → down)
-- My Socials android folder (`top: 100px; right: 20px`)
+## Internet App
 
-### Android-style "My Socials" folder
-- Shows a 2×2 mini-grid of Twitter/Instagram/YouTube/LinkedIn icons inside a frosted-glass box.
-- Clicking calls `toggleSocialsFolder(event)` in `system.js`.
-- A dim overlay + centered expanded popup shows all 5 socials (+ GitHub) at full size.
-- Clicking outside the popup closes it.
+The Internet window is split between a Snoogle home screen and a browser pane.
 
----
+Frontend:
 
-## Mail App (`js/mail.js`)
+- `js/apps/internet.js` owns browser state, search normalization, history, back navigation, and iframe click/form interception.
+- Quick links and text submission route through `navigateInternet()`.
+- Some domains are intentionally opened outside RetroOS because they block reliable iframe rendering.
 
-2-pane Apple Mail clone: Email List → Detail pane. (Sidebar & Compose features were deprecated).
+Backend:
 
-`inboxEmails` array holds all hardcoded lore emails (HR, Sequoia, Morpheus, etc.).
+- `api/browser.js` fetches public `http` and `https` pages only.
+- Private network targets, credentialed URLs, and unsafe protocols are blocked.
+- Scripts are stripped from fetched HTML and links/forms are rewritten back through the proxy where possible.
+- A small in-memory cache is used for repeated page loads.
 
-### Notification Badge
-- The dock icon features a dynamically updating red dot `.dock-badge` showing unread count.
-- `updateMailBadge()` runs on `DOMContentLoaded` and when an email is read.
+## Terminal App
 
----
+`js/apps/terminal.js` is a stateful shell, not a collection of hardcoded output strings.
 
-## Photo Viewer App
+It maintains:
 
-- Window ID: `#photo-viewer`
-- Opened via `openPhotoViewer(src, title)` in `system.js`.
-- Image fills the content area using `width:100%; height:100%; object-fit:contain`.
-- Has full minimize / maximize / close controls.
+- command history and history cursor
+- current virtual path rooted at `~`
+- session uptime
+- Matrix mode state
 
----
+It exposes a virtual filesystem with:
 
-## Adding a New App — Checklist
+- `~/Applications`
+- `~/Desktop`
+- `~/Documents`
+- `~/Downloads`
+- `~/Projects`
+- `~/Desktop/My Socials`
+- `ReadMe.txt`
 
-1. Add `<div class="window" id="app-id" style="display:none">` in `index.html`.
-2. Add launcher as `.dock-icon` in nav or `.desktop-icon` on the desktop.
-3. Add CSS to `css/apps.css` (NOT `main.css`).
-4. Create `js/apps/app-id.js` and add `<script>` tag in `index.html`.
-5. Register init in `initApp()` inside `js/main.js` if needed.
+Bridge commands call the real UI helpers instead of duplicating behavior:
+
+- `open`
+- `close`
+- `finder`
+- `projects`
+- `mail`
+- `theme`
+- `socials`
+
+The `mail` command reads the same foldered mail data used by `js/mail.js`, so terminal mail counts and open actions stay aligned with the app UI.
+
+## Guestbook And Notice Board
+
+Both community apps are serverless-first:
+
+- `api/guestbook.js` handles guestbook CRUD in Upstash Redis.
+- `api/noticeboard.js` handles notice CRUD in Upstash Redis.
+- Frontend code lives in `js/apps/guestbook.js` and `js/apps/noticeboard.js`.
+
+Recent UI behavior worth noting:
+
+- Guestbook compose includes an emoji picker and retro loading panel.
+- Notice Board uses a matching loader before posts resolve.
+
+## Adding A New App
+
+1. Add the window markup to `index.html`.
+2. Add the launcher in the desktop and/or dock if needed.
+3. Create `css/<app>.css` and link it from `index.html`.
+4. Create `js/apps/<app>.js` and load it with a deferred script tag.
+5. Wire initialization in `js/main.js` or `js/system.js` only if the app actually needs startup behavior.

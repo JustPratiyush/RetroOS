@@ -53,6 +53,7 @@
     <link rel="stylesheet" href="css/photo-viewer.css" />
     <link rel="stylesheet" href="css/trash.css" />
     <link rel="stylesheet" href="css/sacrifice.css" />
+    <link rel="stylesheet" href="css/settings.css" />
     <link rel="stylesheet" href="css/responsive.css" />
     <link rel="stylesheet" href="css/projects.css" />
     <link rel="stylesheet" href="css/terminal.css" />
@@ -105,28 +106,56 @@
 
     <div class="grain"></div>
 
-    <div id="icon-readme" class="desktop-icon" style="top: 80px; left: 20px">
+    <div
+      id="icon-readme"
+      class="desktop-icon"
+      data-open-action="readme"
+      style="top: 80px; left: 20px"
+    >
       <img src="assets/icons/TxtIcon.webp" alt="ReadMe" />
       <span>ReadMe.txt</span>
     </div>
 
-    <div id="icon-calculator" class="desktop-icon" style="top: 180px; left: 20px" onclick="openWindow('calculator')">
+    <div
+      id="icon-calculator"
+      class="desktop-icon"
+      data-open-action="window"
+      data-open-target="calculator"
+      style="top: 180px; left: 20px"
+    >
       <img src="assets/icons/calculator.webp" alt="Calculator" />
       <span>Calculator</span>
     </div>
 
-    <div id="icon-coffee" class="desktop-icon" style="top: 280px; left: 20px" onclick="openWindow('coffee')">
+    <div
+      id="icon-coffee"
+      class="desktop-icon"
+      data-open-action="window"
+      data-open-target="coffee"
+      style="top: 280px; left: 20px"
+    >
       <img src="assets/icons/pizza.webp" alt="Pizza" />
       <span>Pizza</span>
     </div>
 
-    <div id="icon-portfolio" class="desktop-icon" style="top: 380px; left: 20px" onclick="window.open('https://abhinavkuchhal.com', '_blank')">
+    <div
+      id="icon-portfolio"
+      class="desktop-icon"
+      data-open-action="url"
+      data-open-target="https://abhinavkuchhal.com"
+      style="top: 380px; left: 20px"
+    >
       <img src="assets/icons/me.png" alt="My Site" style="border-radius: 12px; border: 2px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,0.4);" />
       <span>My Site</span>
     </div>
 
     <!-- Android-style Social Folder -->
-    <div id="socials-folder" class="android-folder desktop-icon" style="top: 80px; right: 20px; left: auto; width: 100px;" onclick="toggleSocialsFolder(event)">
+    <div
+      id="socials-folder"
+      class="android-folder desktop-icon"
+      data-open-action="socials"
+      style="top: 80px; right: 20px; left: auto; width: 100px;"
+    >
       <div class="android-folder-box">
         <div class="android-folder-grid">
           <img src="assets/icons/twitter.webp" alt="Twitter" />
@@ -139,13 +168,25 @@
     </div>
 
     <!-- Guestbook Desktop Icon -->
-    <div id="icon-guestbook" class="desktop-icon" style="top: 180px; right: 20px; left: auto; width: 100px;" onclick="openWindow('guestbook')">
+    <div
+      id="icon-guestbook"
+      class="desktop-icon"
+      data-open-action="window"
+      data-open-target="guestbook"
+      style="top: 180px; right: 20px; left: auto; width: 100px;"
+    >
       <img src="assets/icons/guestbook.png" alt="Guestbook" />
       <span>Guestbook</span>
     </div>
 
     <!-- Notice Board Desktop Icon -->
-    <div id="icon-noticeboard" class="desktop-icon" style="top: 280px; right: 20px; left: auto; width: 100px;" onclick="openWindow('noticeboard')">
+    <div
+      id="icon-noticeboard"
+      class="desktop-icon"
+      data-open-action="window"
+      data-open-target="noticeboard"
+      style="top: 280px; right: 20px; left: auto; width: 100px;"
+    >
       <img src="assets/icons/notice-board.png" alt="Notice Board" />
       <span>Notice Board</span>
     </div>
@@ -176,7 +217,7 @@
         </a>
       </div>
     </div>
-    <!-- <div id="icon-projects" class="desktop-icon" style="top: 180px; left: 20px">
+    <!-- <div id="icon-projects" class="desktop-icon" data-open-action="projects" style="top: 180px; left: 20px">
       <img src="assets/icons/folderIcon.webp" alt="Projects" />
       <span>Projects</span>
     </div> -->
@@ -570,10 +611,23 @@
         </span>
       </div>
       <div class="content mail-app">
-        <div class="mail-list" id="mail-list" style="width: 320px; min-width: 320px;"></div>
-        <!-- Email Detail Pane -->
-        <div class="mail-detail" id="mail-detail" style="display:flex">
-          <div class="mail-detail-placeholder">Select an email to read</div>
+        <div class="mail-layout">
+          <aside class="mail-sidebar">
+            <div class="mail-tabs" id="mail-tabs">
+              <button type="button" class="mail-tab active" data-folder="inbox">Inbox</button>
+              <button type="button" class="mail-tab" data-folder="important">Important</button>
+              <button type="button" class="mail-tab" data-folder="spam">Spam</button>
+              <button type="button" class="mail-tab" data-folder="deleted">Deleted</button>
+            </div>
+            <div class="mail-sidebar-divider"></div>
+            <div class="mail-list-wrap">
+              <div class="mail-list" id="mail-list"></div>
+            </div>
+          </aside>
+
+          <section class="mail-detail" id="mail-detail">
+            <div class="mail-detail-placeholder">Select an email to read.</div>
+          </section>
         </div>
       </div>
     </div>
@@ -799,16 +853,93 @@
         </span>
       </div>
       <div class="content internet-content">
-        <div class="snoogle-header">
-          <img src="assets/icons/snoogle.webp" alt="Snoogle Logo" />
+        <div class="internet-title-tools" hidden>
+          <button
+            type="button"
+            id="internetBackButton"
+            class="internet-toolbar-btn internet-back-btn"
+            aria-label="Go back"
+            disabled
+          >
+            Back
+          </button>
+          <form id="internetSearchForm" class="internet-search-form">
+            <input
+              type="text"
+              id="internetSearchInput"
+              placeholder="Search or type a URL"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button
+              type="submit"
+              class="internet-toolbar-btn internet-go-btn"
+            >
+              Go
+            </button>
+          </form>
         </div>
-        <form id="internetSearchForm">
-          <input
-            type="text"
-            id="internetSearchInput"
-            placeholder="Search or type a URL"
-          />
-        </form>
+        <div class="internet-browser-shell">
+          <div id="internetBrowserHome" class="internet-browser-home">
+            <div class="snoogle-header">
+              <img src="assets/icons/snoogle.webp" alt="Snoogle Logo" />
+            </div>
+            <form id="internetHomeSearchForm" class="internet-home-search-form">
+              <input
+                type="text"
+                id="internetHomeSearchInput"
+                placeholder="Search or type a URL"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button
+                type="submit"
+                class="internet-toolbar-btn internet-go-btn"
+              >
+                Go
+              </button>
+            </form>
+            <div class="favourites-section">
+              <div class="favourites-title">Quick Links</div>
+              <div class="favourites-container">
+                <button
+                  type="button"
+                  class="favourite-item internet-favourite-btn"
+                  data-url="https://abhinavkuchhal.com"
+                >
+                  <img src="assets/icons/me.png" alt="Portfolio" />
+                  <span class="favourite-label">Portfolio</span>
+                </button>
+                <button
+                  type="button"
+                  class="favourite-item internet-favourite-btn"
+                  data-url="https://github.com/JustPratiyush"
+                >
+                  <img src="assets/icons/github.webp" alt="GitHub" />
+                  <span class="favourite-label">GitHub</span>
+                </button>
+                <button
+                  type="button"
+                  class="favourite-item internet-favourite-btn"
+                  data-url="https://www.linkedin.com/in/abhinav-kuchhal/"
+                >
+                  <img src="assets/icons/linkedin.webp" alt="LinkedIn" />
+                  <span class="favourite-label">LinkedIn</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="internetBrowserPane" class="internet-browser-pane" hidden>
+            <div id="internetBrowserLoading" class="internet-browser-loading">
+              Loading page...
+            </div>
+            <iframe
+              id="internetBrowserFrame"
+              title="RetroOS Internet Browser"
+              referrerpolicy="no-referrer"
+            ></iframe>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -829,7 +960,17 @@
             <h3>📖 Visitor Guestbook</h3>
             <button class="gb-btn gb-btn-send" onclick="showGbComposeView()">Post your own message</button>
           </div>
-          <div class="guestbook-list" id="guestbook-list"></div>
+          <div class="guestbook-list" id="guestbook-list">
+            <div class="guestbook-loader" role="status" aria-live="polite">
+              <div class="guestbook-loader-panel">
+                <div class="guestbook-loader-title">Loading Guestbook</div>
+                <div class="guestbook-loader-track" aria-hidden="true"></div>
+                <div class="guestbook-loader-copy">
+                  Reading visitor messages from the RetroOS archive...
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- View 2: Detail View -->
@@ -855,6 +996,21 @@
             <input type="text" id="gb-name-input" placeholder="Your name..." maxlength="50" />
             <textarea id="gb-message-input" placeholder="Leave a message..." maxlength="500"></textarea>
             <div class="guestbook-compose-actions">
+              <div class="gb-emoji-anchor">
+                <button
+                  type="button"
+                  class="gb-btn gb-emoji-toggle"
+                  id="gb-emoji-toggle"
+                  aria-expanded="false"
+                  aria-controls="gb-emoji-picker"
+                  onclick="toggleGbEmojiPicker()"
+                >
+                  Add Emoji
+                </button>
+                <div id="gb-emoji-picker" class="gb-emoji-picker" hidden>
+                  <div id="gb-emoji-grid" class="gb-emoji-grid"></div>
+                </div>
+              </div>
               <button class="gb-btn gb-btn-send" onclick="submitGuestbookEntry()">Post Message</button>
             </div>
           </div>
@@ -878,7 +1034,15 @@
           <button class="nb-btn admin-only" onclick="showNbComposeForm()">+ New Post</button>
         </div>
         <div class="noticeboard-posts" id="noticeboard-posts">
-          <div class="noticeboard-empty">Loading notices...</div>
+          <div class="noticeboard-loader" role="status" aria-live="polite">
+            <div class="noticeboard-loader-panel">
+              <div class="noticeboard-loader-title">Loading Notices</div>
+              <div class="noticeboard-loader-track" aria-hidden="true"></div>
+              <div class="noticeboard-loader-copy">
+                Syncing the latest developer bulletins...
+              </div>
+            </div>
+          </div>
         </div>
         <div id="nb-compose-form" class="nb-compose" style="display:none;">
           <input type="text" id="nb-compose-title" placeholder="Notice title..." />
@@ -950,13 +1114,13 @@
             About This Project
           </h2>
           <p style="margin-bottom: 15px;">
-            This entire project is open source and I am actively looking for contributors.
+            RetroOS is an open-source interactive portfolio designed to recreate the feel of a classic desktop operating system in the browser.
           </p>
           <p style="margin-bottom: 15px;">
-            As a sole developer, I will not continuously be able to provide updates, so I am looking for open contributors to help maintain and expand this digital space.
+            The project is currently maintained independently, and thoughtful contributions are welcome to help refine, maintain, and expand the experience over time.
           </p>
           <p style="margin-bottom: 15px;">
-            Also, this entire project is built on vanilla JavaScript and CSS. I know that is a hell; why is it not fucking built on React? For that, I am sorry, but this is how it works.
+            It is built with vanilla HTML, CSS, and JavaScript to preserve a lightweight, handcrafted architecture and to keep the interface closely aligned with its retro design philosophy.
           </p>
         </div>
       </div>
@@ -1008,6 +1172,7 @@
     <!-- UPDATED SCRIPT NAME -->
     <script src="js/apps/datetime_battery_wifi.js" defer></script>
     <script src="js/apps/terminal.js" defer></script>
+    <script src="js/apps/internet.js" defer></script>
     <script src="js/apps/guestbook.js" defer></script>
     <script src="js/apps/noticeboard.js" defer></script>
     <script src="js/mail.js" defer></script>

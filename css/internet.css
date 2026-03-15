@@ -2,62 +2,270 @@
    🌐 Internet App (Snoogle)
    ===================================================================== */
 
-.internet-content {
+#internet.window {
+  background: #000 !important;
+}
+
+#internet .internet-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  background: #f3eedf;
+  height: calc(100% - 45px);
+  overflow: hidden !important;
+}
+
+.internet-title-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #d9d9d9;
+  border-bottom: 2px solid #000;
+  flex-shrink: 0;
+}
+
+.internet-title-tools[hidden] {
+  display: none !important;
+}
+
+.internet-search-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+#internetSearchInput,
+#internetHomeSearchInput {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 7px 12px;
+  font-size: 20px;
+  font-family: "VT323", monospace;
+  color: #111;
+  background: #fff;
+  border: 3px solid #000;
+}
+
+#internetSearchInput::placeholder,
+#internetHomeSearchInput::placeholder {
+  color: #555;
+}
+
+#internetSearchInput:focus,
+#internetHomeSearchInput:focus {
+  outline: none;
+}
+
+.internet-toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 7px 16px;
+  border: 3px solid #000;
+  background: #e0e0e0;
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.internet-back-btn {
+  flex-shrink: 0;
+  min-width: 82px;
+}
+
+.internet-go-btn {
+  flex-shrink: 0;
+  min-width: 62px;
+  background: #32cd32;
+  color: #000;
+}
+
+.internet-toolbar-btn:active {
+  transform: none;
+}
+
+.internet-toolbar-btn:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.internet-browser-shell {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #f3eedf;
+}
+
+.internet-browser-home,
+.internet-browser-pane {
+  width: 100%;
+  height: 100%;
+}
+
+.internet-browser-home[hidden],
+.internet-browser-pane[hidden] {
+  display: none !important;
+}
+
+.internet-browser-home {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px 15px;
+  justify-content: flex-start;
+  gap: 26px;
+  padding: 36px 24px 32px;
   text-align: center;
+  overflow: auto;
+}
+
+.snoogle-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 620px);
+  padding: 0;
+}
+
+.snoogle-header img {
+  max-width: 360px;
+  width: min(100%, 360px);
+  height: auto;
+}
+
+.internet-home-search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 620px);
+  margin: 0;
+}
+
+.internet-browser-pane {
+  position: relative;
   background: #fff;
+}
+
+.internet-browser-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "VT323", monospace;
+  font-size: 28px;
+  background: rgba(243,238,223,0.94);
+  z-index: 1;
+}
+
+.internet-browser-loading[hidden] {
+  display: none;
+}
+
+#internetBrowserFrame {
+  width: 100%;
   height: 100%;
-}
-.snoogle-header { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.snoogle-header img { max-width: 350px; height: auto; margin-top: 20px; }
-
-#internetSearchForm { width: 100%; display: flex; justify-content: center; }
-#internetSearchInput {
-  width: 90%;
-  max-width: 320px;
-  padding: 10px 15px;
-  font-size: 16px;
-  border: 2px solid #999;
-  border-radius: 6px;
-  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+  border: 0;
+  background: #fff;
 }
 
-.favourites-section  { width: 100%; margin-top: 15px; }
+.favourites-section  {
+  width: min(100%, 620px);
+  margin-top: 2px;
+  padding: 0;
+}
+
 .favourites-title {
   font-weight: bold;
-  margin-bottom: 20px;
-  font-size: 20px;
-  text-align: left;
-  color: #555;
-  margin-left: 20px;
+  margin-bottom: 18px;
+  font-size: 22px;
+  text-align: center;
+  color: #2f2b24;
+  margin-left: 0;
   font-family: "VT323", monospace;
 }
+
 .favourites-container {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 20px;
+  gap: 14px;
 }
+
 .favourite-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   text-decoration: none;
   color: #000;
-  width: 70px;
+  width: 92px;
+  min-height: 124px;
+  padding: 10px 8px;
   gap: 8px;
-  transition: transform 0.2s ease;
+  border: 2px solid transparent;
+  background: transparent;
+  font-family: "VT323", monospace;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
+
 .favourite-item img {
   border: 2px solid #000;
-  border-radius: 12px;
   background-color: #fff;
   box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
 }
-.favourite-label { font-size: 12px; font-weight: 600; }
+
+.favourite-item:hover,
+.favourite-item:focus-visible {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  outline: none;
+}
+
+.favourite-label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .internet-title-tools {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .internet-search-form {
+    width: 100%;
+  }
+
+  #internetSearchInput,
+  #internetHomeSearchInput {
+    font-size: 18px;
+  }
+
+  .internet-home-search-form {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .internet-browser-home {
+    padding: 20px 16px 24px;
+  }
+
+  .snoogle-header,
+  .favourites-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

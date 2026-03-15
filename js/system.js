@@ -25,6 +25,102 @@ let currentWallpaperIndex = parseInt(
   localStorage.getItem("currentWallpaperIndex") || "1",
   10
 );
+let matrixWallpaperCanvas = null;
+let matrixWallpaperInterval = null;
+let matrixWallpaperDrops = [];
+const matrixWallpaperAlphabet =
+  "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポャュョッ";
+const matrixWallpaperFontSize = 18;
+
+function resizeMatrixWallpaperCanvas() {
+  if (!matrixWallpaperCanvas) return;
+
+  matrixWallpaperCanvas.width = window.innerWidth;
+  matrixWallpaperCanvas.height = window.innerHeight;
+
+  const columns = Math.max(
+    1,
+    Math.floor(matrixWallpaperCanvas.width / matrixWallpaperFontSize)
+  );
+  matrixWallpaperDrops = Array.from({ length: columns }).fill(1);
+}
+
+function stopMatrixWallpaperAnimation() {
+  if (matrixWallpaperInterval) {
+    clearInterval(matrixWallpaperInterval);
+    matrixWallpaperInterval = null;
+  }
+
+  window.removeEventListener("resize", resizeMatrixWallpaperCanvas);
+
+  if (matrixWallpaperCanvas?.parentElement) {
+    matrixWallpaperCanvas.parentElement.removeChild(matrixWallpaperCanvas);
+  }
+
+  matrixWallpaperCanvas = null;
+  matrixWallpaperDrops = [];
+}
+
+function startMatrixWallpaperAnimation() {
+  stopMatrixWallpaperAnimation();
+
+  matrixWallpaperCanvas = document.createElement("canvas");
+  matrixWallpaperCanvas.id = "matrix-wallpaper-canvas";
+
+  const grain = document.querySelector(".grain");
+  if (grain?.parentElement === document.body) {
+    document.body.insertBefore(matrixWallpaperCanvas, grain);
+  } else {
+    document.body.prepend(matrixWallpaperCanvas);
+  }
+
+  const context = matrixWallpaperCanvas.getContext("2d");
+  if (!context) {
+    stopMatrixWallpaperAnimation();
+    return;
+  }
+
+  resizeMatrixWallpaperCanvas();
+
+  const draw = () => {
+    if (!matrixWallpaperCanvas) return;
+
+    context.fillStyle = "rgba(0, 0, 0, 0.08)";
+    context.fillRect(
+      0,
+      0,
+      matrixWallpaperCanvas.width,
+      matrixWallpaperCanvas.height
+    );
+
+    context.fillStyle = "rgba(83, 255, 106, 0.72)";
+    context.font = `${matrixWallpaperFontSize}px VT323, monospace`;
+    context.textBaseline = "top";
+
+    matrixWallpaperDrops.forEach((drop, index) => {
+      const text = matrixWallpaperAlphabet.charAt(
+        Math.floor(Math.random() * matrixWallpaperAlphabet.length)
+      );
+      context.fillText(
+        text,
+        index * matrixWallpaperFontSize,
+        drop * matrixWallpaperFontSize
+      );
+
+      if (
+        drop * matrixWallpaperFontSize > matrixWallpaperCanvas.height &&
+        Math.random() > 0.975
+      ) {
+        matrixWallpaperDrops[index] = 0;
+      }
+
+      matrixWallpaperDrops[index] += 1;
+    });
+  };
+
+  matrixWallpaperInterval = setInterval(draw, 60);
+  window.addEventListener("resize", resizeMatrixWallpaperCanvas);
+}
 
 /**
  * Closes all currently open or minimized windows.
@@ -49,10 +145,17 @@ function activateMatrixTheme() {
 
   document.body.classList.toggle("matrix-theme");
   const isActive = document.body.classList.contains("matrix-theme");
-  const title = "System Security Alert";
+
+  if (isActive) {
+    startMatrixWallpaperAnimation();
+  } else {
+    stopMatrixWallpaperAnimation();
+  }
+
+  const title = isActive ? "Matrix Protocol Engaged" : "Matrix Protocol Offline";
   const message = isActive
-    ? "Reality glitch detected. Engaging fallback simulation... Welcome to the Matrix."
-    : "Simulation disengaged. Welcome back to reality.";
+    ? "Signal acquired. RetroOS has switched to the hidden Matrix shell. Enter the code again to return to the standard desktop."
+    : "Matrix shell disengaged. Standard RetroOS rendering restored.";
   createMessageWindow(title, message);
 }
 
@@ -74,6 +177,64 @@ function bringToFront(el) {
   if (!el) return;
   zTop += 1;
   el.style.zIndex = zTop;
+}
+
+function clearDesktopIconSelection(activeIcon = null) {
+  document.querySelectorAll(".desktop-icon.selected").forEach((icon) => {
+    icon.classList.toggle("selected", icon === activeIcon);
+  });
+}
+
+function selectDesktopIcon(icon) {
+  if (!icon) return;
+  clearDesktopIconSelection(icon);
+}
+
+function activateIconAction(action, target = "", options = {}) {
+  switch (action) {
+    case "window":
+      openWindow(target);
+      break;
+    case "url":
+      if (target) window.open(target, "_blank");
+      break;
+    case "readme":
+      openReadMe();
+      break;
+    case "projects":
+      openProjectsFolder();
+      break;
+    case "socials":
+      toggleSocialsFolder(options.event);
+      break;
+    case "finder-location":
+      if (typeof selectFinderLocation === "function") {
+        selectFinderLocation(target);
+      } else {
+        renderFinderContent(target);
+      }
+      break;
+    case "photo":
+      openPhotoViewer(target, options.title);
+      break;
+    case "purge":
+      handlePurgeAction();
+      break;
+  }
+}
+
+function activateDesktopIcon(icon, options = {}) {
+  if (!icon) return;
+
+  const fallbackActions = {
+    "icon-readme": { action: "readme" },
+    "icon-projects": { action: "projects" },
+  };
+  const fallback = fallbackActions[icon.id] || {};
+  const action = icon.dataset.openAction || fallback.action || "";
+  const target = icon.dataset.openTarget || fallback.target || "";
+
+  activateIconAction(action, target, options);
 }
 
 /**
@@ -296,8 +457,14 @@ function makeDraggable(win) {
   let offY = 0;
 
   function dragStart(e) {
-    // Ignore clicks/touches on the window control buttons
-    if (e.target.classList.contains("ctrl")) return;
+    // Ignore header interactions that are meant for controls and inputs.
+    if (
+      e.target.closest(
+        ".ctrl, .title-interactive, button, input, textarea, select, a, label, form"
+      )
+    ) {
+      return;
+    }
 
     // Prevent default browser actions (like scrolling) on touch
     if (e.type === "touchstart") {
@@ -353,26 +520,45 @@ function makeDraggable(win) {
 }
 
 function makeIconDraggable(icon) {
+  const dragThreshold = 6;
+  const activationCooldown = 350;
   let isDragging = false;
+  let didDrag = false;
+  let suppressClick = false;
+  let lastActivationTime = 0;
   let offX = 0,
     offY = 0;
   let startX = 0,
     startY = 0; // Used to tell a tap from a drag
+  let startLeft = 0;
 
-  // This function opens the correct window
-  const openIcon = () => {
-    if (icon.id === "icon-projects") {
-      openProjectsFolder();
-    } else if (icon.id === "icon-readme") {
-      openReadMe();
-    }
-  };
+  function activateFromClick(event) {
+    const now = Date.now();
+    if (now - lastActivationTime < activationCooldown) return;
+    lastActivationTime = now;
+    activateDesktopIcon(icon, { event });
+  }
 
-  // For desktop, the standard double-click is best
-  icon.addEventListener("dblclick", openIcon);
+  icon.addEventListener(
+    "click",
+    (e) => {
+      if (suppressClick) {
+        suppressClick = false;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
+
+      selectDesktopIcon(icon);
+      activateFromClick(e);
+    },
+    true
+  );
 
   // This function handles the start of a drag or a tap
   function dragStart(e) {
+    if (e.button !== undefined && e.button !== 0) return;
+
     const event = e.touches ? e.touches[0] : e;
 
     // Record the starting position
@@ -380,14 +566,13 @@ function makeIconDraggable(icon) {
     startY = event.clientY;
 
     isDragging = true;
+    didDrag = false;
     const rect = icon.getBoundingClientRect();
     offX = event.clientX - rect.left;
     offY = event.clientY - rect.top;
-
-    if (icon.style.right) {
-      icon.style.left = `${rect.left}px`;
-      icon.style.right = "";
-    }
+    startLeft = rect.left;
+    selectDesktopIcon(icon);
+    document.body.style.userSelect = "none";
 
     // Add listeners to the whole window to track movement
     window.addEventListener("mousemove", dragMove);
@@ -401,6 +586,23 @@ function makeIconDraggable(icon) {
     if (e.type === "touchmove") e.preventDefault(); // Prevent page scroll
 
     const event = e.touches ? e.touches[0] : e;
+    const movedDistance = Math.hypot(
+      event.clientX - startX,
+      event.clientY - startY
+    );
+
+    if (!didDrag && movedDistance >= dragThreshold) {
+      didDrag = true;
+      icon.classList.add("dragging");
+
+      if (icon.style.right) {
+        icon.style.left = `${startLeft}px`;
+        icon.style.right = "";
+      }
+    }
+
+    if (!didDrag) return;
+
     icon.style.left = `${event.clientX - offX}px`;
     icon.style.top = `${event.clientY - offY}px`;
   }
@@ -415,6 +617,8 @@ function makeIconDraggable(icon) {
     window.removeEventListener("touchmove", dragMove);
     window.removeEventListener("mouseup", dragEnd);
     window.removeEventListener("touchend", dragEnd);
+    document.body.style.userSelect = "";
+    icon.classList.remove("dragging");
 
     // Use changedTouches for touchend, as 'touches' will be empty
     const event = e.changedTouches ? e.changedTouches[0] : e;
@@ -425,10 +629,11 @@ function makeIconDraggable(icon) {
       event.clientY - startY
     );
 
-    // If it was a touch event and the icon barely moved, it's a tap!
-    if (e.type === "touchend" && movedDistance < 10) {
-      openIcon();
+    if (movedDistance >= dragThreshold || didDrag) {
+      suppressClick = true;
+      return;
     }
+
   }
 
   // Add the initial listeners to the icon
@@ -773,7 +978,7 @@ function openPhotoViewer(src, title) {
 
 // Android-style Socials Folder
 function toggleSocialsFolder(e) {
-  e.stopPropagation();
+  e?.stopPropagation?.();
   const popup = document.getElementById("socials-popup");
   if (!popup) return;
 

@@ -2,120 +2,118 @@
 
 ## Core Identity
 
-RetroOS is a **nostalgic tribute to classic desktop operating systems** (circa Mac OS 7–9).
-Every design decision must reinforce the feeling of using a 1990s computer — not a modern SaaS app.
-
----
+RetroOS is a nostalgic tribute to classic desktop operating systems circa Mac OS 7-9. Every design decision should reinforce the feeling of using a chunky, physical computer interface instead of a modern web dashboard.
 
 ## The 3 Golden Rules
 
 ### 1. Retro First
-If a design choice looks modern, it does not belong here.
 
-✅ Pixel fonts, hard borders, flat backgrounds, chunky shadows  
-❌ Gradients on interactive elements, rounded pill buttons, blur-heavy glass effects on non-folder elements, Material UI patterns
+If a design choice looks like a modern SaaS dashboard, it probably does not belong here.
 
-### 2. Static is Sacred
-The interface elements should feel solid and physical, like real OS windows.
+- Good: pixel fonts, hard borders, flat fills, chunky shadows, deliberate utility panels
+- Bad: pill buttons, soft cards, gradient-heavy controls, framework-default UI
 
-✅ `box-shadow: 5px 5px 0` hard pixel shadows  
-✅ Discrete color changes on hover  
-✅ Position-based movement (draggable windows)  
-❌ `transform: scale()` pulsing or breathing  
-❌ Keyframe animations that grow or shrink element sizes  
-❌ Size-based micro-animations on buttons
+### 2. Static Is Sacred
+
+Windows and controls should feel solid.
+
+- Good: hard-shadow buttons, discrete hover states, drag-based movement
+- Bad: `transform: scale()` hover effects, breathing buttons, size-changing keyframes on normal controls
 
 ### 3. Organic Over Outsourced
-Build features natively. Avoid embedding third-party services.
 
-✅ Custom Nodemailer backend for contact form  
-✅ Native DOM window manager  
-❌ Formspree, EmailJS, Netlify Forms  
-❌ Widget-based embeds for core features
+Build the experience natively.
 
----
+- Good: custom window manager, custom serverless APIs, custom browser proxy
+- Bad: widget-style services or third-party replacements for core behavior
 
 ## Typography
 
 | Context | Font | Notes |
 |---|---|---|
-| All UI text | `VT323` (Google Fonts) | Monospace pixel font — primary |
-| Numerical Text | `VT323` (Google Fonts) | **MANDATORY:** Always use VT323 for numbers (clocks, badges, stats). `Pixelify Sans` is strictly forbidden for numbers as it lacks readability. |
-| Accent labels | `Pixelify Sans` | Sparingly — for stylistic labels |
-| System font fallback | `monospace` | Never use `sans-serif` as fallback |
+| Primary UI text | `VT323` | Default for windows, lists, status, and forms |
+| Numbers | `VT323` | Mandatory for clocks, counters, badges, and metrics |
+| Accent labels | `Pixelify Sans` | Sparse decorative use only |
+| Fallback | `monospace` | Never `sans-serif` |
 
-**Font sizes should feel big.** VT323 renders well at 16px–28px. Prefer 17–22px for body text.
+VT323 reads best at relatively large sizes. Favor the 18px-28px range for core app text and go larger for titles.
 
----
+## Color Direction
 
-## Colors
+RetroOS is wallpaper-led, but the chrome stays grounded in blacks, grays, and warm neutral panels.
 
-This is NOT a flat-design white/grey app. The desktop is wallpaper-driven with bold colors. UI chrome (windows, sidebars) uses greys and blacks to contrast.
-
-- **Active/selected state:** Always `background: #000; color: #fff` — no blue highlights in the retro sections.
-- **Blue accent (#4a90e2):** Only acceptable for the Send button in Mail and link-type actions.
-- **Window panels:** `#f0f0f0` or `#e0e0e0` for header areas, `#fff` for content areas.
-
----
+- Active and selected states stay black with white text.
+- Mail and Internet may use warm parchment and yellow-green utility accents, but the controls should still feel retro and physical.
+- Finder-safe versions of desktop exceptions such as `My Socials` should become opaque and practical when they enter light window surfaces.
 
 ## Window Chrome Rules
 
-- Every window has a **dark title bar** (`background: #333333`) with white text.
-- Controls are circles: 🔴 close (`#ff5f57`), 🟡 maximize (`#febc2e`), 🟢 minimize (`#32cd32`).
-- The maximize button uses **Arial Bold** with the character `O` — NOT the VT323 font, NOT the `#` symbol.
-- The Calculator window has **no maximize button**.
+- Title bars use `#333333` with white text.
+- Window borders stay heavy and black.
+- Controls remain the red/yellow/green circle set.
+- Calculator does not get a maximize button.
 
----
+## The "My Socials" Exception
 
-## The "Android Folder" Exception
+`My Socials` is the one intentionally non-retro desktop object.
 
-The "My Socials" folder on the desktop is intentionally modern-looking — it is an **Android-inspired frosted-glass folder** and is the one allowed exception to the retro-first rule.
+- On the desktop it may use frosted glass and blur.
+- In Finder it must switch to an opaque gray treatment with a visible border.
+- The popup can keep the more modern glass treatment because it is intentionally a desktop-only flourish.
 
-- On the **desktop** (colorful wallpaper): `background: rgba(255,255,255,0.25); backdrop-filter: blur(8px)` — translucent.
-- In the **Finder** (white background): `background: #e0e0e0; border: 2px solid #999` — opaque grey so it remains visible.
-- The popup it opens uses `backdrop-filter: blur(20px)` with a dark dim overlay.
+## App-Specific Guidance
 
----
+### Mail
 
-## Easter Egg Design Philosophy
+Mail is no longer a thin list-plus-pane clone. It now uses:
 
-There are two interactive easter eggs. Each has its own distinct visual identity designed to break from the normal retro chrome:
+- warm beige sidebars and reader panels
+- folder tabs that still keep hard borders and hard shadows
+- chunky message cards instead of ultra-flat lists
 
-### Trash Easter Egg (Morphy the Dog)
-- Background: `#0d2a0d` (dark earthy green)
-- Text color: `#e0e0e0` (off-white) + matrix green `#32cd32` for highlights
-- Buttons use matrix-green borders with transparent backgrounds (hover fills green)
-- Animations: `dramaticReveal` on enter, `blink` cursor for typewriter effect
-- Dog state is tracked in `trashState` object — conversation progresses through stages: `initial → petted → questioning → pills → final`
-- The skull (`dead_dog.webp`) is draggable after the dog dies — can be dragged onto `SACRIFICE.exe`
+Even with the softer palette, it should still read as a retro utility window, not a modern productivity app.
 
-### Sacrifice Ritual Easter Egg
-- Triggered by dragging skull onto `SACRIFICE.exe` icon in Finder > Downloads
-- Uses a full-screen `#sacrifice-overlay` div with blood rain, vignette, glitch text
-- The `body.sacrifice-shake` class applies `sacrificeShake` keyframe animation (a rare allowed scale/translate exception since it's the big finale)
-- Styles live in `css/sacrifice.css`, logic in `js/apps/sacrifice.js`
+### Internet
 
----
+The Internet window is allowed to feel slightly more "productized" than the rest of the OS because it is imitating a browser shell.
 
-## What "Improvement" Means for App UIs
+- Home view can use a parchment-like background and quick-link cards.
+- The toolbar must still use retro borders and simple button states.
+- Error and loading states should read like OS utility panels, not glossy web spinners.
 
-When redesigning or improving an app's UI, draw inspiration from `css/projects.css` — it defines the visual language for two-pane windows:
+### Guestbook And Notice Board
 
-- **Sidebar:** grey `#e0e0e0`, active = `#000` bg with white text, item separators = `1px solid #ccc`
-- **Buttons:** `border: 3px solid #000; box-shadow: 5px 5px 0 rgba(0,0,0,0.9)` — the `.btn-retro` pattern
-- **Content pane headers:** `background: #f0f0f0; border-bottom: 2px solid #000`
+Loading panels, compose areas, and admin tools should feel like system dialogs:
 
-This exact pattern was used to redesign the Mail app UI — the result is in `css/mail.css`.
+- bordered
+- shadowed
+- text-first
+- easy to read on both desktop and mobile
 
----
+## Easter Eggs
 
-## How to Add a New App
+The Trash and Sacrifice sequences are the deliberate visual exceptions that break normal desktop chrome.
 
-Follow this exact pattern every time:
+### Trash
 
-1. **HTML:** Add the window `<div id="myapp" class="window">` in `index.html`.
-2. **CSS:** Create `css/myapp.css` with all app-specific styles. Add a `<link>` to it in `index.html`.
-3. **JS:** Create `js/apps/myapp.js` with all app logic. Add a `<script defer>` to it in `index.html`.
-4. **Open hook:** Add `'myapp'` to the `openWindow()` function's app-initializer section in `system.js` if the app needs to run setup code when first opened.
-5. **Dock icon (if needed):** Add a `<div class="dock-icon">` in the dock nav in `index.html`.
-6. **Desktop icon (if needed):** Add a `<div class="desktop-icon">` on the desktop in `index.html`.
+- Dark earthy green background
+- Off-white copy with matrix-green highlights
+- Strong terminal-like mood
+
+### Sacrifice
+
+- Full-screen ritual overlay
+- Blood rain, glitch text, shake, and dramatic contrast
+- Isolated from everyday UI styling
+
+## Adding Or Redesigning An App
+
+When improving an app, reuse the existing RetroOS language:
+
+- black borders
+- chunky shadows
+- visible selection states
+- large readable type
+- direct layouts with minimal abstraction
+
+If a surface starts looking like a generic modern web product, pull it back toward the OS metaphor.

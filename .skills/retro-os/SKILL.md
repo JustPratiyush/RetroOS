@@ -1,119 +1,99 @@
----
 name: retro-os
 description: >
-  The complete agent guide for RetroOS — a vanilla JS/CSS/HTML personal portfolio
-  that simulates a classic desktop OS in the browser. Use this skill whenever
-  making any change to this project. It defines the stack constraints, design rules,
-  file organisation, and all app-by-app responsibilities.
----
+The complete agent guide for RetroOS — a vanilla JS/CSS/HTML personal portfolio
+that simulates a classic desktop OS in the browser. Use this skill whenever
+making any change to this project. It defines the stack constraints, design rules,
+file organisation, and app-by-app responsibilities.
 
 # RetroOS Agent Skill
 
-RetroOS is a **creative personal portfolio** built entirely on Vanilla HTML5, CSS3,
-and JavaScript. It mimics a classic retro operating system UI in the browser.
+RetroOS is a creative personal portfolio built entirely with vanilla HTML5, CSS3, and JavaScript. It mimics a retro desktop operating system in the browser and relies on direct DOM patterns instead of framework abstractions.
 
 **Owner:** Abhinav Kuchhal — `https://abhinavkuchhal.com`
 
----
+## Read These First
 
-## 🚨 Read These First
+Before touching code, load the smallest relevant context file:
 
-Before touching any code, load the relevant context file:
+| What you need                    | File to read                                 |
+| -------------------------------- | -------------------------------------------- |
+| Visual rules and CSS patterns    | [design-philosophy.md](design-philosophy.md) |
+| File structure and app wiring    | [architecture.md](architecture.md)           |
+| Colors, fonts, spacing tokens    | [tokens.md](tokens.md)                       |
+| Dos, don'ts, and common pitfalls | [conventions.md](conventions.md)             |
 
-| What you need | File to read |
-|---|---|
-| Visual rules & CSS patterns | [design-philosophy.md](design-philosophy.md) |
-| File structure & how apps are wired | [architecture.md](architecture.md) |
-| Colors, fonts, spacing tokens | [tokens.md](tokens.md) |
-| Dos and don'ts, common pitfalls | [conventions.md](conventions.md) |
+## Stack At A Glance
 
----
-
-## Stack at a Glance
-
-- **No frameworks** — zero React, Vue, Angular or Next.js. Ever.
-- **No CSS libraries** — no Tailwind, no Bootstrap. Plain CSS only.
-- **Data Persistence** — Upstash Redis is used for databases (Guestbook, Notice Board) via Vercel serverless functions.
-- Fonts loaded from Google Fonts: `VT323` (primary) and `Pixelify Sans` (accent).
-
----
+- No frameworks: never add React, Vue, Angular, Next.js, or similar.
+- No CSS libraries: plain CSS only, no Tailwind or Bootstrap.
+- Persistence: Upstash Redis for Guestbook and Notice Board data.
+- Browser proxy: `api/browser.js` rewrites public HTML for the in-app Internet window.
+- Fonts: `VT323` is the primary UI font and the required font for numbers; `Pixelify Sans` is accent-only.
 
 ## Key Entry Points
 
-| File | Role |
-|---|---|
-| `index.html` | All static HTML, window containers, and templates |
-| `js/main.js` | Boot sequence + `initApp()` |
-| `js/system.js` | Window manager — open, close, minimize, maximize, drag, **createWindowFromTemplate** |
-| `js/auth.js` | Login screen and welcome popup |
-| `js/utils.js` | Shared utilities — `typewriterEffect()` |
-| `js/mail.js` | Mail inbox data + dock badge logic (composition removed) |
-| `js/apps/finder.js` | Finder navigation, `renderFinderContent`, `finderData` |
-| `js/apps/projects.js` | Projects window app — `projectsData`, `openProjectsFolder` |
-| `js/apps/trash.js` | Trash easter egg — Morphy the dog game |
-| `js/apps/sacrifice.js` | Sacrifice ritual easter egg |
-| `js/apps/guestbook.js` | Visitor Guestbook app (fetches from Redis) |
-| `js/apps/noticeboard.js` | Developer Notice Board app (fetches from Redis) |
-| `css/main.css` | Global layout, window chrome, desktop icons, dock |
-| `css/mail.css` | Mail app styles |
-| `css/finder.css` | Finder sidebar and icon grid |
-| `css/internet.css` | Snoogle / Internet browser app |
-| `css/calculator.css` | Calculator app |
-| `css/clock.css` | Clock status popover |
-| `css/coffee.css` | Coffee/Pizza app + buy-me-a-pizza button |
-| `css/photo-viewer.css` | Photo Viewer app |
-| `css/trash.css` | Trash easter egg, skull icon, game options |
-| `css/sacrifice.css` | Sacrifice ritual animation, blood rain, glitch text |
-| `css/projects.css` | Projects window app styles |
-| `css/terminal.css` | Terminal app |
-| `css/music.css` | Music player |
-| `css/matrix.css` | Matrix theme easter egg |
-| `css/guestbook.css` | Guestbook app styles |
-| `css/noticeboard.css` | Notice Board app styles |
-| `css/responsive.css` | Mobile-only overrides |
-
----
+| File                     | Role                                                                                                              |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `index.html`             | All static HTML, windows, templates, desktop icons, and dock items                                                |
+| `js/main.js`             | Boot sequence and `initApp()`                                                                                     |
+| `js/system.js`           | Window manager, desktop/Finder icon action routing, drag logic, `createWindowFromTemplate()`, `openPhotoViewer()` |
+| `js/auth.js`             | Login screen and welcome popup                                                                                    |
+| `js/utils.js`            | Shared utilities such as `typewriterEffect()`                                                                     |
+| `js/mail.js`             | Foldered mail data, selection state, `renderMailApp()`, dock badge logic                                          |
+| `js/apps/finder.js`      | Finder navigation, `renderFinderContent()`, Finder icon factories, `finderData`                                   |
+| `js/apps/projects.js`    | Projects window app — `projectsData`, `openProjectsFolder()`, `showProjectDetails()`                              |
+| `js/apps/terminal.js`    | Stateful shell, command registry, virtual filesystem, app bridges                                                 |
+| `js/apps/internet.js`    | Snoogle home/search, iframe navigation, Internet history                                                          |
+| `js/apps/guestbook.js`   | Guestbook list/detail/compose views, emoji picker, API integration                                                |
+| `js/apps/noticeboard.js` | Notice feed, admin compose/edit flow, API integration                                                             |
+| `api/browser.js`         | Sanitized HTML proxy for the Internet window                                                                      |
+| `api/guestbook.js`       | Guestbook CRUD via Upstash Redis                                                                                  |
+| `api/noticeboard.js`     | Notice Board CRUD via Upstash Redis                                                                               |
+| `css/main.css`           | Global layout, window chrome, desktop icons, dock                                                                 |
+| `css/mail.css`           | Mail app styles                                                                                                   |
+| `css/finder.css`         | Finder sidebar, icon grid, Finder-only socials folder styling                                                     |
+| `css/internet.css`       | Internet browser app                                                                                              |
+| `css/settings.css`       | Settings window overrides                                                                                         |
+| `css/responsive.css`     | Mobile-only overrides                                                                                             |
 
 ## CSS Rule: One File Per App
 
-Each app's CSS lives in its own named file. **`apps.css` no longer exists.**
+Each app's CSS lives in its own named file. `apps.css` no longer exists.
 
-| App | CSS File |
-|---|---|
-| Mail | `css/mail.css` |
-| Finder | `css/finder.css` |
-| Internet/Snoogle | `css/internet.css` |
-| Calculator | `css/calculator.css` |
-| Clock | `css/clock.css` |
-| Coffee/Pizza | `css/coffee.css` |
+| App          | CSS File               |
+| ------------ | ---------------------- |
+| Mail         | `css/mail.css`         |
+| Finder       | `css/finder.css`       |
+| Internet     | `css/internet.css`     |
+| Calculator   | `css/calculator.css`   |
+| Clock        | `css/clock.css`        |
+| Coffee/Pizza | `css/coffee.css`       |
 | Photo Viewer | `css/photo-viewer.css` |
-| Trash Easter Egg | `css/trash.css` |
-| Sacrifice Ritual | `css/sacrifice.css` |
-| Projects | `css/projects.css` |
-| Terminal | `css/terminal.css` |
-| Music | `css/music.css` |
-| Matrix | `css/matrix.css` |
-| Guestbook | `css/guestbook.css` |
-| Notice Board | `css/noticeboard.css` |
-
----
+| Trash        | `css/trash.css`        |
+| Sacrifice    | `css/sacrifice.css`    |
+| Projects     | `css/projects.css`     |
+| Terminal     | `css/terminal.css`     |
+| Music        | `css/music.css`        |
+| Matrix       | `css/matrix.css`       |
+| Guestbook    | `css/guestbook.css`    |
+| Notice Board | `css/noticeboard.css`  |
+| Settings     | `css/settings.css`     |
 
 ## JS Rule: One File Per Responsibility
 
-Each JS file owns exactly one concern. Never add code to a file that doesn't match its name.
+Each JS file owns exactly one concern. Do not move logic into a file whose name no longer matches the behavior.
 
-| File | Owns |
-|---|---|
-| `system.js` | Window lifecycle, drag, z-index, `createWindowFromTemplate()` |
-| `auth.js` | Login sequence + welcome window |
-| `mail.js` | `inboxEmails` data, `renderInbox`, `selectEmail`, dock badge logic |
-| `utils.js` | Shared utilities — currently `typewriterEffect()` only |
-| `finder.js` | Finder sidebar navigation, `renderFinderContent`, `finderData` |
-| `projects.js` | `projectsData`, `openProjectsFolder`, `showProjectDetails`, `openReadMe` |
-| `trash.js` | Trash easter egg game logic — Morphy, conversation states, skulls |
-| `sacrifice.js` | Sacrifice ritual — blood rain, glitch text, ritual animation |
-| `calculator.js` | Calculator logic |
-| `terminal.js` | Terminal emulator |
-| `music.js` | Spotify music player integration |
-| `guestbook.js` | Guestbook list/detail/compose views, backend API integration |
-| `noticeboard.js`| Notice Board feed, Admin compose view, backend API integration |
+| File             | Owns                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------- |
+| `system.js`      | Window lifecycle, drag, z-index, desktop icon activation, popup helpers                                 |
+| `auth.js`        | Login sequence and welcome window                                                                       |
+| `mail.js`        | `mailFolders`, `mailData`, `setActiveMailFolder()`, `selectMail()`, `renderMailApp()`, dock badge logic |
+| `utils.js`       | Shared utilities                                                                                        |
+| `finder.js`      | Finder sidebar navigation, icon rendering, Finder interaction binding, `finderData`                     |
+| `projects.js`    | `projectsData`, project windows, readme windows                                                         |
+| `terminal.js`    | Terminal emulator and virtual filesystem                                                                |
+| `internet.js`    | Snoogle home state, proxy navigation, external-domain fallback                                          |
+| `guestbook.js`   | Guestbook rendering, moderation checks, compose flow                                                    |
+| `noticeboard.js` | Notice Board rendering, admin compose/edit flow                                                         |
+| `trash.js`       | Trash easter egg game logic                                                                             |
+| `sacrifice.js`   | Sacrifice ritual logic                                                                                  |

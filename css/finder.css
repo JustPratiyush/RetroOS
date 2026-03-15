@@ -26,21 +26,31 @@
 .finder-main {
   flex-grow: 1;
   padding: 15px;
+}
+.finder-main-container {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 20px;
   align-items: flex-start;
   justify-content: flex-start;
+  width: 100%;
+  min-height: 100%;
 }
 .finder-icon {
   width: 80px;
+  padding: 6px 4px;
   text-align: center;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  user-select: none;
+}
+.finder-icon.selected {
+  background: #000;
+  color: #fff;
 }
 .finder-icon span {
   display: block;
@@ -49,4 +59,24 @@
   word-break: normal;
   overflow-wrap: anywhere;
   hyphens: auto;
+}
+.finder-icon.selected span {
+  color: inherit;
+}
+
+.finder-socials-folder .android-folder-box {
+  background: #e0e0e0;
+  border: 2px solid #999;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18);
+  backdrop-filter: none;
+}
+
+.finder-socials-folder .android-folder-grid img {
+  width: 14px;
+  height: 14px;
+}
+
+.finder-socials-folder.selected .android-folder-box {
+  background: #bdbdbd;
+  border-color: #fff;
 }

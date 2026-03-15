@@ -74,11 +74,25 @@ const NoticeboardService = {
 let _noticeboardPosts = [];
 let _nbEditingId = null; // Track which post is being edited
 
+function getNoticeboardLoaderMarkup() {
+  return `
+    <div class="noticeboard-loader" role="status" aria-live="polite">
+      <div class="noticeboard-loader-panel">
+        <div class="noticeboard-loader-title">Loading Notices</div>
+        <div class="noticeboard-loader-track" aria-hidden="true"></div>
+        <div class="noticeboard-loader-copy">
+          Syncing the latest developer bulletins...
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // --- RENDERING ---
 function renderNoticeboard() {
   const container = document.getElementById("noticeboard-posts");
   if (container) {
-    container.innerHTML = `<div class="retro-loader">Loading Notices</div>`;
+    container.innerHTML = getNoticeboardLoaderMarkup();
   }
   
   NoticeboardService.getPosts().then((posts) => {
