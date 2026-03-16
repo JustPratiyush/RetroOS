@@ -825,11 +825,27 @@ function getReadMeText() {
   }
 
   return [
-    "About This Project",
+    "RetrOS - README.txt",
+    "-------------------",
     "",
-    "RetroOS is an interactive portfolio platform architected to emulate a classic desktop operating system inside the browser, with custom window management, modular application modules, and a systems-oriented interaction model.",
-    "The project combines a structured client runtime, serverless APIs, an independent mail service, and a Redis database for persistent shared state across features such as the guestbook and notice board.",
-    "Rather than functioning as a static portfolio page, RetroOS is designed as a product-grade experience with emphasis on interface fidelity, maintainable architecture, and extensibility.",
+    "Welcome.",
+    "",
+    "You are currently inside a sandbox operating system",
+    "running entirely in your web browser.",
+    "",
+    "This system contains apps, files, hidden functions,",
+    "and several small secrets waiting to be discovered.",
+    "",
+    "Feel free to explore the desktop, open applications,",
+    "inspect folders, and experiment with the environment.",
+    "",
+    "Some things are obvious.",
+    "Some things are not.",
+    "",
+    "Tip:",
+    "Curiosity will reveal more than instructions ever could.",
+    "",
+    "— System",
   ].join("\n");
 }
 
