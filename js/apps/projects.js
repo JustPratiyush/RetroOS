@@ -6,8 +6,8 @@
 // --- DATA ---
 const projectsData = [
   {
-    title: "Retro OS Portfolio",
-    description: "The interactive portfolio website you are currently viewing, inspired by classic MacOS.",
+    title: "Retro OS Sandbox",
+    description: "The interactive operating system sandbox you are currently viewing, inspired by classic MacOS.",
     date: "Aug 23, 2025",
     technologies: ["HTML5", "CSS3", "JavaScript"],
     demoUrl: "#", codeUrl: "#",
@@ -37,11 +37,11 @@ const projectsData = [
     codeUrl: "https://github.com/JustPratiyush/AI-Powered-Medical-Assistant",
   },
   {
-    title: "Old Personal Website",
-    description: "My primary personal portfolio website showcasing my skills, projects, and professional journey.",
+    title: "Legacy Personal Website",
+    description: "My previous personal website showcasing my skills, projects, and professional journey.",
     date: "Jun 22, 2025",
     technologies: ["Vanilla Frontend"],
-    demoUrl: "https://www.oldportfolio.abhinavkuchhal.com",
+    demoUrl: "#",
     codeUrl: "#",
   },
 ];

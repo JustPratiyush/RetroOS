@@ -1,6 +1,6 @@
 # RetroOS
 
-RetroOS is a handcrafted single-page portfolio that recreates a retro desktop operating system in the browser with vanilla HTML, CSS, and JavaScript. The app combines draggable windows, a Finder-style file browser, a stateful terminal shell, an in-app web browser, lore-heavy mail, and Redis-backed community apps without introducing a framework.
+RetroOS is a handcrafted single-page operating system sandbox that recreates a retro desktop operating system in the browser with vanilla HTML, CSS, and JavaScript. The app combines draggable windows, a Finder-style file browser, a stateful terminal shell, an in-app web browser, lore-heavy mail, and Redis-backed community apps without introducing a framework.
 
 ![Desktop Overview](assets/screenshots/Demo1.png)
 
@@ -53,7 +53,7 @@ Check the repo notes in `.skills/retro-os/` before changing architecture or desi
 
 ## Contact
 
-- Portfolio: [abhinavkuchhal.com](https://abhinavkuchhal.com)
+- Live Sandbox: [abhinavkuchhal.com](https://abhinavkuchhal.com)
 - GitHub: [@JustPratiyush](https://github.com/JustPratiyush)
 - X: [@JustPratiyush](https://x.com/JustPratiyush)
 - Instagram: [@abhinavkuchhal7](https://www.instagram.com/abhinavkuchhal7/)

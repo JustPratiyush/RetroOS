@@ -23,7 +23,7 @@ const terminalSocialLinks = [
     label: "Website",
     fileName: "Website.url",
     url: "https://abhinavkuchhal.com",
-    aliases: ["my site", "portfolio"],
+    aliases: ["my site", "website", "sandbox"],
   },
   {
     key: "github",
@@ -125,7 +125,7 @@ const terminalCommands = {
   cat: {
     description: "Read a text file or project note",
     usage: "cat <file>",
-    examples: ["cat ReadMe.txt", 'cat "01-retro-os-portfolio.txt"', 'cat "GitHub.url"'],
+    examples: ["cat ReadMe.txt", 'cat "01-retro-os-sandbox.txt"', 'cat "GitHub.url"'],
     execute(args) {
       const target = args.join(" ").trim();
       if (!target) {
@@ -147,7 +147,7 @@ const terminalCommands = {
       "open github",
       'open "HackYours"',
       'open "system architecture blueprint"',
-      'open "retro desktop portfolio inspiration"',
+      'open "retro desktop sandbox inspiration"',
     ],
     execute(args) {
       const target = args.join(" ").trim();
@@ -286,14 +286,14 @@ const terminalCommands = {
     },
   },
   about: {
-    description: "About the RetroOS portfolio",
+    description: "About the RetroOS operating system sandbox",
     usage: "about",
     execute() {
       return createTextResult(
         [
           `Retro OS v${TERMINAL_OS_VERSION}`,
           "",
-          "A product-grade interactive portfolio engineered as a desktop-style browser environment with modular apps and Redis-backed shared features.",
+          "A product-grade operating system sandbox engineered as a desktop-style browser environment with modular apps and Redis-backed shared features.",
           "The terminal now mirrors the rest of the OS with real window hooks, folder navigation,",
           "project shortcuts, mail summaries, and theme controls.",
         ].join("\n")

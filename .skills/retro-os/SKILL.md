@@ -1,13 +1,13 @@
 name: retro-os
 description: >
-The complete agent guide for RetroOS — a vanilla JS/CSS/HTML personal portfolio
+The complete agent guide for RetroOS — a vanilla JS/CSS/HTML operating system sandbox
 that simulates a classic desktop OS in the browser. Use this skill whenever
 making any change to this project. It defines the stack constraints, design rules,
 file organisation, and app-by-app responsibilities.
 
 # RetroOS Agent Skill
 
-RetroOS is a creative personal portfolio built entirely with vanilla HTML5, CSS3, and JavaScript. It mimics a retro desktop operating system in the browser and relies on direct DOM patterns instead of framework abstractions.
+RetroOS is a creative operating system sandbox built entirely with vanilla HTML5, CSS3, and JavaScript. It mimics a retro desktop operating system in the browser and relies on direct DOM patterns instead of framework abstractions.
 
 **Owner:** Abhinav Kuchhal — `https://abhinavkuchhal.com`
 

@@ -1,6 +1,6 @@
 # RetroOS Email Backend
 
-A custom Node.js backend service to handle email notifications for the RetroOS portfolio website, replacing third-party services like Formspree.
+A custom Node.js backend service to handle email notifications for the RetroOS operating system sandbox, replacing third-party services like Formspree.
 
 ## Features
 
@@ -113,7 +113,7 @@ Test email configuration without sending a message.
 ## Email Template
 
 The service sends beautifully formatted emails with:
-- Retro-styled HTML design matching your portfolio
+- Retro-styled HTML design matching your operating system sandbox
 - Sender information and timestamp
 - Reply-to functionality
 - Plain text fallback

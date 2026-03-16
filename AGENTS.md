@@ -2,7 +2,7 @@
 
 This file applies to the entire repository.
 
-RetroOS is a single-page portfolio that recreates a retro desktop OS in the browser. Treat it as a handcrafted vanilla web app, not a framework project. Changes should preserve the illusion of a 1990s operating system while keeping the codebase modular and predictable.
+RetroOS is a single-page operating system sandbox that recreates a retro desktop OS in the browser. Treat it as a handcrafted vanilla web app, not a framework project. Changes should preserve the illusion of a 1990s operating system while keeping the codebase modular and predictable.
 
 ## Read First
 

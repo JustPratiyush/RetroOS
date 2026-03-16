@@ -809,7 +809,7 @@ function menuAction(action) {
     case "About This Mac":
       createMessageWindow(
         "About This Mac",
-        `<strong>Retro OS v2.1</strong><br>Created by Abhinav Kuchhal.<br><br>A fun, interactive portfolio website inspired by classic Mac OS. Enjoy your stay!`
+        `<strong>Retro OS v2.1</strong><br>Created by Abhinav Kuchhal.<br><br>An interactive operating system sandbox inspired by classic Mac OS. Enjoy your stay!`
       );
       break;
     case "System Info":

@@ -71,7 +71,7 @@ Fix: Respect `--file-icon-size` from `css/main.css`. The `64px` value belongs on
 
 | Platform | URL used in the live UI |
 |---|---|
-| Portfolio | `https://abhinavkuchhal.com` |
+| Sandbox | `https://abhinavkuchhal.com` |
 | GitHub | `https://github.com/JustPratiyush` |
 | X | `https://x.com/JustPratiyush` |
 | Instagram | `https://www.instagram.com/abhinavkuchhal7/` |
