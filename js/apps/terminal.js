@@ -293,7 +293,7 @@ const terminalCommands = {
         [
           `Retro OS v${TERMINAL_OS_VERSION}`,
           "",
-          "A handcrafted single-page portfolio built with vanilla HTML, CSS, and JavaScript.",
+          "A product-grade interactive portfolio engineered as a desktop-style browser environment with modular apps and Redis-backed shared features.",
           "The terminal now mirrors the rest of the OS with real window hooks, folder navigation,",
           "project shortcuts, mail summaries, and theme controls.",
         ].join("\n")
@@ -827,9 +827,9 @@ function getReadMeText() {
   return [
     "About This Project",
     "",
-    "RetroOS is an open-source interactive portfolio designed to recreate the feel of a classic desktop operating system in the browser.",
-    "The project is currently maintained independently, and thoughtful contributions are welcome to help refine, maintain, and expand the experience over time.",
-    "RetroOS is built with vanilla HTML, CSS, and JavaScript to preserve a lightweight, handcrafted architecture and keep the interface aligned with its retro design philosophy.",
+    "RetroOS is an interactive portfolio platform architected to emulate a classic desktop operating system inside the browser, with custom window management, modular application modules, and a systems-oriented interaction model.",
+    "The project combines a structured client runtime, serverless APIs, an independent mail service, and a Redis database for persistent shared state across features such as the guestbook and notice board.",
+    "Rather than functioning as a static portfolio page, RetroOS is designed as a product-grade experience with emphasis on interface fidelity, maintainable architecture, and extensibility.",
   ].join("\n");
 }
 
