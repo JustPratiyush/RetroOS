@@ -87,6 +87,13 @@ function createFinderSocialsIcon(label = "My Socials", action = "socials") {
   return icon;
 }
 
+function createFinderComingSoonNote() {
+  const note = document.createElement("p");
+  note.className = "finder-coming-soon-note";
+  note.textContent = "More things are coming soon in this section.";
+  return note;
+}
+
 function clearFinderSelection(activeIcon = null) {
   document.querySelectorAll("#finder .finder-icon.selected").forEach((icon) => {
     icon.classList.toggle("selected", icon === activeIcon);
@@ -199,7 +206,8 @@ function renderFinderContent(location) {
         action: "finder-location",
         target: "system architecture blueprint",
         classes: ["folder-icon"],
-      })
+      }),
+      createFinderComingSoonNote()
     );
   } else if (finderData[location]) {
     finderData[location].forEach(({ src, label, title }) => {
@@ -229,6 +237,7 @@ function renderFinderContent(location) {
         id: isPurgeReady ? "sacrifice-app-icon" : "",
       })
     );
+    mainContainer.appendChild(createFinderComingSoonNote());
   } else {
     const emptyState = document.createElement("p");
     emptyState.style.cssText = "color:#555;padding:10px;";

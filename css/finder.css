@@ -28,6 +28,7 @@
   padding: 15px;
 }
 .finder-main-container {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -36,6 +37,18 @@
   justify-content: flex-start;
   width: 100%;
   min-height: 100%;
+}
+.finder-coming-soon-note {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  max-width: 180px;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.38);
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: right;
+  pointer-events: none;
 }
 .finder-icon {
   width: 80px;
