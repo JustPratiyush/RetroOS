@@ -200,7 +200,7 @@ function renderGuestbookList() {
       (entry) => `
     <div class="guestbook-list-item" onclick="selectGuestbookEntry('${entry.id}')">
       <span class="gb-name">${escapeHtml(entry.name)}</span>
-      <span class="gb-preview">${escapeHtml(entry.message.substring(0, 60))}</span>
+      <span class="gb-preview">${escapeHtml(entry.message)}</span>
       <span class="gb-date">${formatGbDate(entry.timestamp)}</span>
     </div>`
     )

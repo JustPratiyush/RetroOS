@@ -482,8 +482,16 @@ button {
   color: #000;
 }
 .window.maximized {
+  position: fixed !important;
+  inset: 0 !important;
   border-radius: 0;
   box-shadow: none;
+  z-index: 6001 !important;
+}
+
+body.has-fullscreen-window .dock,
+body.has-fullscreen-window .top-bar {
+  display: none !important;
 }
 
 /* --- Dock --- */

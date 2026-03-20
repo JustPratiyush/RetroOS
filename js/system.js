@@ -355,12 +355,14 @@ function maximizeWindow(id) {
     el.style.top = el.dataset.origTop || "";
     el.style.width = el.dataset.origWidth || "";
     el.style.height = el.dataset.origHeight || "";
+    el.style.zIndex = el.dataset.origZIndex || "";
   } else {
     // Save current dimensions
     el.dataset.origLeft = el.style.left;
     el.dataset.origTop = el.style.top;
     el.dataset.origWidth = el.style.width;
     el.dataset.origHeight = el.style.height;
+    el.dataset.origZIndex = el.style.zIndex;
 
     // Maximize (true fullscreen)
     el.classList.add("maximized");
@@ -370,7 +372,15 @@ function maximizeWindow(id) {
     el.style.height = "100vh";
   }
   bringToFront(el);
+  if (el.classList.contains("maximized")) {
+    el.style.zIndex = "6001";
+  }
   updateFullscreenState();
+}
+
+function isWindowVisible(el) {
+  if (!el) return false;
+  return el.style.display !== "none" && getComputedStyle(el).display !== "none";
 }
 
 /**
@@ -381,7 +391,9 @@ function updateFullscreenState() {
   const topBar = document.querySelector(".top-bar");
   
   const maximizedWindows = Array.from(document.querySelectorAll(".window.maximized"));
-  const hasVisibleMaximized = maximizedWindows.some(win => windowStates[win.id] === "open");
+  const hasVisibleMaximized = maximizedWindows.some((win) => isWindowVisible(win));
+
+  document.body.classList.toggle("has-fullscreen-window", hasVisibleMaximized);
   
   if (hasVisibleMaximized) {
     if (dock) dock.style.display = "none";
@@ -963,7 +975,7 @@ function openPhotoViewer(src, title) {
       <span class="controls">
         <span class="ctrl ctrl-min" onclick="minimizeWindow('${id}')">&#x2212;</span>
         <span class="ctrl ctrl-max" onclick="maximizeWindow('${id}')"><strong style="font-family:Arial,sans-serif;">O</strong></span>
-        <span class="ctrl ctrl-close" onclick="this.closest('.window').remove()">&#x00D7;</span>
+        <span class="ctrl ctrl-close" onclick="this.closest('.window').remove(); updateFullscreenState();">&#x00D7;</span>
       </span>
     </div>
     <div class="content photo-viewer-content">
