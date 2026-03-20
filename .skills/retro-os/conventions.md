@@ -121,5 +121,5 @@ When adding mail content, append a message object to the correct folder inside `
 | `GET /api/health` | `api/health.js` | Health check endpoint |
 
 - Storage: Upstash Redis is the only shared persistence layer for Guestbook and Notice Board.
-- Admin auth: admin actions require `X-Admin-Key` to match `ADMIN_SECRET_KEY`.
+- Admin auth: admin actions require the signed HttpOnly session cookie issued by `/api/admin/session`; keep `ADMIN_SECRET_KEY` server-only and do not mirror it into client code or custom headers.
 - Local dev: use relative `/api/...` calls from the frontend.

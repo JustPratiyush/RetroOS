@@ -98,9 +98,12 @@ const GuestbookService = {
     try {
       const res = await fetch(`${this._baseUrl()}/api/guestbook?id=${id}`, {
         method: "DELETE",
-        headers: { "X-Admin-Key": window.adminPassword || "" },
+        credentials: "same-origin",
       });
       const data = await res.json();
+      if (res.status === 401 && typeof window.setAdminMode === "function") {
+        window.setAdminMode(false);
+      }
       return data;
     } catch (e) {
       console.error("GuestbookService.deleteEntry:", e);
@@ -113,6 +116,12 @@ const GuestbookService = {
 let _guestbookEntries = [];
 let _selectedEntryId = null;
 let _gbEmojiPickerInitialized = false;
+
+window.addEventListener("retroos:admin-state-changed", () => {
+  if (_selectedEntryId) {
+    renderGuestbookDetail();
+  }
+});
 
 function getGuestbookLoaderMarkup() {
   return `

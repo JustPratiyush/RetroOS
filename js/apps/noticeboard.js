@@ -28,11 +28,15 @@ const NoticeboardService = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Admin-Key": window.adminPassword || "",
         },
+        credentials: "same-origin",
         body: JSON.stringify({ title, content, tag }),
       });
-      return await res.json();
+      const data = await res.json();
+      if (res.status === 401 && typeof window.setAdminMode === "function") {
+        window.setAdminMode(false);
+      }
+      return data;
     } catch (e) {
       console.error("NoticeboardService.createPost:", e);
       return { success: false, error: e.message };
@@ -45,11 +49,15 @@ const NoticeboardService = {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "X-Admin-Key": window.adminPassword || "",
         },
+        credentials: "same-origin",
         body: JSON.stringify({ id, title, content, tag }),
       });
-      return await res.json();
+      const data = await res.json();
+      if (res.status === 401 && typeof window.setAdminMode === "function") {
+        window.setAdminMode(false);
+      }
+      return data;
     } catch (e) {
       console.error("NoticeboardService.updatePost:", e);
       return { success: false, error: e.message };
@@ -60,9 +68,13 @@ const NoticeboardService = {
     try {
       const res = await fetch(`${this._baseUrl()}/api/noticeboard?id=${id}`, {
         method: "DELETE",
-        headers: { "X-Admin-Key": window.adminPassword || "" },
+        credentials: "same-origin",
       });
-      return await res.json();
+      const data = await res.json();
+      if (res.status === 401 && typeof window.setAdminMode === "function") {
+        window.setAdminMode(false);
+      }
+      return data;
     } catch (e) {
       console.error("NoticeboardService.deletePost:", e);
       return { success: false, error: e.message };

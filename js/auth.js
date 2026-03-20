@@ -5,9 +5,91 @@
  * The login screen is now visible by default via HTML/CSS to prevent flicker.
  */
 
+let loginRequestInFlight = false;
+
+function setAdminMode(enabled) {
+  const nextValue = Boolean(enabled);
+  const previousValue = Boolean(window.isAdminMode);
+
+  window.isAdminMode = nextValue;
+
+  if (document.body) {
+    document.body.classList.toggle("admin-mode", nextValue);
+  }
+
+  if (previousValue !== nextValue) {
+    window.dispatchEvent(
+      new CustomEvent("retroos:admin-state-changed", {
+        detail: { isAdminMode: nextValue },
+      })
+    );
+  }
+}
+
+async function syncAdminSessionState() {
+  try {
+    const res = await fetch("/api/admin/session", {
+      method: "GET",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      setAdminMode(false);
+      return false;
+    }
+
+    const data = await res.json();
+    setAdminMode(Boolean(data.authenticated));
+    return Boolean(data.authenticated);
+  } catch (error) {
+    console.warn("RetroOS admin session sync failed:", error);
+    setAdminMode(false);
+    return false;
+  }
+}
+
+async function requestAdminSession(password) {
+  try {
+    const res = await fetch("/api/admin/session", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ password }),
+    });
+
+    if (!res.ok) {
+      return false;
+    }
+
+    const data = await res.json();
+    const authenticated = Boolean(data.authenticated);
+
+    if (authenticated) {
+      setAdminMode(true);
+    }
+
+    return authenticated;
+  } catch (error) {
+    console.warn("RetroOS admin login failed:", error);
+    return false;
+  }
+}
+
+window.isAdminMode = false;
+window.setAdminMode = setAdminMode;
+window.syncAdminSessionState = syncAdminSessionState;
+
 document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("login-password");
   const loginScreen = document.getElementById("login-screen");
+
+  syncAdminSessionState();
 
   if (passwordInput) {
     // Focus input after a slight delay to allow the boot screen to transition away
@@ -46,18 +128,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function attemptLogin() {
+async function attemptLogin() {
+  if (loginRequestInFlight) return;
+  loginRequestInFlight = true;
+
   const loginScreen = document.getElementById("login-screen");
   const passwordInput = document.getElementById("login-password");
 
-  // --- Admin Mode Check ---
-  const enteredPassword = passwordInput ? passwordInput.value : "";
-  const ADMIN_PASSWORD = "RetroAdmin$123";
-  window.isAdminMode = (enteredPassword === ADMIN_PASSWORD);
-  window.adminPassword = window.isAdminMode ? enteredPassword : "";
-
   // Simulate processing delay
   if (passwordInput) passwordInput.disabled = true;
+  const enteredPassword = passwordInput ? passwordInput.value.trim() : "";
+
+  if (enteredPassword) {
+    await requestAdminSession(enteredPassword);
+  }
+
+  if (passwordInput) {
+    passwordInput.value = "";
+  }
 
   setTimeout(() => {
     // Success - Fade out
@@ -74,11 +162,6 @@ function attemptLogin() {
       // Finally hide the element completely
       if (loginScreen) loginScreen.style.display = "none";
 
-      // Apply admin mode CSS class
-      if (window.isAdminMode) {
-        document.body.classList.add("admin-mode");
-      }
-
       // Start the background music
       if (typeof startBackgroundMusic === "function") {
         startBackgroundMusic();
@@ -86,6 +169,8 @@ function attemptLogin() {
 
       // Show welcome window after successful login
       showWelcomeWindow();
+
+      loginRequestInFlight = false;
     }, 500);
   }, 600);
 }

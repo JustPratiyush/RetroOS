@@ -1,3 +1,5 @@
+import { applyCors, rejectDisallowedOrigin } from "./_lib/security.js";
+
 const BLOCKED_HOSTNAMES = new Set([
   "localhost",
   "127.0.0.1",
@@ -647,14 +649,15 @@ function renderExternalPromptPage(targetUrl) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  applyCors(req, res, {
+    methods: ["GET", "OPTIONS"],
+    headers: ["Content-Type"],
+  });
   res.setHeader("Cache-Control", "public, max-age=120, stale-while-revalidate=300");
 
   if (req.method === "OPTIONS") {
-    return res.status(200).end();
+    if (rejectDisallowedOrigin(req, res)) return;
+    return res.status(204).end();
   }
 
   if (req.method !== "GET") {
@@ -662,6 +665,8 @@ export default async function handler(req, res) {
       .status(405)
       .json({ success: false, error: "Method not allowed" });
   }
+
+  if (rejectDisallowedOrigin(req, res)) return;
 
   const proxyOrigin = getProxyOrigin(req);
 

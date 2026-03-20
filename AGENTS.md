@@ -151,8 +151,8 @@ When adding a new app:
 
 - Frontend should call relative endpoints under `/api/...`.
 - Guestbook and notice board data live in Upstash Redis.
-- Admin routes rely on the `X-Admin-Key` header matching `ADMIN_SECRET_KEY`.
-- There is currently a fallback admin password in the serverless functions; do not create more client-side secrets or widen that pattern.
+- Admin routes rely on the server-issued admin session cookie from `/api/admin/session`; do not add client-side admin secrets or header-based shared passwords.
+- `ADMIN_SECRET_KEY` must stay server-only, come from environment variables, and never fall back to a hardcoded value.
 
 ## Email Backend
 
