@@ -1063,6 +1063,18 @@
             <option value="info">ℹ️ Info</option>
           </select>
           <textarea id="nb-compose-content" placeholder="Notice content..."></textarea>
+          <label class="nb-attachment-picker" for="nb-compose-files">
+            <span class="nb-attachment-picker-title">📎 Attach Files</span>
+            <span class="nb-attachment-picker-copy">Up to 3 files. PNG, JPG, WEBP, GIF, PDF, TXT, or Markdown. 256 KB each.</span>
+          </label>
+          <input
+            type="file"
+            id="nb-compose-files"
+            class="nb-compose-file-input"
+            accept=".png,.jpg,.jpeg,.webp,.gif,.pdf,.txt,.md,text/plain,text/markdown,image/png,image/jpeg,image/webp,image/gif,application/pdf"
+            multiple
+          />
+          <div id="nb-compose-attachments" class="nb-compose-attachments"></div>
           <div class="nb-compose-actions">
             <button class="nb-btn" onclick="hideNbComposeForm()">Cancel</button>
             <button class="nb-btn gb-btn-send" onclick="submitNoticeboardPost()"><span id="nb-compose-submit-text">Post Notice</span></button>

@@ -147,11 +147,165 @@
   margin-top: 3px;
 }
 
+.nb-card-body-wrap {
+  position: relative;
+}
+
 .nb-card-body {
   padding: 12px 15px;
   font-size: 17px;
   line-height: 1.7;
   white-space: pre-wrap;
+}
+
+.nb-card-body-has-attachment {
+  padding-right: 72px;
+}
+
+.nb-card-attachments {
+  border-top: 2px solid #000;
+  background: #f4f4f4;
+  padding: 10px 15px 12px;
+}
+
+.nb-card-attachments-title {
+  margin-bottom: 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #444;
+}
+
+.nb-attachment-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nb-attachment-card {
+  border: 2px solid #000;
+  background: #fff;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.nb-attachment-thumb {
+  width: 92px;
+  min-width: 92px;
+  background: repeating-linear-gradient(
+    45deg,
+    #dcdcdc 0 12px,
+    #f5f5f5 12px 24px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.nb-attachment-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nb-attachment-meta {
+  padding: 8px 10px;
+  flex: 1;
+}
+
+.nb-attachment-name {
+  font-size: 15px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.nb-attachment-size {
+  margin-top: 3px;
+  font-size: 12px;
+  color: #666;
+}
+
+.nb-attachment-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.nb-attachment-btn {
+  flex: 1;
+  min-width: 0;
+  font-family: "VT323", monospace;
+  font-size: 15px;
+  padding: 5px 8px;
+  border: 2px solid #000;
+  background: #fff;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+}
+
+.nb-attachment-btn:hover {
+  background: #e0e0e0;
+}
+
+.nb-attachment-toggle {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border: 2px solid #000;
+  background: #fff;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.nb-attachment-toggle:hover {
+  background: #e0e0e0;
+}
+
+.nb-attachment-toggle.is-open {
+  background: #000;
+  color: #fff;
+}
+
+.nb-attachment-toggle-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  overflow: hidden;
+}
+
+.nb-attachment-toggle-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nb-attachment-toggle-count {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+  font-size: 11px;
+  line-height: 14px;
+  text-align: center;
 }
 
 .nb-card-actions {
@@ -256,6 +410,76 @@
   margin-bottom: 8px;
 }
 
+.nb-attachment-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+.nb-attachment-picker-title {
+  font-size: 17px;
+}
+
+.nb-attachment-picker-copy {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.3;
+}
+
+.nb-compose-file-input {
+  margin-bottom: 10px;
+}
+
+.nb-compose-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.nb-compose-attachment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 2px solid #000;
+  background: #fff;
+  padding: 8px 10px;
+}
+
+.nb-compose-attachment-copy {
+  min-width: 0;
+}
+
+.nb-compose-attachment-name {
+  font-size: 16px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.nb-compose-attachment-meta {
+  font-size: 13px;
+  color: #666;
+  margin-top: 3px;
+}
+
+.nb-compose-attachment-remove {
+  flex-shrink: 0;
+  font-family: "VT323", monospace;
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 2px solid #000;
+  background: #fff;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+}
+
+.nb-compose-attachment-remove:hover {
+  background: #000;
+  color: #fff;
+}
+
 .nb-compose-actions {
   display: flex;
   justify-content: flex-end;
@@ -295,4 +519,25 @@ body.admin-mode .admin-only {
 
 body.admin-mode .admin-badge {
   display: inline;
+}
+
+@media (max-width: 700px) {
+  .nb-attachment-card {
+    flex-direction: column;
+  }
+
+  .nb-attachment-thumb {
+    width: 100%;
+    min-width: 0;
+    height: 88px;
+  }
+
+  .nb-compose-attachment {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nb-compose-attachment-remove {
+    align-self: flex-end;
+  }
 }
