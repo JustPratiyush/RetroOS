@@ -109,6 +109,17 @@
 #trash.window            { background: #fff; }
 #trash.window .content   { height: calc(100% - 25px); }
 
+/* --- Morphy Desktop Companion --- */
+#morphy-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 8900;
+  pointer-events: none;
+  image-rendering: pixelated;
+  transform-origin: top left;
+}
+
 /* =====================================================================
    💀 Dead Dog Skull (Draggable Remains)
    ===================================================================== */

@@ -267,7 +267,11 @@ function chooseRedPill() {
 
   trashContent.innerHTML = `<div class="final-message-container" style="padding: 15px; height: 100%; box-sizing: border-box; display: flex; justify-content: center; align-items: center;"><div id="final-message" class="final-message-text highlight redpill"></div></div>`;
   const textElement = document.getElementById("final-message");
-  typewriterEffect(textElement, message, 50);
+  typewriterEffect(textElement, message, 50, () => {
+    if (typeof startMorphyFollower === "function") {
+      startMorphyFollower();
+    }
+  });
   endEasterEgg(); // Mark as emptied in the background
 }
 

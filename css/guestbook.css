@@ -12,7 +12,9 @@
   background: #f7f7f7;
 }
 
-#gb-view-list, #gb-view-detail, #gb-view-compose {
+#gb-view-list,
+#gb-view-detail,
+#gb-view-compose {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -146,7 +148,9 @@
   padding: 12px 15px;
   cursor: pointer;
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.9);
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
 }
 
 .guestbook-list-item:hover {
@@ -386,8 +390,14 @@
 }
 
 @keyframes gbSlideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 /* --- Profanity Warning --- */
