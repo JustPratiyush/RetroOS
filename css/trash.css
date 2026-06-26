@@ -166,7 +166,7 @@
   opacity: 0;
 }
 .morphy-paw-print.visible {
-  animation: morphyPawPrint 0.85s steps(4, end) forwards;
+  animation: morphyPawPrint 1.275s steps(4, end) forwards;
 }
 
 @keyframes morphyPawPrint {

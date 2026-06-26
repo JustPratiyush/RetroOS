@@ -443,7 +443,7 @@
     global.setTimeout(() => {
       pawPrint.remove();
       this.pawPrints.delete(pawPrint);
-    }, 900);
+    }, 1350);
   };
 
   MorphyFollower.prototype.getBoundaryScratchDirection = function (dx, dy) {

@@ -7,6 +7,10 @@
 
 let loginRequestInFlight = false;
 
+// Secret bypass password. Typing this on the login screen instantly wakes
+// Morphy (the desktop dog companion) without solving the Trash easter egg.
+const MORPHY_SECRET_PASSWORD = "morphy";
+
 function setAdminMode(enabled) {
   const nextValue = Boolean(enabled);
   const previousValue = Boolean(window.isAdminMode);
@@ -139,7 +143,12 @@ async function attemptLogin() {
   if (passwordInput) passwordInput.disabled = true;
   const enteredPassword = passwordInput ? passwordInput.value.trim() : "";
 
-  if (enteredPassword) {
+  // Detect the secret Morphy bypass password before any admin handling so the
+  // companion can be summoned even on a brand new visit.
+  const isMorphyPassword =
+    enteredPassword.toLowerCase() === MORPHY_SECRET_PASSWORD;
+
+  if (enteredPassword && !isMorphyPassword) {
     await requestAdminSession(enteredPassword);
   }
 
@@ -162,13 +171,19 @@ async function attemptLogin() {
       // Finally hide the element completely
       if (loginScreen) loginScreen.style.display = "none";
 
-      // Start the background music
-      if (typeof startBackgroundMusic === "function") {
+      // Start the background music, unless the Morphy bypass password was used
+      // (Morphy logins should not auto-open the music app).
+      if (!isMorphyPassword && typeof startBackgroundMusic === "function") {
         startBackgroundMusic();
       }
 
       // Show welcome window after successful login
       showWelcomeWindow();
+
+      // Secret password: wake Morphy instantly, bypassing the Trash easter egg.
+      if (isMorphyPassword && typeof startMorphyFollower === "function") {
+        startMorphyFollower();
+      }
 
       loginRequestInFlight = false;
     }, 500);
